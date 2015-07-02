@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <opencv.hpp>
+//#include <stitching.hpp>
 
 #include <omp.h>
 
@@ -12,6 +13,8 @@
 #include <QList>
 #include <QString>
 #include <QStringList>
+
+#include "cam_input.h"
 
 #define fps 12
 
@@ -35,6 +38,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    cam_input *stitcher;
+
+    std::vector<std::string> videoNames;
 
 };
 

@@ -13,9 +13,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    stitcherfix/stitcherfix.cpp \
+    cam_input.cpp \
+    trajectory_tracking.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    stitcherfix/stitcherfix.h \
+    cam_input.h \
+    trajectory_tracking.h
 
 FORMS    += mainwindow.ui
 
@@ -37,3 +43,4 @@ LIBS +=  C:\\opencv300_x64_vc2013\\lib\\opencv_world300.lib \
                 C:\\opencv300_x64_vc2013\\lib\\opencv_ts300d.lib
 
 
+DEFINES += HAVE_OPENCV

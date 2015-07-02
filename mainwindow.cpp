@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    stitcher = new cam_input;
 #ifdef QT_DEBUG
     qDebug() << "Running a debug build";
 #endif
@@ -21,27 +22,29 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionLoad_Raw_Video_File_triggered()
 {
     QStringList fileNames = QFileDialog::getOpenFileNames();
-    cv::VideoCapture video[3];
-    for (int i=0;i<3;i++)
+    videoNames.clear();
+    videoNames.resize(fileNames.size());
+    for(int i = 0; i < fileNames.size(); i++)
     {
-        video[i].open(fileNames[i].toStdString());
+        videoNames[i] = fileNames.at(i).toStdString();
     }
-    cv::Mat frame[3];
-    while(1)
-    {
-        video[0].read(frame[0]);
-        cv::imshow("video",frame[0]);
+    stitcher->setVideoName(videoNames);
+    stitcher->start();
 
-        if(cv::waitKey(1000.0/fps)==27)
-        {
-            cv::destroyAllWindows();
-            break;
-        }
-    }
 }
 
 
 void MainWindow::on_actionLoad_Stitching_Image_triggered()
 {
+    QStringList fileNames = QFileDialog::getOpenFileNames();
+    std::vector<std::string> fileNamesVec;
+    for(int i = 0; i < fileNames.size(); i++)
+    {
+        fileNamesVec.push_back(fileNames[i].toStdString());
+    }
+    stitcher->initialVideo(fileNamesVec);
+
+
+
 
 }
