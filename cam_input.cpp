@@ -57,19 +57,15 @@ void cam_input::run()
             cap[i].read(frame[i]);
         }
 
-        cv::waitKey(10);
+//        cv::waitKey(10);
         cl = clock();
         sfx->composePanorama(frame, pano);
+#ifdef QT_DEBUG
         std::cout << clock() - cl << std::endl << std::endl;
-
-
-        cv::imshow("stitch", pano);
-
-
-
-        //sendPano(frame[1]);
+#endif
+        emit sendPano(pano);
     }
-
+    emit stitchFinish();
 }
 
 int cam_input::initialCam(int cam_num)
@@ -122,15 +118,7 @@ int cam_input::initialVideo(std::vector<std::string> filenames)
     camera_num = filenames.size();
     cv::Mat pano;
     sfx = new cv::Stitcherfix(cv::Stitcherfix::createDefault(true));
-
-    //std::vector<cv::VideoCapture> cap(camera_num);
     std::vector<cv::Mat> frame(camera_num);
-
-//    for(int i = 0; i < camera_num; i++)
-//    {
-//        cap[i].open(video_names[i]);
-//    }
-
     for(int i = 0; i < camera_num; i++)
     {
         frame[i] = cv::imread(filenames[i]);
@@ -154,7 +142,6 @@ int cam_input::initialVideo(std::vector<std::string> filenames)
     img_sz = frame[0].size();
     readyForComposite = true;
 
-//    saveKR();
     saveSetting();
     sfx->composePanorama(frame, pano);
     cv::imwrite("KRResult.png", pano);
@@ -162,7 +149,7 @@ int cam_input::initialVideo(std::vector<std::string> filenames)
 
     mode = 2;
     sendInitial(camera_num, frame, pano);
-
+    emit autoStitch();
     return status;
 }
 

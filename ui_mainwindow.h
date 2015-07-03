@@ -14,10 +14,13 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -29,6 +32,10 @@ public:
     QAction *actionLoad_Raw_Video_File;
     QAction *actionLoad_Stitching_Image;
     QWidget *centralWidget;
+    QTextBrowser *videoName_textBrowser;
+    QPushButton *stitchingStart_pushButton;
+    QPushButton *stitchingStop_pushButton;
+    QLabel *label;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -38,7 +45,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(691, 496);
+        MainWindow->resize(807, 496);
         QFont font;
         font.setFamily(QStringLiteral("Noto Sans CJK TC DemiLight"));
         font.setPointSize(14);
@@ -50,10 +57,25 @@ public:
         actionLoad_Stitching_Image->setObjectName(QStringLiteral("actionLoad_Stitching_Image"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        videoName_textBrowser = new QTextBrowser(centralWidget);
+        videoName_textBrowser->setObjectName(QStringLiteral("videoName_textBrowser"));
+        videoName_textBrowser->setGeometry(QRect(410, 40, 221, 311));
+        QFont font1;
+        font1.setPointSize(10);
+        videoName_textBrowser->setFont(font1);
+        stitchingStart_pushButton = new QPushButton(centralWidget);
+        stitchingStart_pushButton->setObjectName(QStringLiteral("stitchingStart_pushButton"));
+        stitchingStart_pushButton->setGeometry(QRect(30, 260, 151, 91));
+        stitchingStop_pushButton = new QPushButton(centralWidget);
+        stitchingStop_pushButton->setObjectName(QStringLiteral("stitchingStop_pushButton"));
+        stitchingStop_pushButton->setGeometry(QRect(190, 260, 151, 91));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(410, -1, 141, 41));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 691, 21));
+        menuBar->setGeometry(QRect(0, 0, 807, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -79,6 +101,9 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         actionLoad_Raw_Video_File->setText(QApplication::translate("MainWindow", "Load Raw Video File", 0));
         actionLoad_Stitching_Image->setText(QApplication::translate("MainWindow", "Load Stitching Image", 0));
+        stitchingStart_pushButton->setText(QApplication::translate("MainWindow", "Start", 0));
+        stitchingStop_pushButton->setText(QApplication::translate("MainWindow", "Stop", 0));
+        label->setText(QApplication::translate("MainWindow", "File Sequence", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 

@@ -14,7 +14,7 @@ class cam_input : public QThread
     Q_OBJECT
 public:
     explicit cam_input(QObject *parent = 0);
-    void stopCam(bool status){stopped = status;}
+    void stopStitch(bool status){stopped = status;}
     int initialCam(int cam_num);
     int initialVideo(std::vector<std::string> filenames);
     void setVideoName(std::vector<std::string> filenames){video_names = filenames;}
@@ -38,6 +38,8 @@ private:
 signals:
     void sendPano(cv::Mat pano);
     void sendInitial(int numl, std::vector<cv::Mat> image_set, cv::Mat pano);
+    void stitchFinish();
+    void autoStitch();
 public slots:
 
 };
