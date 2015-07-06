@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
+std::vector<cv::Mat> stitchFrame;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +21,14 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::imageShift(std::vector<cv::Mat> stitchFrame, std::vector<int> shiftDelta)
+{
+    cv::Mat cat(cv::Size(3600,1600),CV_8U,cv::Scalar::all(0));
+    stitchFrame[1](cv::Rect(shiftDelta[0],shiftDelta[1],stitchFrame[1].cols-shiftDelta[0],stitchFrame[1].rows-shiftDelta[1])).copyTo(stitchFrame[1](cv::Rect(0,0,stitchFrame[1].cols-shiftDelta[0],stitchFrame[1].rows-shiftDelta[1])));
+    cv::hconcat(stitchFrame,cat);
+    cv::imshow("Stitch",cat);
 }
 
 void MainWindow::on_actionLoad_Raw_Video_File_triggered()
@@ -109,7 +117,7 @@ std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std:
     {
         if (list[i].size()<1)
         {
-//            qDebug() << "END";
+            //            qDebug() << "END";
             return fileNames;
         }
         std::string folder;
@@ -119,17 +127,46 @@ std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std:
             folder = "/Camera_M/";
         else if(i == 2)
             folder = "/Camera_R/";
-//        qDebug() << QString::fromStdString(path+folder+list[i][0].toStdString());
+        //        qDebug() << QString::fromStdString(path+folder+list[i][0].toStdString());
         fileNames.push_back(path+folder+list[i][0].toStdString());
     }
     return fileNames;
+}
+
+void mouseCallBack(int event, int x, int y, int flag,void* userdata)
+{
+
+    int xBorder = 1200;
+    int yBorder = 0;
+
+    static int xLast,yLast;
+
+    std::vector<int> shiftDelta;
+    if (x > xBorder && flag == 1)
+    {
+        qDebug() <<"old"<< xLast << yLast;
+        qDebug() << event << x << y <<flag;
+
+
+        shiftDelta.resize(2);
+
+        shiftDelta[0] = x-xLast;
+        shiftDelta[1] = y-yLast;
+
+        xLast = x;
+        yLast = y;
+
+        trajectory_tracking TT;
+        TT.imageShift(stitchFrame,shiftDelta);
+    }
+
 }
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
     if (stitchMode == 0)
     {
-        std::vector<cv::Mat> frame;
+
         std::vector<std::string> fileNames;
         std::string path = dir.absolutePath().toStdString();
         fileNames = getVideoName(videoList,path);
@@ -138,12 +175,14 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
             cv::VideoCapture cap(fileNames[i]);
             cv::Mat temp;
             cap.read(temp);
-            frame.push_back(temp);
+            stitchFrame.push_back(temp);
             cap.release();
         }
         cv::Mat cat;
-        cv::hconcat(frame,cat);
-        cv::imshow("test",cat);
+        cv::hconcat(stitchFrame,cat);
+        cv::namedWindow("Stitch");
+        cv::setMouseCallback("Stitch",mouseCallBack,0);
+        cv::imshow("Stitch",cat);
     }
     stitchImage();
 }

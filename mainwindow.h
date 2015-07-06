@@ -17,8 +17,13 @@
 #include <QVector>
 
 #include "cam_input.h"
+#include "trajectory_tracking.h"
 
 #define fps 12
+
+//int mouseLeft = 0;
+
+
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +37,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+
+
+    void imageShift(std::vector<cv::Mat> stitchFrame,std::vector<int> shiftDelta);
 
 private slots:
     void on_actionLoad_Raw_Video_File_triggered();
@@ -53,7 +62,11 @@ private:
 
     cam_input *stitcher;
 
+//    trajectory_tracking *TT;
+
     std::vector<std::string> getVideoName(QVector<QStringList> list, std::string path);
+
+
 
     int stitchMode = 0;//Manual
 
