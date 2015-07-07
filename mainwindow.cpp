@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     stitcher = new cam_input;
+    TT = new trajectory_tracking;
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
@@ -27,13 +28,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::imageShift(std::vector<cv::Mat> stitchFrame, std::vector<int> shiftDelta)
-{
-    cv::Mat cat(cv::Size(3600,1600),CV_8U,cv::Scalar::all(0));
-    stitchFrame[1](cv::Rect(shiftDelta[0],shiftDelta[1],stitchFrame[1].cols-shiftDelta[0],stitchFrame[1].rows-shiftDelta[1])).copyTo(stitchFrame[1](cv::Rect(0,0,stitchFrame[1].cols-shiftDelta[0],stitchFrame[1].rows-shiftDelta[1])));
-    cv::hconcat(stitchFrame,cat);
-    cv::imshow("Stitch",cat);
-}
 
 void MainWindow::on_actionLoad_Raw_Video_File_triggered()
 {
@@ -105,9 +99,12 @@ void MainWindow::stitchImage()
         stitcher->setVideoName(fileNames);
         stitcher->start();
     }
-    else
+    else if(stitchMode == 0)
     {
-
+        if(manualLoad)
+        {
+            TT->imageShift(stitchFrame);
+        }
     }
 }
 
@@ -154,9 +151,17 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
         lastPoint = cv::Point(x,y);
         return;
     }
+    else if (event == 3)
+    {
+        qDebug() << "fileSaved";
+        cv::FileStorage f("manual_stitching.xml",cv::FileStorage::WRITE);
+        f << "point" << originPoint;
+        f.release();
+
+    }
     if (flag == 1)
     {
-//        qDebug() << "Last" << lastPoint.x << lastPoint.y;
+        //        qDebug() << "Last" << lastPoint.x << lastPoint.y;
         qDebug() << event << x << y << flag;
         shiftDelta = cv::Point(x,y)-lastPoint;
         if (x > originPoint[0].x && x <= originPoint[0].x+imgSizeX)
@@ -171,17 +176,32 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
         {
             imgIndex = 2;
         }
+
         originPoint[imgIndex].x = originPoint[imgIndex].x+shiftDelta.x;
         originPoint[imgIndex].y = originPoint[imgIndex].y+shiftDelta.y;
-//        qDebug() << imgIndex << shiftDelta.x << shiftDelta.y;
-//        qDebug() << originPoint[imgIndex].x <<originPoint[imgIndex].y;
+        //        qDebug() << imgIndex << shiftDelta.x << shiftDelta.y;
+        //        qDebug() << originPoint[imgIndex].x <<originPoint[imgIndex].y;
 
         lastPoint = cv::Point(x,y);
 
-        trajectory_tracking TT;
-        TT.imageShift(stitchFrame,originPoint);
+        qDebug() << originPoint[0].x << originPoint[0].y << originPoint[1].x << originPoint[1].y << originPoint[2].x << originPoint[2].y;
+        cv::Mat cat(cv::Size(imgSizeX*3,imgSizeY),CV_8UC3,cv::Scalar(0));
+        for (int i=0;i<3;i++)
+        {
+            if(originPoint[i].x>=0&&originPoint[i].y>=0)
+            {
+                stitchFrame[i](cv::Rect(0,0,fmin(imgSizeX,imgSizeX*3-originPoint[i].x),imgSizeY-originPoint[i].y)).copyTo(cat(cv::Rect(originPoint[i].x,originPoint[i].y,fmin(imgSizeX,imgSizeX*3-originPoint[i].x),imgSizeY-originPoint[i].y)));
+            }
+
+        }
+
+        cv::imshow("Stitch",cat);
+//        trajectory_tracking t;
+//        t.imageShift(stitchFrame,originPoint);
+//        qDebug() <<"fuck3";
 
     }
+
 }
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
@@ -201,20 +221,46 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
             cap.release();
         }
 
-        originPoint.resize(3);
-        originPoint[0] = cv::Point(0,0);
-        originPoint[1] = cv::Point(imgSizeX,0);
-        originPoint[2] = cv::Point(imgSizeX*2,0);
+        if (!manualLoad)
+        {
+            originPoint.resize(3);
+            originPoint[0] = cv::Point(0,0);
+            originPoint[1] = cv::Point(imgSizeX,0);
+            originPoint[2] = cv::Point(imgSizeX*2,0);
 
-        cv::Mat cat;
-        cv::hconcat(stitchFrame,cat);
-        cv::namedWindow("Stitch");
-        cv::setMouseCallback("Stitch",mouseCallBack,0);
-        cv::imshow("Stitch",cat);
+            cv::Mat cat;
+            cv::hconcat(stitchFrame,cat);
+            cv::namedWindow("Stitch");
+            cv::setMouseCallback("Stitch",mouseCallBack,0);
+            cv::imshow("Stitch",cat);
+            manualLoad = 1;
+        }
+        else
+        {
+            stitchImage();
+
+        }
+
+
+    }
+    else if (stitchMode == 1)
+    {
+        std::vector<std::string> fileNames;
+        std::string path = dir.absolutePath().toStdString();
+        fileNames = getVideoName(videoList,path);
+        for(int i = 0;i<videoList.size();i++)
+        {
+            cv::VideoCapture cap(fileNames[i]);
+            cv::Mat temp;
+            cap.read(temp);
+            stitchFrame.push_back(temp);
+            cap.release();
+        }
+        stitchImage();
+
     }
 
 
-    stitchImage();
 
 
 }
@@ -222,4 +268,18 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
     stitcher->stopStitch(true);
+}
+
+void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
+{
+    cv::FileStorage f("manual_stitching.xml",cv::FileStorage::READ);
+    std::vector<cv::Point> p;
+    if (f.isOpened())
+    {
+
+        f["point"] >> p;
+        f.release();
+    }
+    TT->setImageShiftOriginPoint(p);
+    manualLoad = 1;
 }

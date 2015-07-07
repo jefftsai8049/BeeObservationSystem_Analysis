@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>807</width>
-    <height>496</height>
+    <width>655</width>
+    <height>418</height>
    </rect>
   </property>
   <property name="font">
@@ -80,7 +80,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>807</width>
+     <width>655</width>
      <height>21</height>
     </rect>
    </property>
@@ -89,8 +89,9 @@
      <string>File</string>
     </property>
     <addaction name="actionLoad_Stitching_Image"/>
-    <addaction name="actionLoad_Raw_Video_File"/>
+    <addaction name="actionLoad_Maunal_Stitching_Setting"/>
     <addaction name="separator"/>
+    <addaction name="actionLoad_Raw_Video_File"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -114,6 +115,11 @@
   <action name="actionLoad_Stitching_Image">
    <property name="text">
     <string>Load Stitching Image</string>
+   </property>
+  </action>
+  <action name="actionLoad_Maunal_Stitching_Setting">
+   <property name="text">
+    <string>Load Maunal Stitching Setting</string>
    </property>
   </action>
  </widget>

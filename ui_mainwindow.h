@@ -31,6 +31,7 @@ class Ui_MainWindow
 public:
     QAction *actionLoad_Raw_Video_File;
     QAction *actionLoad_Stitching_Image;
+    QAction *actionLoad_Maunal_Stitching_Setting;
     QWidget *centralWidget;
     QTextBrowser *videoName_textBrowser;
     QPushButton *stitchingStart_pushButton;
@@ -45,7 +46,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(807, 496);
+        MainWindow->resize(655, 418);
         QFont font;
         font.setFamily(QStringLiteral("Noto Sans CJK TC DemiLight"));
         font.setPointSize(14);
@@ -55,6 +56,8 @@ public:
         actionLoad_Raw_Video_File->setCheckable(false);
         actionLoad_Stitching_Image = new QAction(MainWindow);
         actionLoad_Stitching_Image->setObjectName(QStringLiteral("actionLoad_Stitching_Image"));
+        actionLoad_Maunal_Stitching_Setting = new QAction(MainWindow);
+        actionLoad_Maunal_Stitching_Setting->setObjectName(QStringLiteral("actionLoad_Maunal_Stitching_Setting"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         videoName_textBrowser = new QTextBrowser(centralWidget);
@@ -75,7 +78,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 807, 21));
+        menuBar->setGeometry(QRect(0, 0, 655, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -88,8 +91,9 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuFile->addAction(actionLoad_Stitching_Image);
-        menuFile->addAction(actionLoad_Raw_Video_File);
+        menuFile->addAction(actionLoad_Maunal_Stitching_Setting);
         menuFile->addSeparator();
+        menuFile->addAction(actionLoad_Raw_Video_File);
 
         retranslateUi(MainWindow);
 
@@ -101,6 +105,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         actionLoad_Raw_Video_File->setText(QApplication::translate("MainWindow", "Load Raw Video File", 0));
         actionLoad_Stitching_Image->setText(QApplication::translate("MainWindow", "Load Stitching Image", 0));
+        actionLoad_Maunal_Stitching_Setting->setText(QApplication::translate("MainWindow", "Load Maunal Stitching Setting", 0));
         stitchingStart_pushButton->setText(QApplication::translate("MainWindow", "Start", 0));
         stitchingStop_pushButton->setText(QApplication::translate("MainWindow", "Stop", 0));
         label->setText(QApplication::translate("MainWindow", "File Sequence", 0));

@@ -39,10 +39,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-
-
-    void imageShift(std::vector<cv::Mat> stitchFrame,std::vector<int> shiftDelta);
-
 private slots:
     void on_actionLoad_Raw_Video_File_triggered();
 
@@ -58,10 +54,14 @@ private slots:
 
     void changeStitchMode();
 
+    void on_actionLoad_Maunal_Stitching_Setting_triggered();
+
 private:
     Ui::MainWindow *ui;
 
     cam_input *stitcher;
+
+    trajectory_tracking *TT;
 
 //    trajectory_tracking *TT;
 
@@ -70,6 +70,8 @@ private:
 
 
     int stitchMode = 0;//Manual
+
+    bool manualLoad = 0;
 
     std::vector<std::string> videoNames;
 
