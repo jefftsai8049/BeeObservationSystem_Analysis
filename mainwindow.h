@@ -20,7 +20,8 @@
 #include "trajectory_tracking.h"
 
 #define fps 12
-
+#define imgSizeX 1200
+#define imgSizeY 1600
 //int mouseLeft = 0;
 
 
