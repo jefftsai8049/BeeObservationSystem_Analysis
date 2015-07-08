@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
     connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
+
+    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
+
 #ifdef QT_DEBUG
     qDebug() << "Running a debug build";
 #endif
@@ -83,9 +87,7 @@ void MainWindow::receivePano(cv::Mat pano)
 
 void MainWindow::stitchImage()
 {
-
     qDebug() << "Stitching Image";
-
     std::vector<std::string> fileNames;
     std::string path = dir.absolutePath().toStdString();
     fileNames = getVideoName(videoList,path);
@@ -103,9 +105,11 @@ void MainWindow::stitchImage()
     {
         if(manualLoad)
         {
-            TT->imageShift(stitchFrame);
+            TT->setVideoName(fileNames);
+            TT->start();
         }
     }
+
 }
 
 void MainWindow::changeStitchMode()
@@ -139,9 +143,6 @@ std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std:
 void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 {
     cv::Size imageSize = cv::Size(imgSizeX,imgSizeY);
-
-
-
     static cv::Point lastPoint;
     cv::Point shiftDelta = cv::Point(0,0);
     int imgIndex;
@@ -196,15 +197,37 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
         }
 
         cv::imshow("Stitch",cat);
-//        trajectory_tracking t;
-//        t.imageShift(stitchFrame,originPoint);
-//        qDebug() <<"fuck3";
 
     }
 
 }
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
+{
+    stitchImage();
+}
+
+void MainWindow::on_stitchingStop_pushButton_clicked()
+{
+    stitcher->stopStitch(true);
+    TT->stopStitch();
+}
+
+void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
+{
+    cv::FileStorage f("manual_stitching.xml",cv::FileStorage::READ);
+    std::vector<cv::Point> p;
+    if (f.isOpened())
+    {
+
+        f["point"] >> p;
+        f.release();
+    }
+    TT->setImageShiftOriginPoint(p);
+    manualLoad = 1;
+}
+
+void MainWindow::on_stitching_pushButton_clicked()
 {
     if (stitchMode == 0)
     {
@@ -235,15 +258,8 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
             cv::imshow("Stitch",cat);
             manualLoad = 1;
         }
-        else
-        {
-            stitchImage();
-
-        }
-
-
     }
-    else if (stitchMode == 1)
+    else
     {
         std::vector<std::string> fileNames;
         std::string path = dir.absolutePath().toStdString();
@@ -256,30 +272,6 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
             stitchFrame.push_back(temp);
             cap.release();
         }
-        stitchImage();
 
     }
-
-
-
-
-}
-
-void MainWindow::on_stitchingStop_pushButton_clicked()
-{
-    stitcher->stopStitch(true);
-}
-
-void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
-{
-    cv::FileStorage f("manual_stitching.xml",cv::FileStorage::READ);
-    std::vector<cv::Point> p;
-    if (f.isOpened())
-    {
-
-        f["point"] >> p;
-        f.release();
-    }
-    TT->setImageShiftOriginPoint(p);
-    manualLoad = 1;
 }

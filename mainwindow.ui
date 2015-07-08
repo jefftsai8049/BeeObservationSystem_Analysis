@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>655</width>
-    <height>418</height>
+    <width>760</width>
+    <height>434</height>
    </rect>
   </property>
   <property name="font">
@@ -74,13 +74,26 @@
      <string>File Sequence</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="stitching_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>160</y>
+      <width>151</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stitch</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>655</width>
+     <width>760</width>
      <height>21</height>
     </rect>
    </property>

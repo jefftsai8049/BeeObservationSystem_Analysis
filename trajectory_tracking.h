@@ -24,16 +24,28 @@ public:
 
     void setImageShiftOriginPoint(std::vector<cv::Point> originPoint);
 
-    void imageShift(std::vector<cv::Mat> stitchFrame,std::vector<cv::Point> originPoint);
+    cv::Mat imageShift(std::vector<cv::Mat> stitchFrame,std::vector<cv::Point> originPoint);
 
-    void imageShift(std::vector<cv::Mat> stitchFrame);
+    cv::Mat imageShift(std::vector<cv::Mat> stitchFrame);
+
+    void setVideoName(std::vector<std::string> videoName);
+
+    void stopStitch();
 
 signals:
+
+    void finish();
 
 public slots:
 
 private:
     std::vector<cv::Point> originPoint;
+
+    std::vector<std::string> videoName;
+
+    std::vector<cv::Mat> frame;
+
+    bool stopped;
 
     void run();
 };

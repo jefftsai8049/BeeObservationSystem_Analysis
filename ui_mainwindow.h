@@ -37,6 +37,7 @@ public:
     QPushButton *stitchingStart_pushButton;
     QPushButton *stitchingStop_pushButton;
     QLabel *label;
+    QPushButton *stitching_pushButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -46,7 +47,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(655, 418);
+        MainWindow->resize(760, 434);
         QFont font;
         font.setFamily(QStringLiteral("Noto Sans CJK TC DemiLight"));
         font.setPointSize(14);
@@ -75,10 +76,13 @@ public:
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(410, -1, 141, 41));
+        stitching_pushButton = new QPushButton(centralWidget);
+        stitching_pushButton->setObjectName(QStringLiteral("stitching_pushButton"));
+        stitching_pushButton->setGeometry(QRect(30, 160, 151, 91));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 655, 21));
+        menuBar->setGeometry(QRect(0, 0, 760, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -109,6 +113,7 @@ public:
         stitchingStart_pushButton->setText(QApplication::translate("MainWindow", "Start", 0));
         stitchingStop_pushButton->setText(QApplication::translate("MainWindow", "Stop", 0));
         label->setText(QApplication::translate("MainWindow", "File Sequence", 0));
+        stitching_pushButton->setText(QApplication::translate("MainWindow", "Stitch", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 

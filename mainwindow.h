@@ -56,6 +56,8 @@ private slots:
 
     void on_actionLoad_Maunal_Stitching_Setting_triggered();
 
+    void on_stitching_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
