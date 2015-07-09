@@ -78,8 +78,11 @@ void trajectory_tracking::run()
     this->stopped = false;
 
     cv::Mat pano;
+
     while(!this->stopped)
     {
+        QTime clock;
+        clock.start();
         std::vector<cv::Mat> frame(3);
         for(int i = 0; i < 3; i++)
         {
@@ -91,8 +94,31 @@ void trajectory_tracking::run()
             break;
         }
         pano = this->imageShift(frame);
-        cv::imshow("Stitch",pano);
-        cv::waitKey(3);
+        pano = this->bgr2gray(pano);
+//        cv::imshow("Stitch",pano);
+//        cv::waitKey(1);
+        std::vector<cv::Vec3f> circles;
+        int dp = 2;
+        double miniDist = 20;
+        int para_1 = 80;
+        int para_2 = 80;
+        int minRadius = 12;
+        int maxRadius = 19;
+        cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,miniDist,para_1,para_2,minRadius,maxRadius);
+
+//        qDebug() << circles.size();
+        for(int i = 0; i < circles.size(); i++ )
+        {
+           cv::Point center(circles[i][0], circles[i][1]);
+           int radius = circles[i][2];
+           // circle center
+    //       circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
+           // circle outline
+           cv::circle( pano, center, radius, cv::Scalar(255), 1, 8, 0 );
+         }
+        qDebug() << clock.elapsed();
+//        cv::imshow("Stitch",pano);
+//        cv::waitKey(3);
     }
 
     for(int i = 0; i < 3; i++)
@@ -100,5 +126,19 @@ void trajectory_tracking::run()
         cap[i].release();
     }
 
+}
+
+cv::Mat trajectory_tracking::bgr2gray(cv::Mat src)
+{
+    cv::Mat dst;
+    dst.create(src.rows,src.cols,CV_8UC1);
+    for(int i=0;i<src.rows;i++)
+    {
+        for(int j=0;j<src.cols;j++)
+        {
+            dst.at<uchar>(i,j) = (src.at<cv::Vec3b>(i,j)[0]+src.at<cv::Vec3b>(i,j)[1]+src.at<cv::Vec3b>(i,j)[2])/3;
+        }
+    }
+    return dst;
 }
 

@@ -3,7 +3,7 @@
 <cameras_size>3</cameras_size>
 <img_sz_width>1200</img_sz_width>
 <img_sz_height>1600</img_sz_height>
-<cameras_focal_0>8.7645271086356788e+003</cameras_focal_0>
+<cameras_focal_0>6.5568152562511059e+003</cameras_focal_0>
 <cameras_aspect_0>1.</cameras_aspect_0>
 <cameras_ppx_0>3.3550000000000000e+002</cameras_ppx_0>
 <cameras_ppy_0>447.</cameras_ppy_0>
@@ -12,10 +12,10 @@
   <cols>3</cols>
   <dt>f</dt>
   <data>
-    9.98527944e-001 2.00122409e-002 -5.04143983e-002 -3.37496214e-003
-    9.50571418e-001 3.10488254e-001 5.41360527e-002 -3.09861004e-001
-    9.49239492e-001</data></cameras_R_0>
-<cameras_focal_1>9.0096725619802219e+003</cameras_focal_1>
+    9.96603847e-001 -1.68684386e-002 -8.05996209e-002 1.67134833e-002
+    9.99857128e-001 -2.59687798e-003 8.06319267e-002 1.24091352e-003
+    9.96743262e-001</data></cameras_R_0>
+<cameras_focal_1>6.7064843217876069e+003</cameras_focal_1>
 <cameras_aspect_1>1.</cameras_aspect_1>
 <cameras_ppx_1>3.3550000000000000e+002</cameras_ppx_1>
 <cameras_ppy_1>447.</cameras_ppy_1>
@@ -24,10 +24,10 @@
   <cols>3</cols>
   <dt>f</dt>
   <data>
-    9.99976814e-001 -6.55553536e-003 -1.82290177e-003 6.79745618e-003
-    9.50475872e-001 3.10724676e-001 -3.04342684e-004 -3.10729891e-001
-    9.50498283e-001</data></cameras_R_1>
-<cameras_focal_2>8.9568557013513746e+003</cameras_focal_2>
+    9.99492943e-001 3.17096300e-002 -2.90220953e-003 -3.17221023e-002
+    9.99487340e-001 -4.35939990e-003 2.76245689e-003 4.44922363e-003
+    9.99986410e-001</data></cameras_R_1>
+<cameras_focal_2>6.6707201946447358e+003</cameras_focal_2>
 <cameras_aspect_2>1.</cameras_aspect_2>
 <cameras_ppx_2>3.3550000000000000e+002</cameras_ppx_2>
 <cameras_ppy_2>447.</cameras_ppy_2>
@@ -36,7 +36,7 @@
   <cols>3</cols>
   <dt>f</dt>
   <data>
-    9.98544037e-001 -1.34605430e-002 5.22373021e-002 -3.43230180e-003
-    9.50551331e-001 3.10549051e-001 -5.38343936e-002 -3.10276151e-001
-    9.49120998e-001</data></cameras_R_2>
+    9.96399760e-001 -1.46677094e-002 8.35018232e-002 1.51036680e-002
+    9.99875546e-001 -4.59173322e-003 -8.34240615e-002 5.83634665e-003
+    9.96497095e-001</data></cameras_R_2>
 </opencv_storage>

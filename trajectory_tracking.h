@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QObject>
 #include <QDebug>
+#include <QTime>
 
 #include <stdlib.h>
 #include <math.h>
@@ -48,6 +49,8 @@ private:
     bool stopped;
 
     void run();
+
+    cv::Mat bgr2gray(cv::Mat src);
 };
 
 #endif // TRAJECTORY_TRACKING_H

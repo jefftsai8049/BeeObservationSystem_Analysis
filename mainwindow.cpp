@@ -109,6 +109,7 @@ void MainWindow::stitchImage()
             TT->start();
         }
     }
+    ui->statusBar->showMessage(QString::fromStdString(fileNames[1])+" is processing...");
 
 }
 
@@ -204,6 +205,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
+    cv::namedWindow("Stitch",cv::WINDOW_AUTOSIZE);
     stitchImage();
 }
 
@@ -225,13 +227,13 @@ void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
     }
     TT->setImageShiftOriginPoint(p);
     manualLoad = 1;
+    ui->statusBar->showMessage("Manual Stitching Setting Loaded");
 }
 
 void MainWindow::on_stitching_pushButton_clicked()
 {
     if (stitchMode == 0)
     {
-
         std::vector<std::string> fileNames;
         std::string path = dir.absolutePath().toStdString();
         fileNames = getVideoName(videoList,path);
@@ -244,20 +246,16 @@ void MainWindow::on_stitching_pushButton_clicked()
             cap.release();
         }
 
-        if (!manualLoad)
-        {
-            originPoint.resize(3);
-            originPoint[0] = cv::Point(0,0);
-            originPoint[1] = cv::Point(imgSizeX,0);
-            originPoint[2] = cv::Point(imgSizeX*2,0);
+        originPoint.resize(3);
+        originPoint[0] = cv::Point(0,0);
+        originPoint[1] = cv::Point(imgSizeX,0);
+        originPoint[2] = cv::Point(imgSizeX*2,0);
 
-            cv::Mat cat;
-            cv::hconcat(stitchFrame,cat);
-            cv::namedWindow("Stitch");
-            cv::setMouseCallback("Stitch",mouseCallBack,0);
-            cv::imshow("Stitch",cat);
-            manualLoad = 1;
-        }
+        cv::Mat cat;
+        cv::hconcat(stitchFrame,cat);
+        cv::namedWindow("Stitch");
+        cv::setMouseCallback("Stitch",mouseCallBack,0);
+        cv::imshow("Stitch",cat);
     }
     else
     {
