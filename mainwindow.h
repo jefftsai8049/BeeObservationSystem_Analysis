@@ -74,6 +74,8 @@ private slots:
 
     void on_show_image_checkBox_clicked();
 
+    void on_cuda_test_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

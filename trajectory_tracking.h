@@ -9,8 +9,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-
+#include "cudaimgproc.hpp"
 #include "opencv.hpp"
+
+
 
 
 #define imgSizeX 1200
@@ -31,7 +33,7 @@ public:
 
     void setVideoName(std::vector<std::string> videoName);
 
-    void setHoughCircleParameters(const int &dp,const int &miniDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
+    void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
 
     void setShowImage(const bool &status);
 
@@ -52,6 +54,7 @@ private:
 
     std::vector<cv::Mat> frame;
 
+
     bool stopped;
 
     bool showImage = true;
@@ -61,17 +64,20 @@ private:
     cv::Mat bgr2gray(cv::Mat src);
 
     //Hough Circle Parameters
-    int dp = 2;
+    int dp = 4;
 
-    int miniDist = 20;
+    int minDist = 20;
 
-    int para_1 = 80;
+    int para_1 = 100;
 
     int para_2 = 80;
 
     int minRadius = 12;
 
     int maxRadius = 19;
+
+//    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(dp,minDist,para_1,para_2,minRadius,maxRadius);
+
 };
 
 #endif // TRAJECTORY_TRACKING_H

@@ -3,6 +3,8 @@
 trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
 {
     frame.resize(3);
+//    circleDetect = new cv::cuda::HoughCirclesDetector;
+
 }
 
 trajectory_tracking::~trajectory_tracking()
@@ -60,11 +62,12 @@ void trajectory_tracking::setVideoName(std::vector<std::string> videoName)
 
 }
 
-void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &miniDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius)
+void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius)
 {
+    qDebug() << "set";
     this->dp = dp;
 
-    this->miniDist = miniDist;
+    this->minDist = minDist;
 
     this->para_1 = para_1;
 
@@ -73,6 +76,14 @@ void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &mini
     this->minRadius = minRadius;
 
     this->maxRadius = maxRadius;
+//cuda testing
+//    circleDetect->setDp(this->dp);
+//    circleDetect->setMinDist(this->minDist);
+//    circleDetect->setCannyThreshold(this->para_1);
+//    circleDetect->setVotesThreshold(this->para_2);
+
+//    circleDetect->setMinRadius(this->minRadius);
+//    circleDetect->setMaxRadius(this->maxRadius);
 }
 
 void trajectory_tracking::setShowImage(const bool &status)
@@ -97,10 +108,24 @@ void trajectory_tracking::run()
             return;
         }
     }
+    //cuda testing
+//    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
+//    qDebug() << cv::cuda::getDevice();
+
+//    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
+//    cv::cuda::DeviceInfo gpu;
+//    qDebug() << gpu.name();
+//    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
+//    qDebug() << cv::cuda::getDevice();
+//    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
+
+//    qDebug() << "cuda ok";
     //thread stop flag
     this->stopped = false;
 
     cv::Mat pano;
+//    cv::cuda::GpuMat panoGpu;
+//    cv::cuda::GpuMat circlesGpu;
 
     //main processing loop
     while(!this->stopped)
@@ -125,11 +150,32 @@ void trajectory_tracking::run()
         pano = this->imageShift(frameGray);
 
         //hough circle detection
+
         std::vector<cv::Vec3f> circles;
-        cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,miniDist,para_1,para_2,minRadius,maxRadius);
+        cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+        //cuda testing
+//        panoGpu.upload(pano);
+//        circleDetect->detect(panoGpu,circlesGpu);
+
+//        cv::Mat circlesMat;
+//        circlesGpu.download(circlesMat);
+
+//        std::vector<cv::Vec3f> circles(circlesMat.cols);
+//        qDebug() << circles.cols <<circles.rows << circles.channels();
+//        if (circlesMat.cols>0)
+//        {
+//            for (int i=0;i<circlesMat.cols;i++)
+//            {
+//               qDebug() << "x" << circlesMat.data[i];
+//               qDebug() << "y" << circlesMat.data[i+circlesMat.cols];
+//               qDebug() << "r" << circlesMat.data[i+circlesMat.cols*2];
+//               circles[i] =  cv::Vec3f(circlesMat.data[i],circlesMat.data[i+circlesMat.cols],circlesMat.data[i+circlesMat.cols*2]);
+//            }
+//        }
         if (showImage)
         {
             //draw cicle
+//            qDebug() << circles.size();
             cv::Mat panoDrawCircle = pano.clone();
             for(int i = 0; i < circles.size(); i++ )
             {

@@ -212,6 +212,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
     cv::namedWindow("Stitch",cv::WINDOW_AUTOSIZE);
+//    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     stitchImage();
 }
 
@@ -313,4 +314,15 @@ void MainWindow::on_maxRadius_hough_circle_spinBox_valueChanged(int arg1)
 void MainWindow::on_show_image_checkBox_clicked()
 {
     TT->setShowImage(ui->show_image_checkBox->isChecked());
+}
+
+void MainWindow::on_cuda_test_pushButton_clicked()
+{
+    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
+    qDebug() << cv::cuda::getDevice();
+
+
+    cv::cuda::DeviceInfo gpu;
+    qDebug() << gpu.name();
+
 }
