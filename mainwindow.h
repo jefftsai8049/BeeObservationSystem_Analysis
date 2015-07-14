@@ -40,6 +40,14 @@ public:
     ~MainWindow();
 
 private slots:
+    void receivePano(cv::Mat pano);
+
+    void receiveFPS(const double &fpsRun);
+
+    void stitchImage();
+
+    void changeStitchMode();
+
     void on_actionLoad_Raw_Video_File_triggered();
 
     void on_actionLoad_Stitching_Image_triggered();
@@ -48,15 +56,23 @@ private slots:
 
     void on_stitchingStop_pushButton_clicked();
 
-    void receivePano(cv::Mat pano);
-
-    void stitchImage();
-
-    void changeStitchMode();
-
     void on_actionLoad_Maunal_Stitching_Setting_triggered();
 
     void on_stitching_pushButton_clicked();
+
+    void on_dp_hough_circle_spinBox_valueChanged(int arg1);
+
+    void on_minDist_hough_circle_spinBox_valueChanged(int arg1);
+
+    void on_para_1_hough_circle_spinBox_valueChanged(int arg1);
+
+    void on_para_2_hough_circle_spinBox_valueChanged(int arg1);
+
+    void on_minRadius_hough_circle_spinBox_valueChanged(int arg1);
+
+    void on_maxRadius_hough_circle_spinBox_valueChanged(int arg1);
+
+    void on_show_image_checkBox_clicked();
 
 private:
     Ui::MainWindow *ui;

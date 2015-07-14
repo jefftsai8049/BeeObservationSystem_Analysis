@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
 
     connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+    connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
 
 
 #ifdef QT_DEBUG
@@ -83,6 +84,11 @@ void MainWindow::receivePano(cv::Mat pano)
     cv::Mat show;
     cv::resize(pano,show,cv::Size(pano.cols/2,pano.rows/2));
     cv::imshow("Panorama",show);
+}
+
+void MainWindow::receiveFPS(const double &fpsRun)
+{
+    ui->processing_lcdNumber->display(fpsRun);
 }
 
 void MainWindow::stitchImage()
@@ -272,4 +278,39 @@ void MainWindow::on_stitching_pushButton_clicked()
         }
 
     }
+}
+
+void MainWindow::on_dp_hough_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+}
+
+void MainWindow::on_minDist_hough_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+}
+
+void MainWindow::on_para_1_hough_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+}
+
+void MainWindow::on_para_2_hough_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+}
+
+void MainWindow::on_minRadius_hough_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+}
+
+void MainWindow::on_maxRadius_hough_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+}
+
+void MainWindow::on_show_image_checkBox_clicked()
+{
+    TT->setShowImage(ui->show_image_checkBox->isChecked());
 }

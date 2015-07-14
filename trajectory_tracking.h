@@ -31,11 +31,17 @@ public:
 
     void setVideoName(std::vector<std::string> videoName);
 
+    void setHoughCircleParameters(const int &dp,const int &miniDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
+
+    void setShowImage(const bool &status);
+
     void stopStitch();
 
 signals:
 
     void finish();
+
+    void sendFPS(const double &fps);
 
 public slots:
 
@@ -48,9 +54,24 @@ private:
 
     bool stopped;
 
+    bool showImage = true;
+
     void run();
 
     cv::Mat bgr2gray(cv::Mat src);
+
+    //Hough Circle Parameters
+    int dp = 2;
+
+    int miniDist = 20;
+
+    int para_1 = 80;
+
+    int para_2 = 80;
+
+    int minRadius = 12;
+
+    int maxRadius = 19;
 };
 
 #endif // TRAJECTORY_TRACKING_H
