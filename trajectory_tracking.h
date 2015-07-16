@@ -31,6 +31,8 @@ public:
 
     cv::Mat imageShift(std::vector<cv::Mat> stitchFrame);
 
+    cv::Mat bgr2gray(cv::Mat src);
+
     void setVideoName(std::vector<std::string> videoName);
 
     void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
@@ -61,7 +63,7 @@ private:
 
     void run();
 
-    cv::Mat bgr2gray(cv::Mat src);
+
 
     //Hough Circle Parameters
     int dp = 2;

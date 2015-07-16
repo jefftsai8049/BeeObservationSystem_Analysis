@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     stitcher = new cam_input;
     TT = new trajectory_tracking;
+    TR = new tag_recognition;
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
@@ -212,7 +213,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
     cv::namedWindow("Stitch",cv::WINDOW_AUTOSIZE);
-//    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+    //    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     stitchImage();
 }
 
@@ -325,4 +326,20 @@ void MainWindow::on_cuda_test_pushButton_clicked()
     cv::cuda::DeviceInfo gpu;
     qDebug() << gpu.name();
 
+}
+
+void MainWindow::on_load_training_data_pushButton_clicked()
+{
+    QStringList fileNames = QFileDialog::getOpenFileNames();
+
+
+
+    for(int i =0;i<fileNames.size();i++)
+    {
+        cv::Mat src = cv::imread(fileNames[i].toStdString());
+        src = TT->bgr2gray(src);
+        cv::Mat dst = TR->tagImgProc(src);
+        cv::imshow("tag",dst);
+        cv::waitKey(500);
+    }
 }

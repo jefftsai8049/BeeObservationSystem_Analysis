@@ -47,26 +47,32 @@ SOURCES       = main.cpp \
 		mainwindow.cpp \
 		stitcherfix\stitcherfix.cpp \
 		cam_input.cpp \
-		trajectory_tracking.cpp release\moc_mainwindow.cpp \
+		trajectory_tracking.cpp \
+		tag_recognition.cpp release\moc_mainwindow.cpp \
 		release\moc_cam_input.cpp \
-		release\moc_trajectory_tracking.cpp
+		release\moc_trajectory_tracking.cpp \
+		release\moc_tag_recognition.cpp
 OBJECTS       = release\main.obj \
 		release\mainwindow.obj \
 		release\stitcherfix.obj \
 		release\cam_input.obj \
 		release\trajectory_tracking.obj \
+		release\tag_recognition.obj \
 		release\moc_mainwindow.obj \
 		release\moc_cam_input.obj \
-		release\moc_trajectory_tracking.obj
+		release\moc_trajectory_tracking.obj \
+		release\moc_tag_recognition.obj
 
 DIST          =  mainwindow.h \
 		stitcherfix\stitcherfix.h \
 		cam_input.h \
-		trajectory_tracking.h main.cpp \
+		trajectory_tracking.h \
+		tag_recognition.h main.cpp \
 		mainwindow.cpp \
 		stitcherfix\stitcherfix.cpp \
 		cam_input.cpp \
-		trajectory_tracking.cpp
+		trajectory_tracking.cpp \
+		tag_recognition.cpp
 QMAKE_TARGET  = BeeObservationSystem_Analysis
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = BeeObservationSystem_Analysis.exe
@@ -155,7 +161,7 @@ dist:
 	$(ZIP) BeeObservationSystem_Analysis.zip $(SOURCES) $(DIST) BeeObservationSystem_Analysis.pro C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\spec_pre.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\common\shell-win32.conf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\qconfig.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_axbase.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_axserver.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_clucene_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_core.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_core_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_dbus.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_declarative.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_declarative_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_designer.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_enginio.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_enginio_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_gui.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_help.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_help_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_location.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_location_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_network.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_network_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_nfc.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_opengl.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_platformsupport_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_positioning.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_qml.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_quick.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_script.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_script_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_sensors.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_serialport.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_sql.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_svg.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_testlib.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_uitools.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webengine.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webengine_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webenginecore.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webenginecore_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webenginewidgets.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webenginewidgets_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webkit.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webkit_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webkitwidgets.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webkitwidgets_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_websockets.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webview.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_webview_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_widgets.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_winextras.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_xml.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\qt_functions.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\qt_config.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\win32\qt_config.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\win32-msvc2013\qmake.conf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\spec_post.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\exclusive_builds.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\default_pre.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\win32\default_pre.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\resolve_config.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\exclusive_builds_post.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\default_post.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\build_pass.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\win32\rtti.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\precompile_header.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\warn_on.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\qt.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\resources.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\moc.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\win32\opengl.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\uic.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\win32\windows.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\testcase_targets.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\exceptions.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\yacc.prf C:\Qt\5.4\msvc2013_64_opengl\mkspecs\features\lex.prf BeeObservationSystem_Analysis.pro C:/Qt/5.4/msvc2013_64_opengl/lib/qtmain.prl C:/Qt/5.4/msvc2013_64_opengl/lib/Qt5Core.prl C:/Qt/5.4/msvc2013_64_opengl/lib/Qt5Widgets.prl C:/Qt/5.4/msvc2013_64_opengl/lib/Qt5Gui.prl  NO_PCH_SOURCES RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\main.obj release\mainwindow.obj release\stitcherfix.obj release\cam_input.obj release\trajectory_tracking.obj release\moc_mainwindow.obj release\moc_cam_input.obj release\moc_trajectory_tracking.obj
+	-$(DEL_FILE) release\main.obj release\mainwindow.obj release\stitcherfix.obj release\cam_input.obj release\trajectory_tracking.obj release\tag_recognition.obj release\moc_mainwindow.obj release\moc_cam_input.obj release\moc_trajectory_tracking.obj release\moc_tag_recognition.obj
 	-$(DEL_FILE) release\BeeObservationSystem_Analysis.exp
 
 distclean: clean 
@@ -172,9 +178,9 @@ compiler_no_pch_compiler_make_all:
 compiler_no_pch_compiler_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: release\moc_mainwindow.cpp release\moc_cam_input.cpp release\moc_trajectory_tracking.cpp
+compiler_moc_header_make_all: release\moc_mainwindow.cpp release\moc_cam_input.cpp release\moc_trajectory_tracking.cpp release\moc_tag_recognition.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) release\moc_mainwindow.cpp release\moc_cam_input.cpp release\moc_trajectory_tracking.cpp
+	-$(DEL_FILE) release\moc_mainwindow.cpp release\moc_cam_input.cpp release\moc_trajectory_tracking.cpp release\moc_tag_recognition.cpp
 release\moc_mainwindow.cpp: C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvdef.h \
@@ -364,6 +370,8 @@ release\moc_mainwindow.cpp: C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\stitching\detail\blenders.hpp \
 		trajectory_tracking.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObject \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\cudaimgproc.hpp \
+		tag_recognition.h \
 		mainwindow.h
 	C:\Qt\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013_cuda/include -IC:/opencv300_x64_vc2013_cuda/include/opencv -IC:/opencv300_x64_vc2013_cuda/include/opencv2 -IC:/Qt/5.4/msvc2013_64_opengl/include -IC:/Qt/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/5.4/msvc2013_64_opengl/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
 
@@ -616,7 +624,8 @@ release\moc_trajectory_tracking.cpp: C:\Qt\5.4\msvc2013_64_opengl\include\QtCore
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontiguouscache.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QTime \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdatetime.h \
-		C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\cudaimgproc.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cuda.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvdef.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\hal\defs.h \
@@ -639,9 +648,12 @@ release\moc_trajectory_tracking.cpp: C:\Qt\5.4\msvc2013_64_opengl\include\QtCore
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\core_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\types_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cuda_types.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cuda.inl.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\imgproc_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo\photo_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\video.hpp \
@@ -667,6 +679,59 @@ release\moc_trajectory_tracking.cpp: C:\Qt\5.4\msvc2013_64_opengl\include\QtCore
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp \
 		trajectory_tracking.h
 	C:\Qt\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013_cuda/include -IC:/opencv300_x64_vc2013_cuda/include/opencv -IC:/opencv300_x64_vc2013_cuda/include/opencv2 -IC:/Qt/5.4/msvc2013_64_opengl/include -IC:/Qt/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/5.4/msvc2013_64_opengl/include/QtCore trajectory_tracking.h -o release\moc_trajectory_tracking.cpp
+
+release\moc_tag_recognition.cpp: C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObject \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobjectdefs.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qnamespace.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qglobal.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qconfig.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qfeatures.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qsystemdetection.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qprocessordetection.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcompilerdetection.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qtypeinfo.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qtypetraits.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qsysinfo.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qlogging.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qflags.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qbasicatomic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_bootstrap.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qgenericatomic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_msvc.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_armv7.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_armv6.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_armv5.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_ia64.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_mips.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_x86.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_gcc.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_unix.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qglobalstatic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qmutex.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qnumeric.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstring.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qchar.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qbytearray.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qrefcount.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qarraydata.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstringbuilder.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qlist.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qalgorithms.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qiterator.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qbytearraylist.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcoreevent.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qscopedpointer.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qmetatype.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvarlengtharray.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontainerfwd.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qisenum.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject_impl.h \
+		tag_recognition.h
+	C:\Qt\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013_cuda/include -IC:/opencv300_x64_vc2013_cuda/include/opencv -IC:/opencv300_x64_vc2013_cuda/include/opencv2 -IC:/Qt/5.4/msvc2013_64_opengl/include -IC:/Qt/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/5.4/msvc2013_64_opengl/include/QtCore tag_recognition.h -o release\moc_tag_recognition.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -878,6 +943,8 @@ release\main.obj: main.cpp mainwindow.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\stitching\detail\blenders.hpp \
 		trajectory_tracking.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObject \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\cudaimgproc.hpp \
+		tag_recognition.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtWidgets\QApplication \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtWidgets\qapplication.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcoreapplication.h \
@@ -1076,6 +1143,8 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\stitching\detail\blenders.hpp \
 		trajectory_tracking.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObject \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\cudaimgproc.hpp \
+		tag_recognition.h \
 		ui_mainwindow.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QVariant \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtWidgets\QAction \
@@ -1434,7 +1503,8 @@ release\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontiguouscache.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QTime \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdatetime.h \
-		C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\cudaimgproc.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cuda.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvdef.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\hal\defs.h \
@@ -1457,9 +1527,12 @@ release\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\core_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\types_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cuda_types.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cuda.inl.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\imgproc_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo.hpp \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo\photo_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\video.hpp \
@@ -1484,11 +1557,65 @@ release\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio\videoio_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp
 
+release\tag_recognition.obj: tag_recognition.cpp tag_recognition.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObject \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobjectdefs.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qnamespace.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qglobal.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qconfig.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qfeatures.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qsystemdetection.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qprocessordetection.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcompilerdetection.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qtypeinfo.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qtypetraits.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qsysinfo.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qlogging.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qflags.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qbasicatomic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_bootstrap.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qgenericatomic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_msvc.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_armv7.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_armv6.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_armv5.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_ia64.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_mips.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_x86.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_gcc.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qatomic_unix.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qglobalstatic.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qmutex.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qnumeric.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstring.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qchar.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qbytearray.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qrefcount.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qarraydata.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstringbuilder.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qlist.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qalgorithms.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qiterator.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qbytearraylist.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcoreevent.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qscopedpointer.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qmetatype.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvarlengtharray.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontainerfwd.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qisenum.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject_impl.h
+
 release\moc_mainwindow.obj: release\moc_mainwindow.cpp 
 
 release\moc_cam_input.obj: release\moc_cam_input.cpp 
 
 release\moc_trajectory_tracking.obj: release\moc_trajectory_tracking.cpp 
+
+release\moc_tag_recognition.obj: release\moc_tag_recognition.cpp 
 
 ####### Install
 

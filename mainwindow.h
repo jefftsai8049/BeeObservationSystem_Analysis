@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <opencv.hpp>
+#include <features2d.hpp>
 //#include <stitching.hpp>
 
 #include <omp.h>
@@ -18,6 +19,7 @@
 
 #include "cam_input.h"
 #include "trajectory_tracking.h"
+#include "tag_recognition.h"
 
 #define fps 12
 #define imgSizeX 1200
@@ -76,6 +78,8 @@ private slots:
 
     void on_cuda_test_pushButton_clicked();
 
+    void on_load_training_data_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -83,7 +87,7 @@ private:
 
     trajectory_tracking *TT;
 
-//    trajectory_tracking *TT;
+    tag_recognition *TR;
 
     std::vector<std::string> getVideoName(QVector<QStringList> list, std::string path);
 

@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     stitcherfix/stitcherfix.cpp \
     cam_input.cpp \
-    trajectory_tracking.cpp
+    trajectory_tracking.cpp \
+    tag_recognition.cpp
 
 HEADERS  += mainwindow.h \
     stitcherfix/stitcherfix.h \
     cam_input.h \
-    trajectory_tracking.h
+    trajectory_tracking.h \
+    tag_recognition.h
 
 FORMS    += mainwindow.ui
 

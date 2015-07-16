@@ -62,6 +62,8 @@ public:
     QLabel *label_5;
     QLabel *label_6;
     QLabel *label_7;
+    QWidget *tab_3;
+    QPushButton *load_training_data_pushButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -169,6 +171,12 @@ public:
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(100, 110, 101, 31));
         tabWidget->addTab(tab_2, QString());
+        tab_3 = new QWidget();
+        tab_3->setObjectName(QStringLiteral("tab_3"));
+        load_training_data_pushButton = new QPushButton(tab_3);
+        load_training_data_pushButton->setObjectName(QStringLiteral("load_training_data_pushButton"));
+        load_training_data_pushButton->setGeometry(QRect(10, 10, 181, 81));
+        tabWidget->addTab(tab_3, QString());
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -191,7 +199,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -218,6 +226,8 @@ public:
         label_6->setText(QApplication::translate("MainWindow", "minRadius", 0));
         label_7->setText(QApplication::translate("MainWindow", "maxRadius", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Setting", 0));
+        load_training_data_pushButton->setText(QApplication::translate("MainWindow", "Load Data", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Tag", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 
