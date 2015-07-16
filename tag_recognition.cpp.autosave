@@ -55,10 +55,8 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
             {
                 status[j] = 1;
                 int temp = blobPointIndex[i];
-                qDebug() << blobPointIndex[i] <<blobPointIndex[j];
                 blobPointIndex[i] = blobPointIndex[j];
                 blobPointIndex[j] = temp;
-                qDebug() << blobPointIndex[i] <<blobPointIndex[j];
             }
             else
                 status[j] = 0;
