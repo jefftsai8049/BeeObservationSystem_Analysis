@@ -64,17 +64,19 @@ private:
     cv::Mat bgr2gray(cv::Mat src);
 
     //Hough Circle Parameters
-    int dp = 4;
+    int dp = 2;
 
     int minDist = 20;
 
-    int para_1 = 100;
+    int para_1 = 150;
 
-    int para_2 = 80;
+    int para_2 = 35;
 
     int minRadius = 12;
 
     int maxRadius = 19;
+
+    cv::Mat imageCutBlack(cv::Mat src);
 
 //    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(dp,minDist,para_1,para_2,minRadius,maxRadius);
 

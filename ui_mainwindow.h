@@ -131,12 +131,12 @@ public:
         dp_hough_circle_spinBox = new QSpinBox(groupBox);
         dp_hough_circle_spinBox->setObjectName(QStringLiteral("dp_hough_circle_spinBox"));
         dp_hough_circle_spinBox->setGeometry(QRect(10, 60, 61, 31));
-        dp_hough_circle_spinBox->setValue(6);
+        dp_hough_circle_spinBox->setValue(2);
         para_2_hough_circle_spinBox = new QSpinBox(groupBox);
         para_2_hough_circle_spinBox->setObjectName(QStringLiteral("para_2_hough_circle_spinBox"));
         para_2_hough_circle_spinBox->setGeometry(QRect(10, 300, 61, 31));
         para_2_hough_circle_spinBox->setMaximum(200);
-        para_2_hough_circle_spinBox->setValue(80);
+        para_2_hough_circle_spinBox->setValue(35);
         minRadius_hough_circle_spinBox = new QSpinBox(groupBox);
         minRadius_hough_circle_spinBox->setObjectName(QStringLiteral("minRadius_hough_circle_spinBox"));
         minRadius_hough_circle_spinBox->setGeometry(QRect(100, 60, 61, 31));
@@ -145,7 +145,7 @@ public:
         para_1_hough_circle_spinBox->setObjectName(QStringLiteral("para_1_hough_circle_spinBox"));
         para_1_hough_circle_spinBox->setGeometry(QRect(10, 220, 61, 31));
         para_1_hough_circle_spinBox->setMaximum(200);
-        para_1_hough_circle_spinBox->setValue(100);
+        para_1_hough_circle_spinBox->setValue(150);
         minDist_hough_circle_spinBox = new QSpinBox(groupBox);
         minDist_hough_circle_spinBox->setObjectName(QStringLiteral("minDist_hough_circle_spinBox"));
         minDist_hough_circle_spinBox->setGeometry(QRect(10, 140, 61, 31));

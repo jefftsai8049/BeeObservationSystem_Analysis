@@ -127,6 +127,7 @@ void trajectory_tracking::run()
 //    cv::cuda::GpuMat panoGpu;
 //    cv::cuda::GpuMat circlesGpu;
 
+    int frameCount = 0;
     //main processing loop
     while(!this->stopped)
     {
@@ -148,7 +149,7 @@ void trajectory_tracking::run()
         }
         //stitching image
         pano = this->imageShift(frameGray);
-
+        pano = this->imageCutBlack(pano);
         //hough circle detection
 
         std::vector<cv::Vec3f> circles;
@@ -172,6 +173,7 @@ void trajectory_tracking::run()
 //               circles[i] =  cv::Vec3f(circlesMat.data[i],circlesMat.data[i+circlesMat.cols],circlesMat.data[i+circlesMat.cols*2]);
 //            }
 //        }
+
         if (showImage)
         {
             //draw cicle
@@ -194,11 +196,13 @@ void trajectory_tracking::run()
         for (int i=0;i<circles.size();i++)
         {
             cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
+
             cv::imshow("tag",circleImg[i]);
             cv::waitKey(3);
+//            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
         }
 
-
+        frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
     }
 
@@ -220,6 +224,12 @@ cv::Mat trajectory_tracking::bgr2gray(cv::Mat src)
             dst.at<uchar>(i,j) = (src.at<cv::Vec3b>(i,j)[0]+src.at<cv::Vec3b>(i,j)[1]+src.at<cv::Vec3b>(i,j)[2])/3;
         }
     }
+    return dst;
+}
+
+cv::Mat trajectory_tracking::imageCutBlack(cv::Mat src)
+{
+    cv::Mat dst(src, cv::Rect(0, 0, originPoint[2].x+imgSizeX, imgSizeY));
     return dst;
 }
 
