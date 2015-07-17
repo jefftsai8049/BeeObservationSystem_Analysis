@@ -3,7 +3,7 @@
 trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
 {
     frame.resize(3);
-//    circleDetect = new cv::cuda::HoughCirclesDetector;
+    //    circleDetect = new cv::cuda::HoughCirclesDetector;
 
 }
 
@@ -62,6 +62,14 @@ void trajectory_tracking::setVideoName(std::vector<std::string> videoName)
 
 }
 
+void trajectory_tracking::setCircleDectionMode(const int &mode)
+{
+    //mode 0 Hough Transform
+    //mode 1 Contour
+
+    this->circleDectionMode = mode;
+}
+
 void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius)
 {
     qDebug() << "set";
@@ -76,14 +84,20 @@ void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minD
     this->minRadius = minRadius;
 
     this->maxRadius = maxRadius;
-//cuda testing
-//    circleDetect->setDp(this->dp);
-//    circleDetect->setMinDist(this->minDist);
-//    circleDetect->setCannyThreshold(this->para_1);
-//    circleDetect->setVotesThreshold(this->para_2);
+    //cuda testing
+    //    circleDetect->setDp(this->dp);
+    //    circleDetect->setMinDist(this->minDist);
+    //    circleDetect->setCannyThreshold(this->para_1);
+    //    circleDetect->setVotesThreshold(this->para_2);
 
-//    circleDetect->setMinRadius(this->minRadius);
-//    circleDetect->setMaxRadius(this->maxRadius);
+    //    circleDetect->setMinRadius(this->minRadius);
+    //    circleDetect->setMaxRadius(this->maxRadius);
+}
+
+void trajectory_tracking::setContourParamters(const int &threshold,const int &area)
+{
+    this->contourThreshold = threshold;
+    this->contourArea = area;
 }
 
 void trajectory_tracking::setShowImage(const bool &status)
@@ -109,25 +123,26 @@ void trajectory_tracking::run()
         }
     }
     //cuda testing
-//    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
-//    qDebug() << cv::cuda::getDevice();
+    //    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
+    //    qDebug() << cv::cuda::getDevice();
 
-//    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
-//    cv::cuda::DeviceInfo gpu;
-//    qDebug() << gpu.name();
-//    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
-//    qDebug() << cv::cuda::getDevice();
-//    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
+    //    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
+    //    cv::cuda::DeviceInfo gpu;
+    //    qDebug() << gpu.name();
+    //    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
+    //    qDebug() << cv::cuda::getDevice();
+    //    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
 
-//    qDebug() << "cuda ok";
+    //    qDebug() << "cuda ok";
     //thread stop flag
     this->stopped = false;
 
     cv::Mat pano;
-//    cv::cuda::GpuMat panoGpu;
-//    cv::cuda::GpuMat circlesGpu;
+    //    cv::cuda::GpuMat panoGpu;
+    //    cv::cuda::GpuMat circlesGpu;
 
     int frameCount = 0;
+
     //main processing loop
     while(!this->stopped)
     {
@@ -150,58 +165,113 @@ void trajectory_tracking::run()
         //stitching image
         pano = this->imageShift(frameGray);
         pano = this->imageCutBlack(pano);
-        //hough circle detection
 
-        std::vector<cv::Vec3f> circles;
-        cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
-        //cuda testing
-//        panoGpu.upload(pano);
-//        circleDetect->detect(panoGpu,circlesGpu);
-
-//        cv::Mat circlesMat;
-//        circlesGpu.download(circlesMat);
-
-//        std::vector<cv::Vec3f> circles(circlesMat.cols);
-//        qDebug() << circles.cols <<circles.rows << circles.channels();
-//        if (circlesMat.cols>0)
-//        {
-//            for (int i=0;i<circlesMat.cols;i++)
-//            {
-//               qDebug() << "x" << circlesMat.data[i];
-//               qDebug() << "y" << circlesMat.data[i+circlesMat.cols];
-//               qDebug() << "r" << circlesMat.data[i+circlesMat.cols*2];
-//               circles[i] =  cv::Vec3f(circlesMat.data[i],circlesMat.data[i+circlesMat.cols],circlesMat.data[i+circlesMat.cols*2]);
-//            }
-//        }
-
-        if (showImage)
+        //mode 0 Hough Transform
+        //mode 1 Contour
+        if(this->circleDectionMode == 0)
         {
-            //draw cicle
-//            qDebug() << circles.size();
-            cv::Mat panoDrawCircle = pano.clone();
-            for(int i = 0; i < circles.size(); i++ )
+            //hough circle detection
+            std::vector<cv::Vec3f> circles;
+            cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+
+
+            if (showImage)
             {
-                cv::Point center(circles[i][0], circles[i][1]);
-                int radius = circles[i][2];
-                cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
+                //draw cicle
+//                qDebug() << circles.size();
+                cv::Mat panoDrawCircle = pano.clone();
+                for(int i = 0; i < circles.size(); i++ )
+                {
+                    cv::Point center(circles[i][0], circles[i][1]);
+                    int radius = circles[i][2];
+                    cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
 
+                }
+                cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
+                //show image
+                cv::imshow("Stitch",panoDrawCircle);
+                cv::waitKey(3);
             }
-            cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
-            //show image
-            cv::imshow("Stitch",panoDrawCircle);
-            cv::waitKey(3);
+            //cut subimage
+            std::vector<cv::Mat> circleImg(circles.size());
+            for (int i=0;i<circles.size();i++)
+            {
+                cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
+
+                cv::imshow("tag",circleImg[i]);
+                cv::waitKey(3);
+                //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
+            }
         }
-        //cut subimage
-        std::vector<cv::Mat> circleImg(circles.size());
-        for (int i=0;i<circles.size();i++)
+        else if (this->circleDectionMode == 1)
         {
-            cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
+            cv::Mat canny_output;
+            std::vector<std::vector<cv::Point> > contours;
+            std::vector<cv::Vec4i> hierarchy;
 
-            cv::imshow("tag",circleImg[i]);
-            cv::waitKey(3);
-//            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
+
+            //Detect edges using canny
+            cv::Canny( pano, canny_output, this->contourThreshold, this->contourThreshold*2, 3 );
+            //Find contours
+            cv::findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+
+
+            if (showImage)
+            {
+                //Draw contours
+                //                cv::Mat drawing = cv::Mat::zeros( canny_output.size(), CV_8UC1 );
+                //                for( int i = 0; i< contours.size(); i++ )
+                //                {
+                //                    cv::Scalar color = cv::Scalar(255);
+                //                    cv::drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, cv::Point() );
+                //                }
+                //                cv::resize(drawing,drawing,cv::Size(drawing.cols/2,drawing.rows/2));
+                //                cv::imshow("contour",drawing);
+                for(int i = 0;i < contours.size();i++)
+                {
+                    if(cv::contourArea(contours[i]) > this->contourArea)
+                    {
+                        double x = 0;
+                        double y = 0;
+                        for (int j = 0;j < contours[i].size();j++)
+                        {
+                            x += contours[i][j].x/contours[i].size();
+                            y += contours[i][j].y/contours[i].size();
+                        }
+                        cv::circle(pano,cv::Point(x,y),15,cv::Scalar(255));
+                    }
+                }
+
+
+                cv::resize(pano,pano,cv::Size(pano.cols/2,pano.rows/2));
+                cv::imshow("Stitch",pano);
+                cv::waitKey(3);
+            }
+
         }
 
+
+
+
+        //cuda testing
+        //        panoGpu.upload(pano);
+        //        circleDetect->detect(panoGpu,circlesGpu);
+
+        //        cv::Mat circlesMat;
+        //        circlesGpu.download(circlesMat);
+
+        //        std::vector<cv::Vec3f> circles(circlesMat.cols);
+        //        qDebug() << circles.cols <<circles.rows << circles.channels();
+        //        if (circlesMat.cols>0)
+        //        {
+        //            for (int i=0;i<circlesMat.cols;i++)
+        //            {
+        //               qDebug() << "x" << circlesMat.data[i];
+        //               qDebug() << "y" << circlesMat.data[i+circlesMat.cols];
+        //               qDebug() << "r" << circlesMat.data[i+circlesMat.cols*2];
+        //               circles[i] =  cv::Vec3f(circlesMat.data[i],circlesMat.data[i+circlesMat.cols],circlesMat.data[i+circlesMat.cols*2]);
+        //            }
+        //        }
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
     }

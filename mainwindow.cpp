@@ -343,3 +343,48 @@ void MainWindow::on_load_training_data_pushButton_clicked()
         cv::waitKey(500);
     }
 }
+
+void MainWindow::on_threshold_contour_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setContourParamters(ui->threshold_contour_circle_spinBox->value(),ui->area_contour_circle_spinBox->value());
+}
+
+void MainWindow::on_hough_cirle_checkBox_clicked()
+{
+    if(ui->hough_cirle_checkBox->isChecked())
+    {
+        ui->contour_checkBox->setChecked(false);
+        TT->setCircleDectionMode(CIRCLE_DETECTION_HOUGH);
+    }
+    else
+    {
+        if(ui->contour_checkBox->isChecked())
+        {
+            ui->hough_cirle_checkBox->setChecked(false);
+            TT->setCircleDectionMode(CIRCLE_DETECTION_CONTOUR);
+        }
+    }
+}
+
+void MainWindow::on_contour_checkBox_clicked()
+{
+    if(ui->contour_checkBox->isChecked())
+    {
+        ui->hough_cirle_checkBox->setChecked(false);
+        TT->setCircleDectionMode(CIRCLE_DETECTION_CONTOUR);
+    }
+    else
+    {
+        if(ui->hough_cirle_checkBox->isChecked())
+        {
+            ui->contour_checkBox->setChecked(false);
+            TT->setCircleDectionMode(CIRCLE_DETECTION_HOUGH);
+        }
+    }
+
+}
+
+void MainWindow::on_area_contour_circle_spinBox_valueChanged(int arg1)
+{
+    TT->setContourParamters(ui->threshold_contour_circle_spinBox->value(),ui->area_contour_circle_spinBox->value());
+}

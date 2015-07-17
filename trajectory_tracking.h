@@ -35,7 +35,11 @@ public:
 
     void setVideoName(std::vector<std::string> videoName);
 
+    void setCircleDectionMode(const int &mode);
+
     void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
+
+    void setContourParamters(const int &threshold,const int &area);
 
     void setShowImage(const bool &status);
 
@@ -61,9 +65,8 @@ private:
 
     bool showImage = true;
 
-    void run();
 
-
+    int circleDectionMode = 0;
 
     //Hough Circle Parameters
     int dp = 2;
@@ -77,6 +80,13 @@ private:
     int minRadius = 12;
 
     int maxRadius = 19;
+
+    //Contour
+    int contourThreshold = 90;
+
+    int contourArea = 10;
+
+    void run();
 
     cv::Mat imageCutBlack(cv::Mat src);
 

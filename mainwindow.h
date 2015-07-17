@@ -24,6 +24,9 @@
 #define fps 12
 #define imgSizeX 1200
 #define imgSizeY 1600
+
+#define CIRCLE_DETECTION_HOUGH 0
+#define CIRCLE_DETECTION_CONTOUR 1
 //int mouseLeft = 0;
 
 
@@ -79,6 +82,14 @@ private slots:
     void on_cuda_test_pushButton_clicked();
 
     void on_load_training_data_pushButton_clicked();
+
+    void on_threshold_contour_circle_spinBox_valueChanged(int arg1);
+
+    void on_hough_cirle_checkBox_clicked();
+
+    void on_contour_checkBox_clicked();
+
+    void on_area_contour_circle_spinBox_valueChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

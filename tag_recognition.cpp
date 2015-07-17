@@ -24,7 +24,7 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
 
     cv::SimpleBlobDetector::Params blobParams;
-    blobParams.minDistBetweenBlobs = 1.0;
+    blobParams.minDistBetweenBlobs = 0;
     blobParams.filterByInertia = true;
     blobParams.minInertiaRatio = 0.1;
     blobParams.maxInertiaRatio = 1.0;
@@ -51,14 +51,14 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
         for (int j =i;j<keypoints.size(); j++)
         {
             std::vector<bool> status(3);
+
+            //改用covaiance?
             if (keypoints[i].size>keypoints[j].size)
             {
                 status[j] = 1;
                 int temp = blobPointIndex[i];
-                qDebug() << blobPointIndex[i] <<blobPointIndex[j];
                 blobPointIndex[i] = blobPointIndex[j];
                 blobPointIndex[j] = temp;
-                qDebug() << blobPointIndex[i] <<blobPointIndex[j];
             }
             else
                 status[j] = 0;
@@ -66,13 +66,28 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
         }
     }
 
+
     for (int i=0; i<keypoints.size(); i++)
     {
-        qDebug() << blobPointIndex[i] << keypoints[blobPointIndex[i]].size;
+//        qDebug() << blobPointIndex[i] << keypoints[blobPointIndex[i]].size << keypoints[blobPointIndex[i]].pt.x <<keypoints[blobPointIndex[i]].pt.y;
         cv::circle(src,cv::Point(keypoints[i].pt.x,keypoints[i].pt.y),2,cv::Scalar(255),-1);
     }
+    cv::Point topPoint,sidePoint1,sidePoint2;
+    topPoint = cv::Point(keypoints[blobPointIndex[0]].pt.x,keypoints[blobPointIndex[0]].pt.y);
+    sidePoint1 = cv::Point(keypoints[blobPointIndex[1]].pt.x,keypoints[blobPointIndex[1]].pt.y);
+    sidePoint2 = cv::Point(keypoints[blobPointIndex[2]].pt.x,keypoints[blobPointIndex[2]].pt.y);
 
+    cv::Point circleCenter;
+    circleCenter = (sidePoint1+sidePoint2)/2;
 
+    qDebug() << topPoint.x <<topPoint.y << circleCenter.x <<circleCenter.y;
+    cv::circle(src,cv::Point(topPoint.x,topPoint.y),2,cv::Scalar(0),-1);
+    cv::circle(src,cv::Point(circleCenter.x,circleCenter.y),2,cv::Scalar(0),-1);
     return src;
+}
+
+cv::Mat tag_recognition::calcualteCOV(cv::KeyPoint points)
+{
+
 }
 
