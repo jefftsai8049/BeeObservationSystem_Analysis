@@ -36,7 +36,9 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
     std::vector<cv::KeyPoint> keypoints;
     blob->detect(srcBinary, keypoints);
     cv::imshow("tagBinary",srcBinary);
-    if(keypoints.size() != 3)
+
+
+    if(keypoints.size() < 3)
     {
         cv::Mat black(tagSize,tagSize,CV_8UC1,cv::Scalar::all(0));
         return black;
@@ -86,8 +88,11 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
     return src;
 }
 
-cv::Mat tag_recognition::calcualteCOV(cv::KeyPoint points)
-{
+//cv::Mat tag_recognition::calcualteCOV(std::vector<cv::KeyPoint> keypoints)
+//{
+//    for(int i = 0; i < keypoints.size(); i++)
+//    {
 
-}
+//    }
+//}
 

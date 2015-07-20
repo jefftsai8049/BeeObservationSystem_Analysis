@@ -23,7 +23,7 @@ signals:
 
 public slots:
 private:
-    cv::Mat calcualteCOV(cv::KeyPoint points);
+//    cv::Mat calcualteCOV(std::vector<cv::KeyPoint> keypoints);
 };
 
 #endif // TAG_RECOGNITION_H
