@@ -2,7 +2,7 @@
 #define TAG_RECOGNITION_H
 
 #define tagSize 24
-#define tagBinaryThreshold 100
+#define tagBinaryThreshold 110
 
 
 #include <QObject>
@@ -23,7 +23,9 @@ signals:
 
 public slots:
 private:
-//    cv::Mat calcualteCOV(std::vector<cv::KeyPoint> keypoints);
+
+    void findBlobs(const cv::Mat binary,std::vector<std::vector<cv::Point2i>> &blobs);
+    float calcualteCOV(std::vector<cv::Point2i> points);
 };
 
 #endif // TAG_RECOGNITION_H
