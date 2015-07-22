@@ -25,7 +25,16 @@ public slots:
 private:
 
     void findBlobs(const cv::Mat binary,std::vector<std::vector<cv::Point2i>> &blobs);
+
     float calcualteCOV(std::vector<cv::Point2i> points);
+
+    void sortblobs(std::vector<std::vector<cv::Point2i>> blobs);
+
+    std::vector<std::vector<cv::Point2i>> removeImpossibleBlobs(std::vector<std::vector<cv::Point2i>> blobs);
+
+    float findRotateAngle(cv::Point circleCenter,cv::Point imgCenter);
+
+    cv::Mat drawBlob(std::vector<std::vector<cv::Point2i>> blobs);
 };
 
 #endif // TAG_RECOGNITION_H

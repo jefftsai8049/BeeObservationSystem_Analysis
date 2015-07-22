@@ -26,6 +26,8 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
     cv::Mat srcBinary;
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
 
+    cv::imshow("Binary",srcBinary);
+
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
     cv::normalize(srcBinary,srcBinaryZeroOne,0,1,cv::NORM_MINMAX);
@@ -35,38 +37,29 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
     this->findBlobs(srcBinaryZeroOne,blobs);
 
     //sort the blobs area by cov*size
-    for (int i = 0;i < blobs.size()-1; i++)
-    {
-        for(int j = i+1;j < blobs.size(); j++)
-        {
-            if(this->calcualteCOV(blobs[i])*blobs[i].size() > this->calcualteCOV(blobs[j])*blobs[j].size())
-            {
-                std::vector<cv::Point2i> temp = blobs[i];
-                blobs[i] = blobs[j];
-                blobs[j] = temp;
-            }
-        }
-    }
+    this->sortblobs(blobs);
 
     //remove those impossible blobs
-    //    for(int i = 0; i < blobs.size(); i++)
-    //    {
-    //        qDebug() << i << blobs[i].size() << this->calcualteCOV(blobs[i]) <<this->calcualteCOV(blobs[i])*blobs[i].size();
-    //        if(blobs[i].size() < 8 || this->calcualteCOV(blobs[i])*blobs[i].size() < 100)
-    //        {
-    //            blobs.erase(blobs.begin()+i);
-    //            i--;
-    //        }
-    //    }
+    blobs = this->removeImpossibleBlobs(blobs);
 
     for(int i = 0; i < blobs.size(); i++)
     {
-        qDebug() << i << blobs[i].size() << this->calcualteCOV(blobs[i]) <<this->calcualteCOV(blobs[i])*blobs[i].size();
+        cv::Point blobCenter = cv::Point(0,0);
+        for(int j=0; j < blobs[i].size(); j++)
+        {
+            int x = blobs[i][j].x;
+            int y = blobs[i][j].y;
+            blobCenter.x += x;
+            blobCenter.y += y;
+        }
+        blobCenter.x = blobCenter.x/(float)blobs[i].size();
+        blobCenter.y = blobCenter.y/(float)blobs[i].size();
+        qDebug() << i << blobs[i].size() << blobCenter.x <<blobCenter.y;
     }
-    //    qDebug() << blobs.size();
+
+
+
     cv::Mat output = cv::Mat::zeros(src.size(), CV_8UC3);
-
-
     //draw blobs
     float angle = 0;
     if(blobs.size() > 2)
@@ -76,95 +69,31 @@ cv::Mat tag_recognition::tagImgProc(cv::Mat src)
         {
             if(blobs[i].size() < 30 &&blobs[i].size() > 8)
             {
-                unsigned char r = 255 * (rand()/(1.0 + RAND_MAX));
-                unsigned char g = 255 * (rand()/(1.0 + RAND_MAX));
-                unsigned char b = 255 * (rand()/(1.0 + RAND_MAX));
-                //                qDebug() << i << blobs[i].size() <<this->calcualteCOV(blobs[i]) <<this->calcualteCOV(blobs[i])*blobs[i].size();
 
 
                 for(int j=0; j < blobs[i].size(); j++)
                 {
                     int x = blobs[i][j].x;
                     int y = blobs[i][j].y;
-
-                    output.at<cv::Vec3b>(y,x)[0] = b;
-                    output.at<cv::Vec3b>(y,x)[1] = g;
-                    output.at<cv::Vec3b>(y,x)[2] = r;
                     circleCenter.x += x;
                     circleCenter.y += y;
                 }
                 circleCenter.x = circleCenter.x/(float)blobs[i].size();
                 circleCenter.y = circleCenter.y/(float)blobs[i].size();
-
-
                 //                qDebug() << atan((center.y/(float)blobs[i].size()-12.0)/(center.x/(float)blobs[i].size()-12.0))/(2.0*3.1415926)*360.0;
                 //                qDebug() << atan((float)(center.y/blobs[i].size()-12)/(float)(center.x/blobs[i].size()-12))/*/(2.0*3.1415926)*360.0*/;
                 break;
             }
 
         }
-        float x,y,r;
-        x = circleCenter.x-tagSize/2.0;
-        y = -(circleCenter.y-tagSize/2.0);
-        r = sqrt(pow(x,2)+pow(y,2));
 
-//        qDebug() << x << y << r;
-        float sinVal = y/r;
-        float cosVal = x/r;
-        float asinVal = asin(sinVal)/(2.0*3.1415926)*360.0;
-        float acosVal = acos(cosVal)/(2.0*3.1415926)*360.0;
+        cv::imshow("blobs",this->drawBlob(blobs));
 
-//        qDebug() << sinVal << cosVal;
-//        qDebug() << asinVal << acosVal;
-        //I
-        if(sinVal > 0 && cosVal > 0)
-        {
-            angle = asinVal;
-        }
-        //II
-        else if(sinVal > 0 && cosVal < 0)
-        {
-            angle = acosVal;
-        }
-        //III
-        else if(sinVal < 0 && cosVal < 0)
-        {
-            angle = -acosVal;
-        }
-        //IV
-        else if(sinVal < 0 && cosVal > 0)
-        {
-            angle = asinVal;
-        }
-        //x-axis right direction
-        else if(sinVal == 0 && cosVal > 0)
-        {
-            angle = 0;
-        }
-        //x-axis left direction
-        else if(sinVal == 0 && cosVal < 0)
-        {
-            angle = 180;
-        }
-        //y-axis up direction
-        else if(sinVal > 0 && cosVal == 0)
-        {
-            angle = 90;
-        }
-        //y-axis down direction
-        else if(sinVal > 0 && cosVal == 0)
-        {
-            angle = -90;
-        }
-        else
-        {
-            angle = 0;
-        }
-        qDebug() << angle;
-        cv::imshow("labelled", output);
+        angle = this->findRotateAngle(circleCenter,cv::Point(tagSize/2,tagSize/2));
+        cv::Mat rotateInfo = cv::getRotationMatrix2D(cv::Point(tagSize/2,tagSize/2), -(angle-90), 1.0);
+        cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size());
     }
-    cv::Mat rotateInfo = cv::getRotationMatrix2D(cv::Point(tagSize/2,tagSize/2), -(angle-90), 1.0);
-    cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size());
+
     return srcNoCircle;
 }
 
@@ -234,5 +163,120 @@ float tag_recognition::calcualteCOV(std::vector<cv::Point2i> points)
 
     }
     return abs(cov);
+}
+
+void tag_recognition::sortblobs(std::vector<std::vector<cv::Point2i> > blobs)
+{
+    for (int i = 0;i < blobs.size()-1; i++)
+    {
+        for(int j = i+1;j < blobs.size(); j++)
+        {
+            if(this->calcualteCOV(blobs[i])*blobs[i].size() > this->calcualteCOV(blobs[j])*blobs[j].size())
+            {
+                std::vector<cv::Point2i> temp = blobs[i];
+                blobs[i] = blobs[j];
+                blobs[j] = temp;
+            }
+        }
+    }
+}
+
+std::vector<std::vector<cv::Point2i> > tag_recognition::removeImpossibleBlobs(std::vector<std::vector<cv::Point2i> > blobs)
+{
+    for(int i = 0; i < blobs.size(); i++)
+    {
+        //        qDebug() << i << blobs[i].size() << this->calcualteCOV(blobs[i]) <<this->calcualteCOV(blobs[i])*blobs[i].size();
+        if(blobs[i].size() < 5)
+        {
+            blobs.erase(blobs.begin()+i);
+            i--;
+        }
+    }
+    return blobs;
+}
+
+float tag_recognition::findRotateAngle(cv::Point circleCenter, cv::Point imgCenter)
+{
+    float angle;
+    float x,y,r;
+    x = circleCenter.x-imgCenter.x;
+    y = -(circleCenter.y-imgCenter.y);
+    r = sqrt(pow(x,2)+pow(y,2));
+
+    //        qDebug() << x << y << r;
+    float sinVal = y/r;
+    float cosVal = x/r;
+    float asinVal = asin(sinVal)/(2.0*3.1415926)*360.0;
+    float acosVal = acos(cosVal)/(2.0*3.1415926)*360.0;
+
+    //        qDebug() << sinVal << cosVal;
+    //        qDebug() << asinVal << acosVal;
+    //I
+    if(sinVal > 0 && cosVal > 0)
+    {
+        angle = asinVal;
+    }
+    //II
+    else if(sinVal > 0 && cosVal < 0)
+    {
+        angle = acosVal;
+    }
+    //III
+    else if(sinVal < 0 && cosVal < 0)
+    {
+        angle = -acosVal;
+    }
+    //IV
+    else if(sinVal < 0 && cosVal > 0)
+    {
+        angle = asinVal;
+    }
+    //x-axis right direction
+    else if(sinVal == 0 && cosVal > 0)
+    {
+        angle = 0;
+    }
+    //x-axis left direction
+    else if(sinVal == 0 && cosVal < 0)
+    {
+        angle = 180;
+    }
+    //y-axis up direction
+    else if(sinVal > 0 && cosVal == 0)
+    {
+        angle = 90;
+    }
+    //y-axis down direction
+    else if(sinVal > 0 && cosVal == 0)
+    {
+        angle = -90;
+    }
+    else
+    {
+        angle = 0;
+    }
+    //    qDebug() << angle;
+    //    cv::imshow("labelled", output);
+    return angle;
+}
+
+cv::Mat tag_recognition::drawBlob(std::vector<std::vector<cv::Point2i> > blobs)
+{
+    cv::Mat output = cv::Mat::zeros(cv::Size(tagSize,tagSize), CV_8UC3);
+    for(int i = 0;i<blobs.size();i++)
+    {
+        unsigned char r = 255 * (rand()/(1.0 + RAND_MAX));
+        unsigned char g = 255 * (rand()/(1.0 + RAND_MAX));
+        unsigned char b = 255 * (rand()/(1.0 + RAND_MAX));
+        for(int j=0; j < blobs[i].size(); j++)
+        {
+            int x = blobs[i][j].x;
+            int y = blobs[i][j].y;
+            output.at<cv::Vec3b>(y,x)[0] = b;
+            output.at<cv::Vec3b>(y,x)[1] = g;
+            output.at<cv::Vec3b>(y,x)[2] = r;
+        }
+    }
+    return output;
 }
 
