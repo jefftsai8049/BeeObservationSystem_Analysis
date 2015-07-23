@@ -338,8 +338,19 @@ void MainWindow::on_load_training_data_pushButton_clicked()
     {
         cv::Mat src = cv::imread(fileNames[i].toStdString());
         src = TT->bgr2gray(src);
-        cv::Mat dst = TR->tagImgProc(src);
-        cv::imshow("tag",dst);
+
+        cv::Mat word1,word2;
+        TR->tagImgProc(src,word1,word2);
+
+//        cv::imshow("word1",word1);
+//        cv::imshow("word2",word2);
+//        for (int j=0;j<dst.size();j++)
+//        {
+////            cv::imwrite("word/"+std::to_string(i)+"_"+std::to_string(j)+".jpg",dst[j]);
+
+////            cv::waitKey(500);//            cv::imshow("tag",dst[j]);
+
+//        }
         cv::waitKey(500);
     }
 }

@@ -17,24 +17,30 @@ public:
     explicit tag_recognition(QObject *parent = 0);
     ~tag_recognition();
 
-    cv::Mat tagImgProc(cv::Mat src);
+    void tagImgProc(cv::Mat src, cv::Mat &word1, cv::Mat &word2);
 
 signals:
 
 public slots:
 private:
 
-    void findBlobs(const cv::Mat binary,std::vector<std::vector<cv::Point2i>> &blobs);
+    void findBlobs(const cv::Mat binary,std::vector<std::vector<cv::Point2f>> &blobs);
 
-    float calcualteCOV(std::vector<cv::Point2i> points);
+    float calcualteCOV(std::vector<cv::Point2f> points);
 
-    void sortblobs(std::vector<std::vector<cv::Point2i>> blobs);
+    void sortblobs(std::vector<std::vector<cv::Point2f>> &blobs);
 
-    std::vector<std::vector<cv::Point2i>> removeImpossibleBlobs(std::vector<std::vector<cv::Point2i>> blobs);
+    void sortblobsSize(std::vector<std::vector<cv::Point2f>> &blobs);
 
-    float findRotateAngle(cv::Point circleCenter,cv::Point imgCenter);
+    std::vector<std::vector<cv::Point2f> > removeImpossibleBlobs(std::vector<std::vector<cv::Point2f> > blobs);
 
-    cv::Mat drawBlob(std::vector<std::vector<cv::Point2i>> blobs);
+    float findRotateAngle(cv::Point2f circleCenter,cv::Point2f imgCenter);
+
+    float findRotateAngle(std::vector<cv::Point2f> blobsCenter, cv::Point2f &imgCenter);
+
+    cv::Mat drawBlob(std::vector<std::vector<cv::Point2f> > blobs);
+
+    cv::Mat drawBlobMask(std::vector<std::vector<cv::Point2f> > blobs);
 };
 
 #endif // TAG_RECOGNITION_H
