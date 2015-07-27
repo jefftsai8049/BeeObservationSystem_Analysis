@@ -41,6 +41,10 @@ private:
     cv::Mat drawBlob(std::vector<std::vector<cv::Point2f> > blobs);
 
     cv::Mat drawBlobMask(std::vector<std::vector<cv::Point2f> > blobs);
+
+    void findBlobCenetr(std::vector<std::vector<cv::Point2f>> blobs,std::vector<cv::Point2f> &blobCenter);
+
+    void cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1, cv::Mat &word2);
 };
 
 #endif // TAG_RECOGNITION_H

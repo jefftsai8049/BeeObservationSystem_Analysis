@@ -42,83 +42,71 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //remove those impossible blobs
     blobs = this->removeImpossibleBlobs(blobs);
 
+    //sort the blobs again by sizes
     this->sortblobsSize(blobs);
 
-    std::vector<cv::Point2f> blobCenter(3);
+    //find blobs center
+    std::vector<cv::Point2f> blobCenter;
+    this->findBlobCenetr(blobs,blobCenter);
+
     for(int i = 0; i < blobs.size(); i++)
     {
-        blobCenter[i] = cv::Point(0,0);
-        for(int j=0; j < blobs[i].size(); j++)
-        {
-            int x = blobs[i][j].x;
-            int y = blobs[i][j].y;
-            blobCenter[i].x += (float)x;
-            blobCenter[i].y += (float)y;
-        }
-        blobCenter[i].x = blobCenter[i].x/(float)blobs[i].size();
-        blobCenter[i].y = blobCenter[i].y/(float)blobs[i].size();
         qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
     }
 
 
     //draw blobs
-
     cv::imshow("blobs",this->drawBlob(blobs));
+
+
 
     float angle = this->findRotateAngle(blobCenter[0],cv::Point(tagSize/2,tagSize/2));
     cv::Point2f imgCenter = cv::Point2f(tagSize/2.0,tagSize/2.0);
-    //    float angle = this->findRotateAngle(blobCenter,imgCenter);
-    //    qDebug() << "center" << imgCenter.x << imgCenter.y;
     cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, -(angle-90), 1.0);
-    //    cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, angle, 1.0);
     cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
     cv::Mat wordsMask;
     cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(tagSize,tagSize),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
-    cv::imshow("mask",wordsMask);
 
+    cv::imshow("mask",wordsMask);
 
     cv::Mat rawDst(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
 
     srcNoCircle.copyTo(rawDst,wordsMask);
     cv::imshow("dst",rawDst);
 
-    std::vector<std::vector<cv::Point> > contours;
-    std::vector<cv::Vec4i> hierarchy;
 
-    cv::Mat binaryDst;
-    int thresh = 100;
-    cv::threshold(rawDst,binaryDst,thresh,255,cv::THRESH_BINARY);
-    cv::findContours( binaryDst, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+    this->cutWords(wordsMask,rawDst,word1,word2);
+
+    cv::imshow("word1",word1);
+    cv::imshow("word2",word2);
+//    std::vector < std::vector<cv::Point2f> > rotatedBlobs;
+//    cv::normalize(wordsMask,wordsMask,0,1,cv::NORM_MINMAX);
+//    this->findBlobs(wordsMask,rotatedBlobs);
+//    rotatedBlobs = this->removeImpossibleBlobs(rotatedBlobs);
+//    qDebug() << rotatedBlobs.size();
+//    for(int i = 0; i < rotatedBlobs.size(); i++)
+//    {
+//        cv::Point2f topLeft = cv::Point2f(tagSize,tagSize);
+//        cv::Point2f downRight = cv::Point2f(0,0);
+//        for(int j=0; j < rotatedBlobs[i].size(); j++)
+//        {
+//            if(topLeft.x > rotatedBlobs[i][j].x)
+//                topLeft.x = rotatedBlobs[i][j].x;
+//            if(topLeft.y > rotatedBlobs[i][j].y)
+//                topLeft.y = rotatedBlobs[i][j].y;
+//            if(downRight.x < rotatedBlobs[i][j].x)
+//                downRight.x = rotatedBlobs[i][j].x;
+//            if(downRight.y < rotatedBlobs[i][j].y)
+//                downRight.y = rotatedBlobs[i][j].y;
+//        }
+//        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
+//        cv::Mat dst;
+//        cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+2,downRight.y-topLeft.y+2),(downRight+topLeft)/2,dst);
+//        cv::imshow(std::to_string(i),dst);
+//    }
 
 
-    std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
-    std::vector<cv::Rect> boundRect( contours.size() );
 
-    //    std::vector<cv::Mat> dst(2);
-    cv::Mat dst;
-
-    for( int i = 0; i < contours.size(); i++ )
-    {
-        cv::approxPolyDP( cv::Mat(contours[i]), contours_poly[i], 3, true );
-        boundRect[i] = cv::boundingRect( cv::Mat(contours_poly[i]) );
-        cv::Point br = boundRect[i].br();
-        cv::Point tl = boundRect[i].tl();
-
-        cv::getRectSubPix(rawDst,cv::Size(br.x-tl.x,br.y-tl.y),(br+tl)/2,dst);
-        //        dstVec[i] = dst.clone();
-//        cv::imshow("dst",dst);
-        qDebug() << i;
-        if(i == 0)
-        {
-            word1 = dst.clone();
-            cv::imshow("word1",word1);
-        }
-        else if(i == 2)
-        {
-            word2 = dst.clone();
-            cv::imshow("word2",word2);
-        }
-    }
 
 }
 
@@ -368,5 +356,61 @@ cv::Mat tag_recognition::drawBlobMask(std::vector<std::vector<cv::Point2f> > blo
         }
     }
     return output;
+}
+
+void tag_recognition::findBlobCenetr(std::vector<std::vector<cv::Point2f>> blobs,std::vector<cv::Point2f> &blobCenter)
+{
+    //    std::vector<cv::Point2f> blobCenter;
+    for(int i = 0; i < blobs.size(); i++)
+    {
+        float xCenter = 0;
+        float yCenter = 0;
+        for(int j=0; j < blobs[i].size(); j++)
+        {
+            int x = blobs[i][j].x;
+            int y = blobs[i][j].y;
+            xCenter += (float)x/(float)blobs[i].size();
+            yCenter += (float)y/(float)blobs[i].size();
+        }
+        blobCenter.push_back(cv::Point2f(xCenter,yCenter));
+        //        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
+    }
+}
+
+void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1, cv::Mat &word2)
+{
+    std::vector < std::vector<cv::Point2f> > rotatedBlobs;
+    cv::normalize(wordsMask,wordsMask,0,1,cv::NORM_MINMAX);
+    this->findBlobs(wordsMask,rotatedBlobs);
+    rotatedBlobs = this->removeImpossibleBlobs(rotatedBlobs);
+//    qDebug() << rotatedBlobs.size();
+    for(int i = 0; i < rotatedBlobs.size(); i++)
+    {
+        cv::Point2f topLeft = cv::Point2f(tagSize,tagSize);
+        cv::Point2f downRight = cv::Point2f(0,0);
+        for(int j=0; j < rotatedBlobs[i].size(); j++)
+        {
+            if(topLeft.x > rotatedBlobs[i][j].x)
+                topLeft.x = rotatedBlobs[i][j].x;
+            if(topLeft.y > rotatedBlobs[i][j].y)
+                topLeft.y = rotatedBlobs[i][j].y;
+            if(downRight.x < rotatedBlobs[i][j].x)
+                downRight.x = rotatedBlobs[i][j].x;
+            if(downRight.y < rotatedBlobs[i][j].y)
+                downRight.y = rotatedBlobs[i][j].y;
+        }
+//        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
+        if(i == 0)
+        {
+            cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+4,downRight.y-topLeft.y+4),(downRight+topLeft)/2,word1);
+        }
+        else if(i == 1)
+        {
+            cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+4,downRight.y-topLeft.y+4),(downRight+topLeft)/2,word2);
+        }
+
+
+//        cv::imshow(std::to_string(i),dst);
+    }
 }
 
