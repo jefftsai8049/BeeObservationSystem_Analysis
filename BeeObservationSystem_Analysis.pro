@@ -93,4 +93,5 @@ LIBS += C:\\opencv300_x64_vc2013_cuda\\lib\\opencv_calib3d300.lib \
 #        C:\\opencv300_x64_vc2013_cuda\\lib\\opencv_xphoto300.lib
 
 
-DEFINES += HAVE_OPENCV
+DEFINES += HAVE_OPENCV \
+        += DEBUG_TSAI

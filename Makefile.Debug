@@ -11,7 +11,7 @@ MAKEFILE      = Makefile.Debug
 
 CC            = cl
 CXX           = cl
-DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -D+= -DDEBUG_TSAI -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -nologo -Zm200 -Zc:wchar_t -FS -Zi -MDd -W3 /Fddebug\BeeObservationSystem_Analysis.pdb $(DEFINES)
 CXXFLAGS      = -nologo -Zm200 -Zc:wchar_t -FS -openmp -arch:AVX -D _CRT_SECURE_NO_WARNINGS -Zi -MDd -GR -W3 -w34100 -w34189 -EHsc /Fddebug\BeeObservationSystem_Analysis.pdb $(DEFINES)
 INCPATH       = -I"." -I"C:\opencv300_x64_vc2013_cuda\include" -I"C:\opencv300_x64_vc2013_cuda\include\opencv" -I"C:\opencv300_x64_vc2013_cuda\include\opencv2" -I"C:\Qt\5.4\msvc2013_64_opengl\include" -I"C:\Qt\5.4\msvc2013_64_opengl\include\QtWidgets" -I"C:\Qt\5.4\msvc2013_64_opengl\include\QtGui" -I"C:\Qt\5.4\msvc2013_64_opengl\include\QtCore" -I"debug" -I"." -I"C:\Qt\5.4\msvc2013_64_opengl\mkspecs\win32-msvc2013" 
@@ -678,6 +678,7 @@ debug\moc_trajectory_tracking.cpp: C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\Q
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgcodecs\imgcodecs_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio\videoio_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp \
+		tag_recognition.h \
 		trajectory_tracking.h
 	C:\Qt\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013_cuda/include -IC:/opencv300_x64_vc2013_cuda/include/opencv -IC:/opencv300_x64_vc2013_cuda/include/opencv2 -IC:/Qt/5.4/msvc2013_64_opengl/include -IC:/Qt/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/5.4/msvc2013_64_opengl/include/QtCore trajectory_tracking.h -o debug\moc_trajectory_tracking.cpp
 
@@ -731,6 +732,75 @@ debug\moc_tag_recognition.cpp: C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObje
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontainerfwd.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qisenum.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject_impl.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QDebug \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdebug.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qhash.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qpair.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qmap.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qtextstream.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qiodevice.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qlocale.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvariant.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstringlist.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdatastream.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qregexp.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstringmatcher.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qshareddata.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvector.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qpoint.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qset.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontiguouscache.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QTime \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdatetime.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp \
 		tag_recognition.h
 	C:\Qt\5.4\msvc2013_64_opengl\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.4/msvc2013_64_opengl/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013_cuda/include -IC:/opencv300_x64_vc2013_cuda/include/opencv -IC:/opencv300_x64_vc2013_cuda/include/opencv2 -IC:/Qt/5.4/msvc2013_64_opengl/include -IC:/Qt/5.4/msvc2013_64_opengl/include/QtWidgets -IC:/Qt/5.4/msvc2013_64_opengl/include/QtGui -IC:/Qt/5.4/msvc2013_64_opengl/include/QtCore tag_recognition.h -o debug\moc_tag_recognition.cpp
 
@@ -1556,7 +1626,8 @@ debug\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\highgui\highgui_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgcodecs\imgcodecs_c.h \
 		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio\videoio_c.h \
-		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp \
+		tag_recognition.h
 
 debug\tag_recognition.obj: tag_recognition.cpp tag_recognition.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QObject \
@@ -1608,7 +1679,76 @@ debug\tag_recognition.obj: tag_recognition.cpp tag_recognition.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvarlengtharray.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontainerfwd.h \
 		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qisenum.h \
-		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject_impl.h
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qobject_impl.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QDebug \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdebug.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qhash.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qpair.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qmap.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qtextstream.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qiodevice.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qlocale.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvariant.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstringlist.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdatastream.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qregexp.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qstringmatcher.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qshareddata.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qvector.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qpoint.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qset.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qcontiguouscache.h \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\QTime \
+		C:\Qt\5.4\msvc2013_64_opengl\include\QtCore\qdatetime.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013_cuda\include\opencv2\ml.hpp
 
 debug\moc_mainwindow.obj: debug\moc_mainwindow.cpp 
 

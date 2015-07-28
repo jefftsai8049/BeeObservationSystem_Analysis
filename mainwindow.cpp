@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
 
 
-#ifdef QT_DEBUG
+#ifdef DEBUG_TSAI
     qDebug() << "Running a debug build";
 #endif
 }
@@ -52,7 +52,7 @@ void MainWindow::on_actionLoad_Raw_Video_File_triggered()
         videoList.push_back(dir.entryList(nameFilter,QDir::Files,QDir::Name));
         dir.cdUp();
     }
-#ifdef QT_DEBUG
+#ifdef DEBUG_TSAI
     qDebug () << videoList[0] << videoList[1] << videoList[2];
 #endif
     for (int k = 0;k<videoList[0].size();k++)

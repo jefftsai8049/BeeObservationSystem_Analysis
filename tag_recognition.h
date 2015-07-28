@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QTime>
 
 #include <opencv.hpp>
 

@@ -12,6 +12,7 @@ tag_recognition::~tag_recognition()
 
 void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 {
+
     //resize and histogram equalize
     cv::resize(src,src,cv::Size(tagSize,tagSize));
     cv::equalizeHist(src,src);
@@ -26,7 +27,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::Mat srcBinary;
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
 
-    cv::imshow("Binary",srcBinary);
+//    cv::imshow("Binary",srcBinary);
 
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
@@ -45,18 +46,24 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //sort the blobs again by sizes
     this->sortblobsSize(blobs);
 
+    if(blobs.size()<3)
+    {
+        word1 = cv::Mat::zeros(1,1,CV_8UC1);
+        word2 = cv::Mat::zeros(1,1,CV_8UC1);
+        return;
+    }
     //find blobs center
     std::vector<cv::Point2f> blobCenter;
     this->findBlobCenetr(blobs,blobCenter);
 
-    for(int i = 0; i < blobs.size(); i++)
-    {
-        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
-    }
+//    for(int i = 0; i < blobs.size(); i++)
+//    {
+//        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
+//    }
 
 
     //draw blobs
-    cv::imshow("blobs",this->drawBlob(blobs));
+//    cv::imshow("blobs",this->drawBlob(blobs));
 
 
 
@@ -66,48 +73,13 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
     cv::Mat wordsMask;
     cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(tagSize,tagSize),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
-
-    cv::imshow("mask",wordsMask);
+//    cv::imshow("mask",wordsMask);
 
     cv::Mat rawDst(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
 
     srcNoCircle.copyTo(rawDst,wordsMask);
-    cv::imshow("dst",rawDst);
-
-
+//    cv::imshow("dst",rawDst);
     this->cutWords(wordsMask,rawDst,word1,word2);
-
-    cv::imshow("word1",word1);
-    cv::imshow("word2",word2);
-//    std::vector < std::vector<cv::Point2f> > rotatedBlobs;
-//    cv::normalize(wordsMask,wordsMask,0,1,cv::NORM_MINMAX);
-//    this->findBlobs(wordsMask,rotatedBlobs);
-//    rotatedBlobs = this->removeImpossibleBlobs(rotatedBlobs);
-//    qDebug() << rotatedBlobs.size();
-//    for(int i = 0; i < rotatedBlobs.size(); i++)
-//    {
-//        cv::Point2f topLeft = cv::Point2f(tagSize,tagSize);
-//        cv::Point2f downRight = cv::Point2f(0,0);
-//        for(int j=0; j < rotatedBlobs[i].size(); j++)
-//        {
-//            if(topLeft.x > rotatedBlobs[i][j].x)
-//                topLeft.x = rotatedBlobs[i][j].x;
-//            if(topLeft.y > rotatedBlobs[i][j].y)
-//                topLeft.y = rotatedBlobs[i][j].y;
-//            if(downRight.x < rotatedBlobs[i][j].x)
-//                downRight.x = rotatedBlobs[i][j].x;
-//            if(downRight.y < rotatedBlobs[i][j].y)
-//                downRight.y = rotatedBlobs[i][j].y;
-//        }
-//        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
-//        cv::Mat dst;
-//        cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+2,downRight.y-topLeft.y+2),(downRight+topLeft)/2,dst);
-//        cv::imshow(std::to_string(i),dst);
-//    }
-
-
-
-
 }
 
 void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv::Point2f> > &blobs)
@@ -384,6 +356,15 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
     this->findBlobs(wordsMask,rotatedBlobs);
     rotatedBlobs = this->removeImpossibleBlobs(rotatedBlobs);
 //    qDebug() << rotatedBlobs.size();
+    if(rotatedBlobs.size() < 2)
+    {
+        cv::normalize(wordsMask,wordsMask,0,255,cv::NORM_MINMAX);
+        cv::imshow("WTF",wordsMask);
+        word1 = cv::Mat::zeros(1,1,CV_8UC1);
+        word2 = cv::Mat::zeros(1,1,CV_8UC1);
+        return;
+    }
+
     for(int i = 0; i < rotatedBlobs.size(); i++)
     {
         cv::Point2f topLeft = cv::Point2f(tagSize,tagSize);

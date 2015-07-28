@@ -12,6 +12,8 @@
 #include "cudaimgproc.hpp"
 #include "opencv.hpp"
 
+#include "tag_recognition.h"
+
 
 
 
@@ -54,6 +56,8 @@ signals:
 public slots:
 
 private:
+    tag_recognition *TR;
+
     std::vector<cv::Point> originPoint;
 
     std::vector<std::string> videoName;
@@ -75,7 +79,7 @@ private:
 
     int para_1 = 150;
 
-    int para_2 = 35;
+    int para_2 = 45;
 
     int minRadius = 12;
 

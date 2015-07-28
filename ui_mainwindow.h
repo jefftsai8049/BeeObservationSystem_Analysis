@@ -145,7 +145,7 @@ public:
         para_2_hough_circle_spinBox->setObjectName(QStringLiteral("para_2_hough_circle_spinBox"));
         para_2_hough_circle_spinBox->setGeometry(QRect(10, 270, 61, 31));
         para_2_hough_circle_spinBox->setMaximum(200);
-        para_2_hough_circle_spinBox->setValue(35);
+        para_2_hough_circle_spinBox->setValue(45);
         minRadius_hough_circle_spinBox = new QSpinBox(groupBox);
         minRadius_hough_circle_spinBox->setObjectName(QStringLiteral("minRadius_hough_circle_spinBox"));
         minRadius_hough_circle_spinBox->setGeometry(QRect(100, 60, 61, 31));
@@ -232,7 +232,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

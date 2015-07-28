@@ -4,7 +4,7 @@ trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
 {
     frame.resize(3);
     //    circleDetect = new cv::cuda::HoughCirclesDetector;
-
+    TR = new tag_recognition;
 }
 
 trajectory_tracking::~trajectory_tracking()
@@ -197,9 +197,16 @@ void trajectory_tracking::run()
             for (int i=0;i<circles.size();i++)
             {
                 cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
+                cv::Mat word1,word2;
 
-                cv::imshow("tag",circleImg[i]);
-                cv::waitKey(3);
+                TR->tagImgProc(circleImg[i],word1,word2);
+                cv::imshow("word1",word1);
+                cv::imshow("word2",word2);
+
+                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
+                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
+//                cv::imshow("tag",circleImg[i]);
+//                cv::waitKey(100);
                 //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
             }
         }
