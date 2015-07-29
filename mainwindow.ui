@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -438,6 +438,19 @@
       </property>
       <property name="text">
        <string>Load Data</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="test_recognition_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>171</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Test</string>
       </property>
      </widget>
     </widget>

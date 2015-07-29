@@ -95,3 +95,6 @@ LIBS += C:\\opencv300_x64_vc2013_cuda\\lib\\opencv_calib3d300.lib \
 
 DEFINES += HAVE_OPENCV \
         += DEBUG_TSAI
+
+RESOURCES += \
+    icon.qrc

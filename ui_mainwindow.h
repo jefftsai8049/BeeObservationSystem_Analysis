@@ -71,6 +71,7 @@ public:
     QCheckBox *contour_checkBox;
     QWidget *tab_3;
     QPushButton *load_training_data_pushButton;
+    QPushButton *test_recognition_pushButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -209,6 +210,9 @@ public:
         load_training_data_pushButton = new QPushButton(tab_3);
         load_training_data_pushButton->setObjectName(QStringLiteral("load_training_data_pushButton"));
         load_training_data_pushButton->setGeometry(QRect(10, 10, 181, 81));
+        test_recognition_pushButton = new QPushButton(tab_3);
+        test_recognition_pushButton->setObjectName(QStringLiteral("test_recognition_pushButton"));
+        test_recognition_pushButton->setGeometry(QRect(20, 120, 171, 71));
         tabWidget->addTab(tab_3, QString());
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -232,7 +236,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -265,6 +269,7 @@ public:
         contour_checkBox->setText(QApplication::translate("MainWindow", "Contour", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Setting", 0));
         load_training_data_pushButton->setText(QApplication::translate("MainWindow", "Load Data", 0));
+        test_recognition_pushButton->setText(QApplication::translate("MainWindow", "Test", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Tag", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi

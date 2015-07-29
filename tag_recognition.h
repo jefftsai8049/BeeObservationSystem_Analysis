@@ -8,8 +8,11 @@
 #include <QObject>
 #include <QDebug>
 #include <QTime>
+#include <QFileInfo>
+
 
 #include <opencv.hpp>
+
 
 class tag_recognition : public QObject
 {
@@ -20,9 +23,15 @@ public:
 
     void tagImgProc(cv::Mat src, cv::Mat &word1, cv::Mat &word2);
 
+    char wordRecognition(cv::Mat src);
+
+    bool loadSVMModel(const std::string &fileName);
+
 signals:
 
 public slots:
+
+
 private:
 
     void findBlobs(const cv::Mat binary,std::vector<std::vector<cv::Point2f>> &blobs);
@@ -46,6 +55,8 @@ private:
     void findBlobCenetr(std::vector<std::vector<cv::Point2f>> blobs,std::vector<cv::Point2f> &blobCenter);
 
     void cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1, cv::Mat &word2);
+
+    cv::Ptr<cv::ml::SVM> SVMModel;
 };
 
 #endif // TAG_RECOGNITION_H

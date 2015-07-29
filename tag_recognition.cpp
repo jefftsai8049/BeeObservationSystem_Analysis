@@ -27,7 +27,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::Mat srcBinary;
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
 
-//    cv::imshow("Binary",srcBinary);
+    cv::imshow("Binary",srcBinary);
 
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
@@ -56,30 +56,91 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     std::vector<cv::Point2f> blobCenter;
     this->findBlobCenetr(blobs,blobCenter);
 
-//    for(int i = 0; i < blobs.size(); i++)
-//    {
-//        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
-//    }
+    //    for(int i = 0; i < blobs.size(); i++)
+    //    {
+    //        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
+    //    }
 
 
     //draw blobs
-//    cv::imshow("blobs",this->drawBlob(blobs));
+    cv::imshow("blobs",this->drawBlob(blobs));
 
 
+    //    cv::Point2f imgCenter = cv::Point2f(tagSize/2.0,tagSize/2.0);
 
-    float angle = this->findRotateAngle(blobCenter[0],cv::Point(tagSize/2,tagSize/2));
-    cv::Point2f imgCenter = cv::Point2f(tagSize/2.0,tagSize/2.0);
+    cv::Point2f imgCenter = (blobCenter[1]+blobCenter[2])/2;
+
+    float angle = this->findRotateAngle(blobCenter[0],imgCenter);
+
     cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, -(angle-90), 1.0);
     cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
     cv::Mat wordsMask;
     cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(tagSize,tagSize),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
-//    cv::imshow("mask",wordsMask);
+    cv::imshow("mask",wordsMask);
 
     cv::Mat rawDst(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
 
     srcNoCircle.copyTo(rawDst,wordsMask);
-//    cv::imshow("dst",rawDst);
+    //    cv::imshow("dst",rawDst);
     this->cutWords(wordsMask,rawDst,word1,word2);
+}
+
+char tag_recognition::wordRecognition(cv::Mat src)
+{
+    QTime t;
+    t.start();
+    //check input image
+    if((src.cols == 1 && src.rows == 1) || (src.cols > 14 || src.rows > 16) || (float)src.rows/(float)src.cols < 1.0 )
+    {
+        qDebug() << "shit word";
+        return '!';
+    }
+    else
+    {
+        cv::imshow("src",src);
+
+        int leftPadding = round((src.rows-src.cols)/2.0);
+        int rightPadding = floor((src.rows-src.cols)/2.0);
+
+        cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
+        cv::resize(src,src,cv::Size(16,16));
+        cv::equalizeHist(src,src);
+//        cv::imshow("padding",src);
+
+
+        src = src.reshape(1,1);
+        cv::normalize(src,src,0,1,cv::NORM_MINMAX);
+        src.convertTo(src,CV_32FC1);
+
+
+//        SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
+
+        char result = SVMModel->predict(src);
+//        qDebug() << "result" << result << "time" << t.elapsed();
+        return result;
+    }
+    //        cv::waitKey(500);
+}
+
+bool tag_recognition::loadSVMModel(const std::string &fileName)
+{
+
+
+    QFileInfo fileInfo;
+    fileInfo.setFile(QString::fromStdString(fileName));
+    if(fileInfo.exists())
+    {
+        //    SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
+
+        SVMModel = cv::ml::StatModel::load<cv::ml::SVM>(fileName);
+        return true;
+
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
 void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv::Point2f> > &blobs)
@@ -355,7 +416,7 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
     cv::normalize(wordsMask,wordsMask,0,1,cv::NORM_MINMAX);
     this->findBlobs(wordsMask,rotatedBlobs);
     rotatedBlobs = this->removeImpossibleBlobs(rotatedBlobs);
-//    qDebug() << rotatedBlobs.size();
+    //    qDebug() << rotatedBlobs.size();
     if(rotatedBlobs.size() < 2)
     {
         cv::normalize(wordsMask,wordsMask,0,255,cv::NORM_MINMAX);
@@ -380,7 +441,7 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
             if(downRight.y < rotatedBlobs[i][j].y)
                 downRight.y = rotatedBlobs[i][j].y;
         }
-//        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
+        //        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
         if(i == 0)
         {
             cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+4,downRight.y-topLeft.y+4),(downRight+topLeft)/2,word1);
@@ -391,7 +452,7 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
         }
 
 
-//        cv::imshow(std::to_string(i),dst);
+        //        cv::imshow(std::to_string(i),dst);
     }
 }
 

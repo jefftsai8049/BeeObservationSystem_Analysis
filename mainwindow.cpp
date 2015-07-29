@@ -342,15 +342,15 @@ void MainWindow::on_load_training_data_pushButton_clicked()
         cv::Mat word1,word2;
         TR->tagImgProc(src,word1,word2);
 
-//        cv::imshow("word1",word1);
-//        cv::imshow("word2",word2);
-//        for (int j=0;j<dst.size();j++)
-//        {
-////            cv::imwrite("word/"+std::to_string(i)+"_"+std::to_string(j)+".jpg",dst[j]);
+        //        cv::imshow("word1",word1);
+        //        cv::imshow("word2",word2);
+        //        for (int j=0;j<dst.size();j++)
+        //        {
+        ////            cv::imwrite("word/"+std::to_string(i)+"_"+std::to_string(j)+".jpg",dst[j]);
 
-////            cv::waitKey(500);//            cv::imshow("tag",dst[j]);
+        ////            cv::waitKey(500);//            cv::imshow("tag",dst[j]);
 
-//        }
+        //        }
         cv::waitKey(500);
     }
 }
@@ -398,4 +398,24 @@ void MainWindow::on_contour_checkBox_clicked()
 void MainWindow::on_area_contour_circle_spinBox_valueChanged(int arg1)
 {
     TT->setContourParamters(ui->threshold_contour_circle_spinBox->value(),ui->area_contour_circle_spinBox->value());
+}
+
+void MainWindow::on_test_recognition_pushButton_clicked()
+{
+    QStringList fileNames = QFileDialog::getOpenFileNames();
+
+    if(TR->loadSVMModel("svm_grid_search_opt.yaml"))
+    {
+
+
+        for(int i =0;i<fileNames.size();i++)
+        {
+            cv::Mat src = cv::imread(fileNames[i].toStdString());
+            src = TT->bgr2gray(src);
+
+            qDebug() << "word" << TR->wordRecognition(src);
+
+//            cv::waitKey(500);
+        }
+    }
 }

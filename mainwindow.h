@@ -91,6 +91,8 @@ private slots:
 
     void on_area_contour_circle_spinBox_valueChanged(int arg1);
 
+    void on_test_recognition_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
