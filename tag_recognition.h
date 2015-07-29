@@ -23,7 +23,7 @@ public:
 
     void tagImgProc(cv::Mat src, cv::Mat &word1, cv::Mat &word2);
 
-    char wordRecognition(cv::Mat src);
+    char wordRecognition(cv::Mat &src);
 
     bool loadSVMModel(const std::string &fileName);
 

@@ -94,7 +94,7 @@ void MainWindow::receiveFPS(const double &fpsRun)
 
 void MainWindow::stitchImage()
 {
-    qDebug() << "Stitching Image";
+    qDebug() << "start";
     std::vector<std::string> fileNames;
     std::string path = dir.absolutePath().toStdString();
     fileNames = getVideoName(videoList,path);

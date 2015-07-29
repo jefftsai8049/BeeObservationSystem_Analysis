@@ -122,6 +122,13 @@ void trajectory_tracking::run()
             return;
         }
     }
+
+    //load SVM model
+    if(!TR->loadSVMModel("svm_grid_search_opt.yaml"))
+    {
+        return;
+    }
+
     //cuda testing
     //    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
     //    qDebug() << cv::cuda::getDevice();
@@ -177,6 +184,8 @@ void trajectory_tracking::run()
 
             if (showImage)
             {
+
+
                 //draw cicle
 //                qDebug() << circles.size();
                 cv::Mat panoDrawCircle = pano.clone();
@@ -187,28 +196,45 @@ void trajectory_tracking::run()
                     cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
 
                 }
+
+                //cut subimage
+                std::vector<cv::Mat> circleImg(circles.size());
+                for (int i=0;i<circles.size();i++)
+                {
+                    cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
+                    cv::Mat word1,word2;
+
+                    TR->tagImgProc(circleImg[i],word1,word2);
+
+                    cv::imshow("word1",word1);
+                    cv::imshow("word2",word2);
+    //                char w1,w2;
+                    std::string w1,w2;
+                    w1.push_back(TR->wordRecognition(word1));
+                    w2.push_back(TR->wordRecognition(word2));
+
+//                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
+
+
+                    cv::putText(panoDrawCircle,w1,cv::Point(circles[i][0]-15, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
+                    cv::putText(panoDrawCircle,w2,cv::Point(circles[i][0]+5, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
+
+    //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
+    //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
+    //                cv::imshow("tag",circleImg[i]);
+    //                cv::waitKey(100);
+                    //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
+                }
+
+
                 cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
                 //show image
                 cv::imshow("Stitch",panoDrawCircle);
                 cv::waitKey(3);
             }
-            //cut subimage
-            std::vector<cv::Mat> circleImg(circles.size());
-            for (int i=0;i<circles.size();i++)
-            {
-                cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
-                cv::Mat word1,word2;
 
-                TR->tagImgProc(circleImg[i],word1,word2);
-                cv::imshow("word1",word1);
-                cv::imshow("word2",word2);
 
-//                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
-//                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
-//                cv::imshow("tag",circleImg[i]);
-//                cv::waitKey(100);
-                //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
-            }
+
         }
         else if (this->circleDectionMode == 1)
         {
@@ -287,7 +313,8 @@ void trajectory_tracking::run()
     {
         cap[i].release();
     }
-
+    qDebug() << "finish";
+    emit finish();
 }
 
 cv::Mat trajectory_tracking::bgr2gray(cv::Mat src)

@@ -85,14 +85,14 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     this->cutWords(wordsMask,rawDst,word1,word2);
 }
 
-char tag_recognition::wordRecognition(cv::Mat src)
+char tag_recognition::wordRecognition(cv::Mat &src)
 {
     QTime t;
     t.start();
     //check input image
-    if((src.cols == 1 && src.rows == 1) || (src.cols > 14 || src.rows > 16) || (float)src.rows/(float)src.cols < 1.0 )
+    if((src.cols == 1 && src.rows == 1) || (src.cols > 18 || src.rows > 20) || (float)src.rows/(float)src.cols < 1.0 )
     {
-        qDebug() << "shit word";
+//        qDebug() << "shit word" << src.cols << src.rows;
         return '!';
     }
     else
@@ -116,7 +116,7 @@ char tag_recognition::wordRecognition(cv::Mat src)
 //        SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
 
         char result = SVMModel->predict(src);
-//        qDebug() << "result" << result << "time" << t.elapsed();
+//        qDebug() << "result" << result;
         return result;
     }
     //        cv::waitKey(500);
