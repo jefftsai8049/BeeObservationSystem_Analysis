@@ -212,7 +212,7 @@ public:
         load_training_data_pushButton->setGeometry(QRect(10, 10, 181, 81));
         test_recognition_pushButton = new QPushButton(tab_3);
         test_recognition_pushButton->setObjectName(QStringLiteral("test_recognition_pushButton"));
-        test_recognition_pushButton->setGeometry(QRect(20, 120, 171, 71));
+        test_recognition_pushButton->setGeometry(QRect(10, 100, 181, 81));
         tabWidget->addTab(tab_3, QString());
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -236,7 +236,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

@@ -210,9 +210,14 @@ void trajectory_tracking::run()
                     cv::imshow("word2",word2);
     //                char w1,w2;
                     std::string w1,w2;
-                    w1.push_back(TR->wordRecognition(word1));
-                    w2.push_back(TR->wordRecognition(word2));
-
+                    cv::Mat wordReshpae1 = word1.clone();
+                    cv::Mat wordReshpae2 = word2.clone();
+                    w1.push_back(TR->wordRecognition(wordReshpae1));
+                    w2.push_back(TR->wordRecognition(wordReshpae2));
+                    cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
+                    cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
+                    cv::imwrite("SVM/"+w1+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
+                    cv::imwrite("SVM/"+w2+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
 //                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
 
 
@@ -230,7 +235,7 @@ void trajectory_tracking::run()
                 cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
                 //show image
                 cv::imshow("Stitch",panoDrawCircle);
-                cv::waitKey(3);
+//                cv::waitKey(3);
             }
 
 
@@ -278,7 +283,7 @@ void trajectory_tracking::run()
 
                 cv::resize(pano,pano,cv::Size(pano.cols/2,pano.rows/2));
                 cv::imshow("Stitch",pano);
-                cv::waitKey(3);
+//                cv::waitKey(3);
             }
 
         }
