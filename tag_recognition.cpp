@@ -429,33 +429,38 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
         return;
     }
 
+    std::vector<cv::Point2f> topLeft(rotatedBlobs.size());
+    std::vector<cv::Point2f> downRight(rotatedBlobs.size());
+
     for(int i = 0; i < rotatedBlobs.size(); i++)
     {
-        cv::Point2f topLeft = cv::Point2f(tagSize,tagSize);
-        cv::Point2f downRight = cv::Point2f(0,0);
+        topLeft[i] = cv::Point2f(tagSize,tagSize);
+        downRight[i] = cv::Point2f(0,0);
         for(int j=0; j < rotatedBlobs[i].size(); j++)
         {
-            if(topLeft.x > rotatedBlobs[i][j].x)
-                topLeft.x = rotatedBlobs[i][j].x;
-            if(topLeft.y > rotatedBlobs[i][j].y)
-                topLeft.y = rotatedBlobs[i][j].y;
-            if(downRight.x < rotatedBlobs[i][j].x)
-                downRight.x = rotatedBlobs[i][j].x;
-            if(downRight.y < rotatedBlobs[i][j].y)
-                downRight.y = rotatedBlobs[i][j].y;
+            if(topLeft[i].x > rotatedBlobs[i][j].x)
+                topLeft[i].x = rotatedBlobs[i][j].x;
+            if(topLeft[i].y > rotatedBlobs[i][j].y)
+                topLeft[i].y = rotatedBlobs[i][j].y;
+            if(downRight[i].x < rotatedBlobs[i][j].x)
+                downRight[i].x = rotatedBlobs[i][j].x;
+            if(downRight[i].y < rotatedBlobs[i][j].y)
+                downRight[i].y = rotatedBlobs[i][j].y;
         }
         //        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
-        if(i == 0)
-        {
-            cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+4,downRight.y-topLeft.y+4),(downRight+topLeft)/2,word1);
-        }
-        else if(i == 1)
-        {
-            cv::getRectSubPix(rawDst,cv::Size(downRight.x-topLeft.x+4,downRight.y-topLeft.y+4),(downRight+topLeft)/2,word2);
-        }
-
-
         //        cv::imshow(std::to_string(i),dst);
     }
+
+    if(topLeft[0].x < topLeft[1].x)
+    {
+        cv::getRectSubPix(rawDst,cv::Size(downRight[0].x-topLeft[0].x+4,downRight[0].y-topLeft[0].y+4),(downRight[0]+topLeft[0])/2,word1);
+        cv::getRectSubPix(rawDst,cv::Size(downRight[1].x-topLeft[1].x+4,downRight[1].y-topLeft[1].y+4),(downRight[1]+topLeft[1])/2,word2);
+    }
+    else
+    {
+        cv::getRectSubPix(rawDst,cv::Size(downRight[0].x-topLeft[0].x+4,downRight[0].y-topLeft[0].y+4),(downRight[0]+topLeft[0])/2,word2);
+        cv::getRectSubPix(rawDst,cv::Size(downRight[1].x-topLeft[1].x+4,downRight[1].y-topLeft[1].y+4),(downRight[1]+topLeft[1])/2,word1);
+    }
+
 }
 
