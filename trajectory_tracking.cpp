@@ -139,8 +139,8 @@ void trajectory_tracking::run()
     //    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
     //    qDebug() << cv::cuda::getDevice();
     //    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
-
     //    qDebug() << "cuda ok";
+
     //thread stop flag
     this->stopped = false;
 
@@ -156,6 +156,7 @@ void trajectory_tracking::run()
         //calculate fps
         QTime clock;
         clock.start();
+
         //capture frame and convert to gray
         std::vector<cv::Mat> frame(3);
         std::vector<cv::Mat> frameGray(3);
@@ -175,120 +176,133 @@ void trajectory_tracking::run()
 
         //mode 0 Hough Transform
         //mode 1 Contour
+
         if(this->circleDectionMode == 0)
         {
             //hough circle detection
             std::vector<cv::Vec3f> circles;
             cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
 
+            std::vector<cv::Mat> circleImg(circles.size());
+            std::vector<std::string> w1,w2;
+            for (int i=0;i<circles.size();i++)
+            {
+                cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
+                cv::Mat word1,word2;
+                TR->tagImgProc(circleImg[i],word1,word2);
+
+                w1.resize(circles.size());
+                w2.resize(circles.size());
+                w1[i].push_back(TR->wordRecognition(word1));
+                w2[i].push_back(TR->wordRecognition(word2));
+                qDebug() << QString::fromStdString(w1[i])<<QString::fromStdString(w2[i]);
+
+
+            }
 
             if (showImage)
             {
 
 
                 //draw cicle
-//                qDebug() << circles.size();
+                //                qDebug() << circles.size();
                 cv::Mat panoDrawCircle = pano.clone();
                 for(int i = 0; i < circles.size(); i++ )
                 {
                     cv::Point center(circles[i][0], circles[i][1]);
                     int radius = circles[i][2];
                     cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
-
+                    cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]-15, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
+                    cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]+5, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
                 }
 
+
+                //                cv::waitKey(3);
                 //cut subimage
-                std::vector<cv::Mat> circleImg(circles.size());
-                for (int i=0;i<circles.size();i++)
-                {
-                    cv::getRectSubPix(pano,cv::Size(circles[i][2]*2-1,circles[i][2]*2-1),cv::Point(circles[i][0], circles[i][1]),circleImg[i]);
-                    cv::Mat word1,word2;
 
-                    TR->tagImgProc(circleImg[i],word1,word2);
-
-                    cv::imshow("word1",word1);
-                    cv::imshow("word2",word2);
-    //                char w1,w2;
-                    std::string w1,w2;
-                    cv::Mat wordReshpae1 = word1.clone();
-                    cv::Mat wordReshpae2 = word2.clone();
-                    w1.push_back(TR->wordRecognition(wordReshpae1));
-                    w2.push_back(TR->wordRecognition(wordReshpae2));
-                    cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
-                    cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
-                    cv::imwrite("SVM/"+w1+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
-                    cv::imwrite("SVM/"+w2+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
-//                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
+                //                for (int i=0;i<circles.size();i++)
+                //                {
 
 
-                    cv::putText(panoDrawCircle,w1,cv::Point(circles[i][0]-15, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
-                    cv::putText(panoDrawCircle,w2,cv::Point(circles[i][0]+5, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
+                //                    cv::imshow("word1",word1);
+                //                    cv::imshow("word2",word2);
+                //                char w1,w2;
 
-    //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
-    //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
-    //                cv::imshow("tag",circleImg[i]);
-    //                cv::waitKey(100);
-                    //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
-                }
+                //                    cv::Mat wordReshpae1 = word1.clone();
+                //                    cv::Mat wordReshpae2 = word2.clone();
+                //                    cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
+                //                    cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
+                //                    cv::imwrite("SVM/"+w1+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
+                //                    cv::imwrite("SVM/"+w2+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
+                //                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
 
 
                 cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
                 //show image
                 cv::imshow("Stitch",panoDrawCircle);
-//                cv::waitKey(3);
-            }
-
-
-
-        }
-        else if (this->circleDectionMode == 1)
-        {
-            cv::Mat canny_output;
-            std::vector<std::vector<cv::Point> > contours;
-            std::vector<cv::Vec4i> hierarchy;
-
-
-            //Detect edges using canny
-            cv::Canny( pano, canny_output, this->contourThreshold, this->contourThreshold*2, 3 );
-            //Find contours
-            cv::findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
-
-
-            if (showImage)
-            {
-                //Draw contours
-                //                cv::Mat drawing = cv::Mat::zeros( canny_output.size(), CV_8UC1 );
-                //                for( int i = 0; i< contours.size(); i++ )
-                //                {
-                //                    cv::Scalar color = cv::Scalar(255);
-                //                    cv::drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, cv::Point() );
+                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
+                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
+                //                cv::imshow("tag",circleImg[i]);
+                //                cv::waitKey(100);
+                //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
                 //                }
-                //                cv::resize(drawing,drawing,cv::Size(drawing.cols/2,drawing.rows/2));
-                //                cv::imshow("contour",drawing);
-                for(int i = 0;i < contours.size();i++)
+//                cv::waitKey(50);
+
+
+
+            }
+            else if (this->circleDectionMode == 1)
+            {
+                cv::Mat canny_output;
+                std::vector<std::vector<cv::Point> > contours;
+                std::vector<cv::Vec4i> hierarchy;
+
+
+                //Detect edges using canny
+                cv::Canny( pano, canny_output, this->contourThreshold, this->contourThreshold*2, 3 );
+                //Find contours
+                cv::findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+
+
+                if (showImage)
                 {
-                    if(cv::contourArea(contours[i]) > this->contourArea)
+                    //Draw contours
+                    //                cv::Mat drawing = cv::Mat::zeros( canny_output.size(), CV_8UC1 );
+                    //                for( int i = 0; i< contours.size(); i++ )
+                    //                {
+                    //                    cv::Scalar color = cv::Scalar(255);
+                    //                    cv::drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, cv::Point() );
+                    //                }
+                    //                cv::resize(drawing,drawing,cv::Size(drawing.cols/2,drawing.rows/2));
+                    //                cv::imshow("contour",drawing);
+                    for(int i = 0;i < contours.size();i++)
                     {
-                        double x = 0;
-                        double y = 0;
-                        for (int j = 0;j < contours[i].size();j++)
+                        if(cv::contourArea(contours[i]) > this->contourArea)
                         {
-                            x += contours[i][j].x/contours[i].size();
-                            y += contours[i][j].y/contours[i].size();
+                            double x = 0;
+                            double y = 0;
+                            for (int j = 0;j < contours[i].size();j++)
+                            {
+                                x += contours[i][j].x/contours[i].size();
+                                y += contours[i][j].y/contours[i].size();
+                            }
+                            cv::circle(pano,cv::Point(x,y),15,cv::Scalar(255));
                         }
-                        cv::circle(pano,cv::Point(x,y),15,cv::Scalar(255));
                     }
+
+
+                    cv::resize(pano,pano,cv::Size(pano.cols/2,pano.rows/2));
+                    cv::imshow("Stitch",pano);
+                    //                cv::waitKey(3);
                 }
 
-
-                cv::resize(pano,pano,cv::Size(pano.cols/2,pano.rows/2));
-                cv::imshow("Stitch",pano);
-//                cv::waitKey(3);
             }
 
+
+
+
+
         }
-
-
 
 
         //cuda testing
@@ -313,6 +327,8 @@ void trajectory_tracking::run()
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
     }
+
+
 
     for(int i = 0; i < 3; i++)
     {

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "cudaimgproc.hpp"
+//#include "cudaimgproc.hpp"
 #include "opencv.hpp"
 
 #include "tag_recognition.h"

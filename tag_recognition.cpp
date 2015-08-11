@@ -26,9 +26,9 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //convert to binary image
     cv::Mat srcBinary;
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
-
-    cv::imshow("Binary",srcBinary);
-
+//#ifdef DEBUG_TSAI
+//    cv::imshow("Binary",srcBinary);
+//#endif
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
     cv::normalize(srcBinary,srcBinaryZeroOne,0,1,cv::NORM_MINMAX);
@@ -61,10 +61,11 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
     //    }
 
+//#ifdef DEBUG_TSAI
+//    //draw blobs
+//    cv::imshow("blobs",this->drawBlob(blobs));
 
-    //draw blobs
-    cv::imshow("blobs",this->drawBlob(blobs));
-
+//#endif
 
     //    cv::Point2f imgCenter = cv::Point2f(tagSize/2.0,tagSize/2.0);
 
@@ -76,8 +77,9 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
     cv::Mat wordsMask;
     cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(tagSize,tagSize),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
-    cv::imshow("mask",wordsMask);
-
+//#ifdef DEBUG_TSAI
+//    cv::imshow("mask",wordsMask);
+//#endif
     cv::Mat rawDst(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
 
     srcNoCircle.copyTo(rawDst,wordsMask);
@@ -92,20 +94,21 @@ char tag_recognition::wordRecognition(cv::Mat &src)
     //check input image
     if((src.cols == 1 && src.rows == 1) || (src.cols > 18 || src.rows > 20) || (float)src.rows/(float)src.cols < 1.0 )
     {
-//        qDebug() << "shit word" << src.cols << src.rows;
+        //        qDebug() << "shit word" << src.cols << src.rows;
         return '!';
     }
     else
     {
-        cv::imshow("src",src);
-
+//#ifdef DEBUG_TSAI
+//        cv::imshow("src",src);
+//#endif
         int leftPadding = round((src.rows-src.cols)/2.0);
         int rightPadding = floor((src.rows-src.cols)/2.0);
 
         cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
         cv::resize(src,src,cv::Size(16,16));
         cv::equalizeHist(src,src);
-//        cv::imshow("padding",src);
+        //        cv::imshow("padding",src);
 
 
         src = src.reshape(1,1);
@@ -113,10 +116,10 @@ char tag_recognition::wordRecognition(cv::Mat &src)
         src.convertTo(src,CV_32FC1);
 
 
-//        SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
+        //        SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
 
         char result = SVMModel->predict(src);
-//        qDebug() << "result" << result;
+        //        qDebug() << "result" << result;
         return result;
     }
     //        cv::waitKey(500);
@@ -420,7 +423,7 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
     if(rotatedBlobs.size() < 2)
     {
         cv::normalize(wordsMask,wordsMask,0,255,cv::NORM_MINMAX);
-        cv::imshow("WTF",wordsMask);
+//        cv::imshow("WTF",wordsMask);
         word1 = cv::Mat::zeros(1,1,CV_8UC1);
         word2 = cv::Mat::zeros(1,1,CV_8UC1);
         return;

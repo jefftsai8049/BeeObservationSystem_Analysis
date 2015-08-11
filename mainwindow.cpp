@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
 
+    qDebug() << "ocl" << cv::ocl::useOpenCL();
+
 
 #ifdef DEBUG_TSAI
     qDebug() << "Running a debug build";
