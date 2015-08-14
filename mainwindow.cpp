@@ -20,8 +20,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
     connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
 
-    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
+
+    cv::ocl::setUseOpenCL(true);
+
 
     qDebug() << "ocl" << cv::ocl::useOpenCL();
 
@@ -215,14 +218,17 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
     cv::namedWindow("Stitch",cv::WINDOW_AUTOSIZE);
+    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
     //    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     stitchImage();
 }
 
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
+    disconnect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
     stitcher->stopStitch(true);
     TT->stopStitch();
+
 }
 
 void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()

@@ -195,7 +195,7 @@ void trajectory_tracking::run()
                 w2.resize(circles.size());
                 w1[i].push_back(TR->wordRecognition(word1));
                 w2[i].push_back(TR->wordRecognition(word2));
-                qDebug() << QString::fromStdString(w1[i])<<QString::fromStdString(w2[i]);
+//                qDebug() << QString::fromStdString(w1[i])<<QString::fromStdString(w2[i]);
 
 
             }
