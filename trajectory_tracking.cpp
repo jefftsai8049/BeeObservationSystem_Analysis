@@ -5,6 +5,13 @@ trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
     frame.resize(3);
     //    circleDetect = new cv::cuda::HoughCirclesDetector;
     TR = new tag_recognition;
+
+
+    cv::ocl::setUseOpenCL(true);
+
+
+    qDebug() << "ocl" << cv::ocl::useOpenCL() << cv::ocl::haveOpenCL();
+
 }
 
 trajectory_tracking::~trajectory_tracking()
@@ -34,7 +41,7 @@ cv::Mat trajectory_tracking::imageShift(std::vector<cv::Mat> stitchFrame, std::v
     return cat;
 }
 
-cv::Mat trajectory_tracking::imageShift(std::vector<cv::Mat> stitchFrame)
+cv::Mat trajectory_tracking::imageShiftLoaded(std::vector<cv::Mat> stitchFrame)
 {
     //    qDebug() << this->originPoint[0].x << this->originPoint[0].y << this->originPoint[1].x << this->originPoint[1].y << this->originPoint[2].x << this->originPoint[2].y;
     cv::Mat cat(cv::Size(imgSizeX*3,imgSizeY),CV_8UC1,cv::Scalar(0));
@@ -144,11 +151,12 @@ void trajectory_tracking::run()
     //thread stop flag
     this->stopped = false;
 
-    cv::Mat pano;
+
     //    cv::cuda::GpuMat panoGpu;
     //    cv::cuda::GpuMat circlesGpu;
 
     int frameCount = 0;
+
 
     //main processing loop
     while(!this->stopped)
@@ -156,32 +164,45 @@ void trajectory_tracking::run()
         //calculate fps
         QTime clock;
         clock.start();
-
-        //capture frame and convert to gray
         std::vector<cv::Mat> frame(3);
         std::vector<cv::Mat> frameGray(3);
+
+
+        //capture frame and convert to gray
+
+
         for(int i = 0; i < 3; i++)
         {
-            cap[i].read(frame[i]);
-            frameGray[i] = this->bgr2gray(frame[i]);
+            cap[i] >> frame[i];
+            cv::cvtColor(frame[i],frameGray[i],cv::COLOR_BGR2GRAY);
+//            frameGray[i] = this->bgr2gray(frame[i]);
+//            qDebug() << m.elapsed();
         }
+//        qDebug() << "m.elapsed()";
         if(frame[0].empty()||frame[1].empty()||frame[2].empty())
         {
             this->stopped = true;
             break;
         }
+
+        cv::Mat pano;
+        cv::UMat panoUMAT;
         //stitching image
-        pano = this->imageShift(frameGray);
+        pano = this->imageShiftLoaded(frameGray);
         pano = this->imageCutBlack(pano);
 
+//        pano = panoUMAT.getMat(2);
+
+        panoUMAT = pano.getUMat(cv::ACCESS_READ);
         //mode 0 Hough Transform
         //mode 1 Contour
-
+//        cv::UMat panoUMAT = pano.clone().getUMat(cv::ACCESS_READ);
         if(this->circleDectionMode == 0)
         {
             //hough circle detection
             std::vector<cv::Vec3f> circles;
-            cv::HoughCircles(pano,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+
+            cv::HoughCircles(panoUMAT,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
 
             std::vector<cv::Mat> circleImg(circles.size());
             std::vector<std::string> w1,w2;

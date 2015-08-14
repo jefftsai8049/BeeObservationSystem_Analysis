@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <opencv.hpp>
+#include <core/ocl.hpp>
 #include <features2d.hpp>
 //#include <stitching.hpp>
 

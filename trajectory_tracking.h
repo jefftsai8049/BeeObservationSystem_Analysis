@@ -10,7 +10,8 @@
 #include <math.h>
 
 //#include "cudaimgproc.hpp"
-#include "opencv.hpp"
+#include <opencv.hpp>
+#include <core/ocl.hpp>
 
 #include "tag_recognition.h"
 
@@ -31,7 +32,7 @@ public:
 
     cv::Mat imageShift(std::vector<cv::Mat> stitchFrame,std::vector<cv::Point> originPoint);
 
-    cv::Mat imageShift(std::vector<cv::Mat> stitchFrame);
+    cv::Mat imageShiftLoaded(std::vector<cv::Mat> stitchFrame);
 
     cv::Mat bgr2gray(cv::Mat src);
 

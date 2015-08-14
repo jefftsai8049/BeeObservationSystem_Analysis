@@ -12,6 +12,7 @@
 
 
 #include <opencv.hpp>
+#include <core/ocl.hpp>
 
 
 class tag_recognition : public QObject

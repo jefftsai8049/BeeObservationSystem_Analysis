@@ -23,11 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
 
-    cv::ocl::setUseOpenCL(true);
-
-
-    qDebug() << "ocl" << cv::ocl::useOpenCL();
-
 
 #ifdef DEBUG_TSAI
     qDebug() << "Running a debug build";
