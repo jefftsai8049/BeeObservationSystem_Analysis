@@ -47,7 +47,6 @@ public:
     QTextBrowser *videoName_textBrowser;
     QLCDNumber *processing_lcdNumber;
     QCheckBox *show_image_checkBox;
-    QPushButton *cuda_test_pushButton;
     QWidget *tab_2;
     QGroupBox *groupBox;
     QSpinBox *maxRadius_hough_circle_spinBox;
@@ -125,9 +124,6 @@ public:
         show_image_checkBox->setObjectName(QStringLiteral("show_image_checkBox"));
         show_image_checkBox->setGeometry(QRect(190, 190, 141, 51));
         show_image_checkBox->setChecked(true);
-        cuda_test_pushButton = new QPushButton(tab);
-        cuda_test_pushButton->setObjectName(QStringLiteral("cuda_test_pushButton"));
-        cuda_test_pushButton->setGeometry(QRect(180, 40, 151, 91));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -253,7 +249,6 @@ public:
         stitchingStop_pushButton->setText(QApplication::translate("MainWindow", "Stop", 0));
         label->setText(QApplication::translate("MainWindow", "File Sequence", 0));
         show_image_checkBox->setText(QApplication::translate("MainWindow", "Show Image", 0));
-        cuda_test_pushButton->setText(QApplication::translate("MainWindow", "Cuda Test", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Main", 0));
         groupBox->setTitle(QApplication::translate("MainWindow", "Hough Circle", 0));
         label_2->setText(QApplication::translate("MainWindow", "dp", 0));

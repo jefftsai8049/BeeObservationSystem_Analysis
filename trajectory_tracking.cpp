@@ -136,27 +136,10 @@ void trajectory_tracking::run()
         return;
     }
 
-    //cuda testing
-    //    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
-    //    qDebug() << cv::cuda::getDevice();
-
-    //    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
-    //    cv::cuda::DeviceInfo gpu;
-    //    qDebug() << gpu.name();
-    //    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
-    //    qDebug() << cv::cuda::getDevice();
-    //    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(this->dp,this->minDist,this->para_1,this->para_2,this->minRadius,this->maxRadius);
-    //    qDebug() << "cuda ok";
-
-    //thread stop flag
+        //thread stop flag
     this->stopped = false;
 
-
-    //    cv::cuda::GpuMat panoGpu;
-    //    cv::cuda::GpuMat circlesGpu;
-
     int frameCount = 0;
-
 
     //main processing loop
     while(!this->stopped)
@@ -193,12 +176,8 @@ void trajectory_tracking::run()
         pano = this->imageShiftLoaded(frameGray);
         pano = this->imageCutBlack(pano);
 
-        //        pano = panoUMAT.getMat(2);
-
-        //        panoUMAT = pano.getUMat(cv::ACCESS_READ);
         //mode 0 Hough Transform
         //mode 1 Contour
-        //        cv::UMat panoUMAT = pano.clone().getUMat(cv::ACCESS_READ);
         if(this->circleDectionMode == 0)
         {
             //hough circle detection
@@ -331,26 +310,6 @@ void trajectory_tracking::run()
 
         }
 
-
-        //cuda testing
-        //        panoGpu.upload(pano);
-        //        circleDetect->detect(panoGpu,circlesGpu);
-
-        //        cv::Mat circlesMat;
-        //        circlesGpu.download(circlesMat);
-
-        //        std::vector<cv::Vec3f> circles(circlesMat.cols);
-        //        qDebug() << circles.cols <<circles.rows << circles.channels();
-        //        if (circlesMat.cols>0)
-        //        {
-        //            for (int i=0;i<circlesMat.cols;i++)
-        //            {
-        //               qDebug() << "x" << circlesMat.data[i];
-        //               qDebug() << "y" << circlesMat.data[i+circlesMat.cols];
-        //               qDebug() << "r" << circlesMat.data[i+circlesMat.cols*2];
-        //               circles[i] =  cv::Vec3f(circlesMat.data[i],circlesMat.data[i+circlesMat.cols],circlesMat.data[i+circlesMat.cols*2]);
-        //            }
-        //        }
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
     }

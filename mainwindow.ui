@@ -129,19 +129,6 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="cuda_test_pushButton">
-      <property name="geometry">
-       <rect>
-        <x>180</x>
-        <y>40</y>
-        <width>151</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Cuda Test</string>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">

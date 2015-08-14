@@ -320,17 +320,6 @@ void MainWindow::on_show_image_checkBox_clicked()
     TT->setShowImage(ui->show_image_checkBox->isChecked());
 }
 
-void MainWindow::on_cuda_test_pushButton_clicked()
-{
-    qDebug() << cv::cuda::getCudaEnabledDeviceCount();
-    qDebug() << cv::cuda::getDevice();
-
-
-    cv::cuda::DeviceInfo gpu;
-    qDebug() << gpu.name();
-
-}
-
 void MainWindow::on_load_training_data_pushButton_clicked()
 {
     QStringList fileNames = QFileDialog::getOpenFileNames();

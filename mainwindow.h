@@ -80,8 +80,6 @@ private slots:
 
     void on_show_image_checkBox_clicked();
 
-    void on_cuda_test_pushButton_clicked();
-
     void on_load_training_data_pushButton_clicked();
 
     void on_threshold_contour_circle_spinBox_valueChanged(int arg1);
