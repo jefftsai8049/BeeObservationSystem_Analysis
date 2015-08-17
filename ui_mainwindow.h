@@ -61,13 +61,6 @@ public:
     QLabel *label_5;
     QLabel *label_6;
     QLabel *label_7;
-    QGroupBox *groupBox_2;
-    QSpinBox *threshold_contour_circle_spinBox;
-    QLabel *label_8;
-    QLabel *label_9;
-    QSpinBox *area_contour_circle_spinBox;
-    QCheckBox *hough_cirle_checkBox;
-    QCheckBox *contour_checkBox;
     QWidget *tab_3;
     QPushButton *load_training_data_pushButton;
     QPushButton *test_recognition_pushButton;
@@ -133,7 +126,7 @@ public:
         maxRadius_hough_circle_spinBox = new QSpinBox(groupBox);
         maxRadius_hough_circle_spinBox->setObjectName(QStringLiteral("maxRadius_hough_circle_spinBox"));
         maxRadius_hough_circle_spinBox->setGeometry(QRect(100, 130, 61, 31));
-        maxRadius_hough_circle_spinBox->setValue(19);
+        maxRadius_hough_circle_spinBox->setValue(9);
         dp_hough_circle_spinBox = new QSpinBox(groupBox);
         dp_hough_circle_spinBox->setObjectName(QStringLiteral("dp_hough_circle_spinBox"));
         dp_hough_circle_spinBox->setGeometry(QRect(10, 60, 61, 31));
@@ -142,11 +135,11 @@ public:
         para_2_hough_circle_spinBox->setObjectName(QStringLiteral("para_2_hough_circle_spinBox"));
         para_2_hough_circle_spinBox->setGeometry(QRect(10, 270, 61, 31));
         para_2_hough_circle_spinBox->setMaximum(200);
-        para_2_hough_circle_spinBox->setValue(45);
+        para_2_hough_circle_spinBox->setValue(25);
         minRadius_hough_circle_spinBox = new QSpinBox(groupBox);
         minRadius_hough_circle_spinBox->setObjectName(QStringLiteral("minRadius_hough_circle_spinBox"));
         minRadius_hough_circle_spinBox->setGeometry(QRect(100, 60, 61, 31));
-        minRadius_hough_circle_spinBox->setValue(12);
+        minRadius_hough_circle_spinBox->setValue(6);
         para_1_hough_circle_spinBox = new QSpinBox(groupBox);
         para_1_hough_circle_spinBox->setObjectName(QStringLiteral("para_1_hough_circle_spinBox"));
         para_1_hough_circle_spinBox->setGeometry(QRect(10, 200, 61, 31));
@@ -174,32 +167,6 @@ public:
         label_7 = new QLabel(groupBox);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(100, 100, 101, 31));
-        groupBox_2 = new QGroupBox(tab_2);
-        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(230, 40, 121, 311));
-        threshold_contour_circle_spinBox = new QSpinBox(groupBox_2);
-        threshold_contour_circle_spinBox->setObjectName(QStringLiteral("threshold_contour_circle_spinBox"));
-        threshold_contour_circle_spinBox->setGeometry(QRect(10, 60, 61, 31));
-        threshold_contour_circle_spinBox->setMaximum(255);
-        threshold_contour_circle_spinBox->setValue(90);
-        label_8 = new QLabel(groupBox_2);
-        label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(10, 30, 101, 31));
-        label_9 = new QLabel(groupBox_2);
-        label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setGeometry(QRect(10, 100, 101, 31));
-        area_contour_circle_spinBox = new QSpinBox(groupBox_2);
-        area_contour_circle_spinBox->setObjectName(QStringLiteral("area_contour_circle_spinBox"));
-        area_contour_circle_spinBox->setGeometry(QRect(10, 130, 61, 31));
-        area_contour_circle_spinBox->setMaximum(300);
-        area_contour_circle_spinBox->setValue(10);
-        hough_cirle_checkBox = new QCheckBox(tab_2);
-        hough_cirle_checkBox->setObjectName(QStringLiteral("hough_cirle_checkBox"));
-        hough_cirle_checkBox->setGeometry(QRect(20, 10, 151, 31));
-        hough_cirle_checkBox->setChecked(true);
-        contour_checkBox = new QCheckBox(tab_2);
-        contour_checkBox->setObjectName(QStringLiteral("contour_checkBox"));
-        contour_checkBox->setGeometry(QRect(230, 10, 151, 31));
         tabWidget->addTab(tab_2, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -232,7 +199,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -257,11 +224,6 @@ public:
         label_5->setText(QApplication::translate("MainWindow", "minDist", 0));
         label_6->setText(QApplication::translate("MainWindow", "minRadius", 0));
         label_7->setText(QApplication::translate("MainWindow", "maxRadius", 0));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "Contour", 0));
-        label_8->setText(QApplication::translate("MainWindow", "Threshold", 0));
-        label_9->setText(QApplication::translate("MainWindow", "Area", 0));
-        hough_cirle_checkBox->setText(QApplication::translate("MainWindow", "Hough Circle", 0));
-        contour_checkBox->setText(QApplication::translate("MainWindow", "Contour", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "Setting", 0));
         load_training_data_pushButton->setText(QApplication::translate("MainWindow", "Load Data", 0));
         test_recognition_pushButton->setText(QApplication::translate("MainWindow", "Test", 0));

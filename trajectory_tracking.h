@@ -80,11 +80,11 @@ private:
 
     int para_1 = 150;
 
-    int para_2 = 45;
+    int para_2 = 25;
 
-    int minRadius = 12;
+    int minRadius = 6;
 
-    int maxRadius = 19;
+    int maxRadius = 9;
 
     //Contour
     int contourThreshold = 90;

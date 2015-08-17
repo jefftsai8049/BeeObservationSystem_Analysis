@@ -26,9 +26,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //convert to binary image
     cv::Mat srcBinary;
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
-//#ifdef DEBUG_TSAI
-//    cv::imshow("Binary",srcBinary);
-//#endif
+
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
     cv::normalize(srcBinary,srcBinaryZeroOne,0,1,cv::NORM_MINMAX);
@@ -52,38 +50,26 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
         word2 = cv::Mat::zeros(1,1,CV_8UC1);
         return;
     }
+
     //find blobs center
     std::vector<cv::Point2f> blobCenter;
     this->findBlobCenetr(blobs,blobCenter);
-
-    //    for(int i = 0; i < blobs.size(); i++)
-    //    {
-    //        qDebug() << i << blobs[i].size() << blobCenter[i].x << blobCenter[i].y << this->calcualteCOV(blobs[i]);
-    //    }
-
-//#ifdef DEBUG_TSAI
-//    //draw blobs
-//    cv::imshow("blobs",this->drawBlob(blobs));
-
-//#endif
-
-    //    cv::Point2f imgCenter = cv::Point2f(tagSize/2.0,tagSize/2.0);
-
     cv::Point2f imgCenter = (blobCenter[1]+blobCenter[2])/2;
 
+    //find angle
     float angle = this->findRotateAngle(blobCenter[0],imgCenter);
 
+    //rotate image
     cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, -(angle-90), 1.0);
     cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
     cv::Mat wordsMask;
     cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(tagSize,tagSize),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
-//#ifdef DEBUG_TSAI
-//    cv::imshow("mask",wordsMask);
-//#endif
-    cv::Mat rawDst(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
 
+    //copy with mask
+    cv::Mat rawDst(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
     srcNoCircle.copyTo(rawDst,wordsMask);
-    //    cv::imshow("dst",rawDst);
+
+    //cut word
     this->cutWords(wordsMask,rawDst,word1,word2);
 }
 
@@ -133,11 +119,8 @@ bool tag_recognition::loadSVMModel(const std::string &fileName)
     fileInfo.setFile(QString::fromStdString(fileName));
     if(fileInfo.exists())
     {
-        //    SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
-
         SVMModel = cv::ml::StatModel::load<cv::ml::SVM>(fileName);
         return true;
-
     }
     else
     {

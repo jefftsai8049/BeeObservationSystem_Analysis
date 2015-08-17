@@ -82,14 +82,6 @@ private slots:
 
     void on_load_training_data_pushButton_clicked();
 
-    void on_threshold_contour_circle_spinBox_valueChanged(int arg1);
-
-    void on_hough_cirle_checkBox_clicked();
-
-    void on_contour_checkBox_clicked();
-
-    void on_area_contour_circle_spinBox_valueChanged(int arg1);
-
     void on_test_recognition_pushButton_clicked();
 
 private:

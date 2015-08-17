@@ -3,7 +3,7 @@
 trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
 {
     frame.resize(3);
-    //    circleDetect = new cv::cuda::HoughCirclesDetector;
+
     TR = new tag_recognition;
 
 
@@ -136,7 +136,7 @@ void trajectory_tracking::run()
         return;
     }
 
-        //thread stop flag
+    //thread stop flag
     this->stopped = false;
 
     int frameCount = 0;
@@ -178,133 +178,82 @@ void trajectory_tracking::run()
 
         //mode 0 Hough Transform
         //mode 1 Contour
-        if(this->circleDectionMode == 0)
+
+        //hough circle detection
+        std::vector<cv::Vec3f> circles;
+        //            cv::Size downSample = cv::Size(pano.cols/2,pano.rows/2);
+        cv::Mat panoSmall;
+        cv::resize(pano,panoSmall,cv::Size(pano.cols/2,pano.rows/2));
+        cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+
+        std::vector<cv::Mat> circleImg(circles.size());
+        std::vector<std::string> w1,w2;
+
+        for (int i=0;i<circles.size();i++)
         {
-            //hough circle detection
-            std::vector<cv::Vec3f> circles;
-            //            cv::Size downSample = cv::Size(pano.cols/2,pano.rows/2);
-            cv::Mat panoSmall;
-            cv::resize(pano,panoSmall,cv::Size(pano.cols/2,pano.rows/2));
-            cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+            cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2-1,circles[i][2]*2*2-1),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
+            cv::imshow("word1",circleImg[i]);
+//            cv::imshow("word2",word2);
+            cv::Mat word1,word2;
+            TR->tagImgProc(circleImg[i],word1,word2);
 
-            std::vector<cv::Mat> circleImg(circles.size());
-            std::vector<std::string> w1,w2;
+            w1.resize(circles.size());
+            w2.resize(circles.size());
+            w1[i].push_back(TR->wordRecognition(word1));
+            w2[i].push_back(TR->wordRecognition(word2));
 
-            //            for (int i=0;i<circles.size();i++)
-            //            {
-            //                cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2-1,circles[i][2]*2*2-1),cv::Point(circles[i][0]*2, circles[i][1])*2,circleImg[i]);
-            //                cv::Mat word1,word2;
-            //                TR->tagImgProc(circleImg[i],word1,word2);
-
-            //                w1.resize(circles.size());
-            //                w2.resize(circles.size());
-            //                w1[i].push_back(TR->wordRecognition(word1));
-            //                w2[i].push_back(TR->wordRecognition(word2));
-
-            ////                qDebug() << QString::fromStdString(w1[i])<<QString::fromStdString(w2[i]);
+            //                qDebug() << QString::fromStdString(w1[i])<<QString::fromStdString(w2[i]);
 
 
-            //            }
+        }
 
-            if (showImage)
+        if (showImage)
+        {
+
+
+            //                //draw cicle
+            //                //                qDebug() << circles.size();
+            cv::Mat panoDrawCircle = pano.clone();
+            for(int i = 0; i < circles.size(); i++ )
             {
-
-
-                //                //draw cicle
-                //                //                qDebug() << circles.size();
-                cv::Mat panoDrawCircle = pano.clone();
-                for(int i = 0; i < circles.size(); i++ )
-                {
-                    cv::Point center(circles[i][0]*2, circles[i][1]*2);
-                    int radius = circles[i][2]*2;
-                    cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
-                    //                    cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
-                    //                    cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
-                }
-
-
-                //                //                cv::waitKey(3);
-                //                //cut subimage
-
-                //                //                for (int i=0;i<circles.size();i++)
-                //                //                {
-
-
-                //                //                    cv::imshow("word1",word1);
-                //                //                    cv::imshow("word2",word2);
-                //                //                char w1,w2;
-
-                //                //                    cv::Mat wordReshpae1 = word1.clone();
-                //                //                    cv::Mat wordReshpae2 = word2.clone();
-                //                //                    cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
-                //                //                    cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
-                //                //                    cv::imwrite("SVM/"+w1+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
-                //                //                    cv::imwrite("SVM/"+w2+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
-                //                //                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
-
-
-                cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
-                //                //show image
-                cv::imshow("Stitch",panoDrawCircle);
-                //                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
-                //                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
-                //                //                cv::imshow("tag",circleImg[i]);
-                //                //                cv::waitKey(100);
-                //                //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
-                //                //                }
-                ////                cv::waitKey(50);
-
-
-
+                cv::Point center(circles[i][0]*2, circles[i][1]*2);
+                int radius = circles[i][2]*2;
+                cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
+                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
+                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
             }
-            //            else if (this->circleDectionMode == 1)
-            //            {
-            //                cv::Mat canny_output;
-            //                std::vector<std::vector<cv::Point> > contours;
-            //                std::vector<cv::Vec4i> hierarchy;
 
 
-            //                //Detect edges using canny
-            //                cv::Canny( pano, canny_output, this->contourThreshold, this->contourThreshold*2, 3 );
-            //                //Find contours
-            //                cv::findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
+            //                //                cv::waitKey(3);
+            //                //cut subimage
+
+            //                //                for (int i=0;i<circles.size();i++)
+            //                //                {
 
 
-            //                if (showImage)
-            //                {
-            //                    //Draw contours
-            //                    //                cv::Mat drawing = cv::Mat::zeros( canny_output.size(), CV_8UC1 );
-            //                    //                for( int i = 0; i< contours.size(); i++ )
-            //                    //                {
-            //                    //                    cv::Scalar color = cv::Scalar(255);
-            //                    //                    cv::drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, cv::Point() );
-            //                    //                }
-            //                    //                cv::resize(drawing,drawing,cv::Size(drawing.cols/2,drawing.rows/2));
-            //                    //                cv::imshow("contour",drawing);
-            //                    for(int i = 0;i < contours.size();i++)
-            //                    {
-            //                        if(cv::contourArea(contours[i]) > this->contourArea)
-            //                        {
-            //                            double x = 0;
-            //                            double y = 0;
-            //                            for (int j = 0;j < contours[i].size();j++)
-            //                            {
-            //                                x += contours[i][j].x/contours[i].size();
-            //                                y += contours[i][j].y/contours[i].size();
-            //                            }
-            //                            cv::circle(pano,cv::Point(x,y),15,cv::Scalar(255));
-            //                        }
-            //                    }
+            //                //                    cv::imshow("word1",word1);
+            //                //                    cv::imshow("word2",word2);
+            //                //                char w1,w2;
+
+            //                //                    cv::Mat wordReshpae1 = word1.clone();
+            //                //                    cv::Mat wordReshpae2 = word2.clone();
+            //                //                    cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
+            //                //                    cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
+            //                //                    cv::imwrite("SVM/"+w1+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
+            //                //                    cv::imwrite("SVM/"+w2+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
+            //                //                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
 
 
-            //                    cv::resize(pano,pano,cv::Size(pano.cols/2,pano.rows/2));
-            //                    cv::imshow("Stitch",pano);
-            //                    //                cv::waitKey(3);
-            //                }
-
-            //            }
-
-
+            cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
+            //                //show image
+            cv::imshow("Stitch",panoDrawCircle);
+            //                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
+            //                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
+            //                //                cv::imshow("tag",circleImg[i]);
+            //                //                cv::waitKey(100);
+            //                //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
+            //                //                }
+            ////                cv::waitKey(50);
 
 
 
