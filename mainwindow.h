@@ -4,11 +4,12 @@
 #include <opencv.hpp>
 #include <core/ocl.hpp>
 #include <features2d.hpp>
-//#include <stitching.hpp>
+#include "ml.hpp"
 
 #include <omp.h>
 
 #include <QMainWindow>
+#include <QCameraInfo>
 #include <QDebug>
 #include <QFileDialog>
 #include <QTime>

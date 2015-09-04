@@ -122,7 +122,7 @@ public:
         tab_2->setObjectName(QStringLiteral("tab_2"));
         groupBox = new QGroupBox(tab_2);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(10, 40, 211, 311));
+        groupBox->setGeometry(QRect(10, 10, 211, 311));
         maxRadius_hough_circle_spinBox = new QSpinBox(groupBox);
         maxRadius_hough_circle_spinBox->setObjectName(QStringLiteral("maxRadius_hough_circle_spinBox"));
         maxRadius_hough_circle_spinBox->setGeometry(QRect(100, 130, 61, 31));
@@ -199,7 +199,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

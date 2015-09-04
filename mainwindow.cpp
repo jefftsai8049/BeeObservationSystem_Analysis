@@ -15,15 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     stitcher = new cam_input;
     TT = new trajectory_tracking;
     TR = new tag_recognition;
-
+    
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
     connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
-
-
+    
+    
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
-
-
+    
 #ifdef DEBUG_TSAI
     qDebug() << "Running a debug build";
 #endif
@@ -38,14 +37,14 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionLoad_Raw_Video_File_triggered()
 {
     QString dirName = QFileDialog::getExistingDirectory();
-
+    
     dir.setPath(dirName);
     QStringList dirList = dir.entryList(QDir::Dirs,QDir::Name);
-
+    
     QStringList nameFilter;
     nameFilter.append("*.avi");
-
-
+    
+    
     for (int j = 0;j<dirList.size()-2;j++)
     {
         dir.cd(dirList[j+2]);
@@ -61,23 +60,23 @@ void MainWindow::on_actionLoad_Raw_Video_File_triggered()
         fileName = fileName.mid(2,fileName.length()-2);
         ui->videoName_textBrowser->insertPlainText(fileName);
     }
-
-
+    
+    
 }
 
 
 void MainWindow::on_actionLoad_Stitching_Image_triggered()
 {
     QStringList fileNames = QFileDialog::getOpenFileNames();
-
-
+    
+    
     std::vector<std::string> fileNamesVec;
     for(int i = 0; i < fileNames.size(); i++)
     {
         fileNamesVec.push_back(fileNames[i].toStdString());
     }
     stitcher->initialVideo(fileNamesVec);
-
+    
 }
 
 void MainWindow::receivePano(cv::Mat pano)
@@ -102,7 +101,7 @@ void MainWindow::stitchImage()
     {
         videoList[i].erase(videoList[i].begin());
     }
-
+    
     if (stitchMode == 1)
     {
         stitcher->setVideoName(fileNames);
@@ -117,7 +116,7 @@ void MainWindow::stitchImage()
         }
     }
     ui->statusBar->showMessage(QString::fromStdString(fileNames[1])+" is processing...");
-
+    
 }
 
 void MainWindow::changeStitchMode()
@@ -154,7 +153,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
     static cv::Point lastPoint;
     cv::Point shiftDelta = cv::Point(0,0);
     int imgIndex;
-
+    
     if (event == 1)
     {
         lastPoint = cv::Point(x,y);
@@ -166,7 +165,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
         cv::FileStorage f("manual_stitching.xml",cv::FileStorage::WRITE);
         f << "point" << originPoint;
         f.release();
-
+        
     }
     if (flag == 1)
     {
@@ -185,14 +184,14 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
         {
             imgIndex = 2;
         }
-
+        
         originPoint[imgIndex].x = originPoint[imgIndex].x+shiftDelta.x;
         originPoint[imgIndex].y = originPoint[imgIndex].y+shiftDelta.y;
         //        qDebug() << imgIndex << shiftDelta.x << shiftDelta.y;
         //        qDebug() << originPoint[imgIndex].x <<originPoint[imgIndex].y;
-
+        
         lastPoint = cv::Point(x,y);
-
+        
         qDebug() << originPoint[0].x << originPoint[0].y << originPoint[1].x << originPoint[1].y << originPoint[2].x << originPoint[2].y;
         cv::Mat cat(cv::Size(imgSizeX*3,imgSizeY),CV_8UC3,cv::Scalar(0));
         for (int i=0;i<3;i++)
@@ -201,13 +200,13 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
             {
                 stitchFrame[i](cv::Rect(0,0,fmin(imgSizeX,imgSizeX*3-originPoint[i].x),imgSizeY-originPoint[i].y)).copyTo(cat(cv::Rect(originPoint[i].x,originPoint[i].y,fmin(imgSizeX,imgSizeX*3-originPoint[i].x),imgSizeY-originPoint[i].y)));
             }
-
+            
         }
-
+        
         cv::imshow("Stitch",cat);
-
+        
     }
-
+    
 }
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
@@ -223,7 +222,7 @@ void MainWindow::on_stitchingStop_pushButton_clicked()
     disconnect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
     stitcher->stopStitch(true);
     TT->stopStitch();
-
+    
 }
 
 void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
@@ -232,7 +231,7 @@ void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
     std::vector<cv::Point> p;
     if (f.isOpened())
     {
-
+        
         f["point"] >> p;
         f.release();
     }
@@ -256,12 +255,12 @@ void MainWindow::on_stitching_pushButton_clicked()
             stitchFrame.push_back(temp);
             cap.release();
         }
-
+        
         originPoint.resize(3);
         originPoint[0] = cv::Point(0,0);
         originPoint[1] = cv::Point(imgSizeX,0);
         originPoint[2] = cv::Point(imgSizeX*2,0);
-
+        
         cv::Mat cat;
         cv::hconcat(stitchFrame,cat);
         cv::namedWindow("Stitch");
@@ -281,7 +280,7 @@ void MainWindow::on_stitching_pushButton_clicked()
             stitchFrame.push_back(temp);
             cap.release();
         }
-
+        
     }
 }
 
@@ -322,47 +321,40 @@ void MainWindow::on_show_image_checkBox_clicked()
 
 void MainWindow::on_load_training_data_pushButton_clicked()
 {
-    QStringList fileNames = QFileDialog::getOpenFileNames();
-
-
-
-    for(int i =0;i<fileNames.size();i++)
-    {
-        cv::Mat src = cv::imread(fileNames[i].toStdString());
-        src = TT->bgr2gray(src);
-
-        cv::Mat word1,word2;
-        TR->tagImgProc(src,word1,word2);
-
-        //        cv::imshow("word1",word1);
-        //        cv::imshow("word2",word2);
-        //        for (int j=0;j<dst.size();j++)
-        //        {
-        ////            cv::imwrite("word/"+std::to_string(i)+"_"+std::to_string(j)+".jpg",dst[j]);
-
-        ////            cv::waitKey(500);//            cv::imshow("tag",dst[j]);
-
-        //        }
-        cv::waitKey(500);
-    }
+    
+#ifdef QT_DEBUG
+    
+#endif
+    
+    //    cv::Ptr<cv::ml::SVM> SVMModel;
+    //    cv::Ptr<cv::ml::TrainData> data;
+    //    data->create();
+    //    SVMModel->trainAuto(data);
+    
 }
 
 void MainWindow::on_test_recognition_pushButton_clicked()
 {
-    QStringList fileNames = QFileDialog::getOpenFileNames();
-
-    if(TR->loadSVMModel("svm_grid_search_opt.yaml"))
-    {
-
-
-        for(int i =0;i<fileNames.size();i++)
-        {
-            cv::Mat src = cv::imread(fileNames[i].toStdString());
-            src = TT->bgr2gray(src);
-
-            qDebug() << "word" << TR->wordRecognition(src);
-
-//            cv::waitKey(500);
-        }
-    }
+    QString fileName = QFileDialog::getExistingDirectory();
+    cv::Mat trainData;
+    cv::Mat trainLabel;
+    
+    TR->loadTrainData(fileName,trainData,trainLabel);
+    qDebug() << "SVM";
+    cv::Ptr<cv::ml::SVM> SVMModel = cv::ml::SVM::create();
+    SVMModel->setType(cv::ml::SVM::C_SVC);
+    SVMModel->setKernel(cv::ml::SVM::RBF);
+    SVMModel->setGamma(0.1);
+    SVMModel->setC(1);
+    qDebug() << "Set";
+//    SVMModel->create();
+    qDebug() << trainLabel.at<int>(1,1);
+    cv::Ptr<cv::ml::TrainData> data;
+    data = cv::ml::TrainData::create(trainData,cv::ml::ROW_SAMPLE,trainLabel);
+    qDebug() << "Data OK";
+    SVMModel->trainAuto(data);
+    qDebug() << "Train Finish";
+    SVMModel->save("model.yml");
+    qDebug() << "Saved";
 }
+

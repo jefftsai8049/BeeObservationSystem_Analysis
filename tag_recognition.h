@@ -9,6 +9,9 @@
 #include <QDebug>
 #include <QTime>
 #include <QFileInfo>
+#include <QDir>
+#include <QString>
+#include <QStringList>
 
 
 #include <opencv.hpp>
@@ -27,6 +30,8 @@ public:
     char wordRecognition(cv::Mat &src);
 
     bool loadSVMModel(const std::string &fileName);
+
+    void loadTrainData(const QString &path, cv::Mat &trainData, cv::Mat &trainLabel);
 
 signals:
 

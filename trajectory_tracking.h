@@ -34,15 +34,9 @@ public:
 
     cv::Mat imageShiftLoaded(std::vector<cv::Mat> stitchFrame);
 
-    cv::Mat bgr2gray(cv::Mat src);
-
     void setVideoName(std::vector<std::string> videoName);
 
-    void setCircleDectionMode(const int &mode);
-
     void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
-
-    void setContourParamters(const int &threshold,const int &area);
 
     void setShowImage(const bool &status);
 
@@ -70,9 +64,6 @@ private:
 
     bool showImage = true;
 
-
-    int circleDectionMode = 0;
-
     //Hough Circle Parameters
     int dp = 2;
 
@@ -86,16 +77,9 @@ private:
 
     int maxRadius = 9;
 
-    //Contour
-    int contourThreshold = 90;
-
-    int contourArea = 10;
-
     void run();
 
     cv::Mat imageCutBlack(cv::Mat src);
-
-//    cv::Ptr<cv::cuda::HoughCirclesDetector> circleDetect = cv::cuda::createHoughCirclesDetector(dp,minDist,para_1,para_2,minRadius,maxRadius);
 
 };
 

@@ -69,17 +69,11 @@ void trajectory_tracking::setVideoName(std::vector<std::string> videoName)
 
 }
 
-void trajectory_tracking::setCircleDectionMode(const int &mode)
-{
-    //mode 0 Hough Transform
-    //mode 1 Contour
-
-    this->circleDectionMode = mode;
-}
 
 void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius)
 {
-    qDebug() << "set";
+    qDebug() << "hough circles parametrs set";
+
     this->dp = dp;
 
     this->minDist = minDist;
@@ -91,20 +85,6 @@ void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minD
     this->minRadius = minRadius;
 
     this->maxRadius = maxRadius;
-    //cuda testing
-    //    circleDetect->setDp(this->dp);
-    //    circleDetect->setMinDist(this->minDist);
-    //    circleDetect->setCannyThreshold(this->para_1);
-    //    circleDetect->setVotesThreshold(this->para_2);
-
-    //    circleDetect->setMinRadius(this->minRadius);
-    //    circleDetect->setMaxRadius(this->maxRadius);
-}
-
-void trajectory_tracking::setContourParamters(const int &threshold,const int &area)
-{
-    this->contourThreshold = threshold;
-    this->contourArea = area;
 }
 
 void trajectory_tracking::setShowImage(const bool &status)
@@ -147,6 +127,7 @@ void trajectory_tracking::run()
         //calculate fps
         QTime clock;
         clock.start();
+
         std::vector<cv::Mat> frame(3);
         std::vector<cv::Mat> frameGray(3);
 
@@ -176,9 +157,6 @@ void trajectory_tracking::run()
         pano = this->imageShiftLoaded(frameGray);
         pano = this->imageCutBlack(pano);
 
-        //mode 0 Hough Transform
-        //mode 1 Contour
-
         //hough circle detection
         std::vector<cv::Vec3f> circles;
         //            cv::Size downSample = cv::Size(pano.cols/2,pano.rows/2);
@@ -192,8 +170,8 @@ void trajectory_tracking::run()
         for (int i=0;i<circles.size();i++)
         {
             cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2-1,circles[i][2]*2*2-1),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
-            cv::imshow("word1",circleImg[i]);
-//            cv::imshow("word2",word2);
+//            cv::imshow("word1",circleImg[i]);
+            //            cv::imshow("word2",word2);
             cv::Mat word1,word2;
             TR->tagImgProc(circleImg[i],word1,word2);
 
@@ -202,17 +180,16 @@ void trajectory_tracking::run()
             w1[i].push_back(TR->wordRecognition(word1));
             w2[i].push_back(TR->wordRecognition(word2));
 
-            //                qDebug() << QString::fromStdString(w1[i])<<QString::fromStdString(w2[i]);
-
-
+            cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
+            cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
+            cv::imwrite("SVM/"+w1[i]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
+            cv::imwrite("SVM/"+w2[i]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
+            qDebug() << QString::fromStdString(w1[i]) << QString::fromStdString(w2[i]);
         }
 
         if (showImage)
         {
-
-
-            //                //draw cicle
-            //                //                qDebug() << circles.size();
+            //draw cicle
             cv::Mat panoDrawCircle = pano.clone();
             for(int i = 0; i < circles.size(); i++ )
             {
@@ -223,25 +200,8 @@ void trajectory_tracking::run()
                 cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
             }
 
-
-            //                //                cv::waitKey(3);
-            //                //cut subimage
-
-            //                //                for (int i=0;i<circles.size();i++)
-            //                //                {
-
-
-            //                //                    cv::imshow("word1",word1);
-            //                //                    cv::imshow("word2",word2);
-            //                //                char w1,w2;
-
-            //                //                    cv::Mat wordReshpae1 = word1.clone();
-            //                //                    cv::Mat wordReshpae2 = word2.clone();
-            //                //                    cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
-            //                //                    cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
-            //                //                    cv::imwrite("SVM/"+w1+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
-            //                //                    cv::imwrite("SVM/"+w2+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
-            //                //                    qDebug() << QString::fromStdString(w1) << QString::fromStdString(w2);
+//            cv::Mat wordReshpae1 = word1.clone();
+//            cv::Mat wordReshpae2 = word2.clone();
 
 
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
@@ -261,6 +221,8 @@ void trajectory_tracking::run()
 
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
+
+//        cv::waitKey(500);
     }
 
 
@@ -271,20 +233,8 @@ void trajectory_tracking::run()
     }
     qDebug() << "finish";
     emit finish();
-}
 
-cv::Mat trajectory_tracking::bgr2gray(cv::Mat src)
-{
-    cv::Mat dst;
-    dst.create(src.rows,src.cols,CV_8UC1);
-    for(int i=0;i<src.rows;i++)
-    {
-        for(int j=0;j<src.cols;j++)
-        {
-            dst.at<uchar>(i,j) = (src.at<cv::Vec3b>(i,j)[0]+src.at<cv::Vec3b>(i,j)[1]+src.at<cv::Vec3b>(i,j)[2])/3;
-        }
-    }
-    return dst;
+
 }
 
 cv::Mat trajectory_tracking::imageCutBlack(cv::Mat src)

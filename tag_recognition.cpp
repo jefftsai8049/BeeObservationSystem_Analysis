@@ -12,20 +12,23 @@ tag_recognition::~tag_recognition()
 
 void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 {
-
     //resize and histogram equalize
     cv::resize(src,src,cv::Size(tagSize,tagSize));
     cv::equalizeHist(src,src);
     cv::Mat circleMask(tagSize,tagSize,CV_8UC1,cv::Scalar::all(0));
+
+
 
     //remove the black circle
     cv::circle(circleMask,cv::Point2f(12,12),11,cv::Scalar(255),-1);
     cv::Mat srcNoCircle(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
     src.copyTo(srcNoCircle,circleMask);
 
+
     //convert to binary image
     cv::Mat srcBinary;
     cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
+
 
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
@@ -75,40 +78,36 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
 char tag_recognition::wordRecognition(cv::Mat &src)
 {
-    QTime t;
-    t.start();
     //check input image
-    if((src.cols == 1 && src.rows == 1) || (src.cols > 18 || src.rows > 20) || (float)src.rows/(float)src.cols < 1.0 )
+    if((src.cols == 1 && src.rows == 1) || (src.cols > 18 || src.rows > 20) || ((float)src.rows/(float)src.cols < 1.0) )
     {
-        //        qDebug() << "shit word" << src.cols << src.rows;
         return '!';
     }
     else
     {
-//#ifdef DEBUG_TSAI
 //        cv::imshow("src",src);
-//#endif
+
+        //find padding size
         int leftPadding = round((src.rows-src.cols)/2.0);
         int rightPadding = floor((src.rows-src.cols)/2.0);
 
+        //padding and resize
         cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
         cv::resize(src,src,cv::Size(16,16));
         cv::equalizeHist(src,src);
-        //        cv::imshow("padding",src);
-
+//        cv::imshow("padding",src);
 
         src = src.reshape(1,1);
         cv::normalize(src,src,0,1,cv::NORM_MINMAX);
         src.convertTo(src,CV_32FC1);
 
-
-        //        SVMModel = cv::ml::StatModel::load<cv::ml::SVM>("svm_grid_search_opt.yaml");
-
+        //predict
         char result = SVMModel->predict(src);
+
         //        qDebug() << "result" << result;
         return result;
     }
-    //        cv::waitKey(500);
+
 }
 
 bool tag_recognition::loadSVMModel(const std::string &fileName)
@@ -127,6 +126,44 @@ bool tag_recognition::loadSVMModel(const std::string &fileName)
         return false;
     }
 
+}
+
+void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::Mat &trainLabel)
+{
+
+    QDir fileDir(path);
+    QStringList fileFolder = fileDir.entryList(QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
+    qDebug() << fileFolder;
+
+
+
+    for(int i=0;i<fileFolder.size();i++)
+    {
+        fileDir.cd(fileFolder[i]);
+        QStringList imageFileNames = fileDir.entryList(QDir::Files|QDir::NoDotAndDotDot,QDir::Name);
+        qDebug() << fileDir.dirName();
+        for(int j=0;j<imageFileNames.size();j++)
+        {
+            cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
+
+            int leftPadding = round((src.rows-src.cols)/2.0);
+            int rightPadding = floor((src.rows-src.cols)/2.0);
+            cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
+            cv::resize(src,src,cv::Size(16,16));
+
+            cv::normalize(src,src,0,1,cv::NORM_MINMAX);
+            src.convertTo(src,CV_32FC1);
+
+            trainData.push_back(src.reshape(1,1));
+            trainLabel.push_back((int)fileDir.dirName().at(0).toLatin1());
+        }
+
+        fileDir.cd("..");
+
+        qDebug() << fileDir.absolutePath();
+    }
+    trainLabel.convertTo(trainLabel,CV_32SC1);
+//    qDebug() << trainData.cols <<trainData.rows;
 }
 
 void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv::Point2f> > &blobs)
@@ -342,8 +379,6 @@ cv::Mat tag_recognition::drawBlob(std::vector<std::vector<cv::Point2f> > blobs)
     cv::Mat output = cv::Mat::zeros(cv::Size(tagSize,tagSize), CV_8UC3);
     for(int i = 0;i<blobs.size();i++)
     {
-        if(i!=0)
-            break;
         unsigned char r = 255 * (rand()/(1.0 + RAND_MAX));
         unsigned char g = 255 * (rand()/(1.0 + RAND_MAX));
         unsigned char b = 255 * (rand()/(1.0 + RAND_MAX));
