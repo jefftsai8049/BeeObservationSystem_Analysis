@@ -23,6 +23,9 @@
 #include "trajectory_tracking.h"
 #include "tag_recognition.h"
 
+#include "qsmartgraphicsview/qsmartgraphicsview.h"
+#include "qsmartgraphicsview/qsmartlabel.h"
+
 #define fps 12
 #define imgSizeX 1200
 #define imgSizeY 1600
@@ -51,6 +54,8 @@ private slots:
 
     void receiveFPS(const double &fpsRun);
 
+    void receiveShowImage(const cv::Mat &src);
+
     void stitchImage();
 
     void changeStitchMode();
@@ -62,8 +67,6 @@ private slots:
     void on_stitchingStart_pushButton_clicked();
 
     void on_stitchingStop_pushButton_clicked();
-
-    void on_actionLoad_Maunal_Stitching_Setting_triggered();
 
     void on_stitching_pushButton_clicked();
 
@@ -84,6 +87,14 @@ private slots:
     void on_load_training_data_pushButton_clicked();
 
     void on_test_recognition_pushButton_clicked();
+
+    void on_binarythreshold_spinBox_valueChanged(int arg1);
+
+    void on_actionChange_SVM_Model_triggered();
+
+    void on_actionChange_PCA_Model_triggered();
+
+    void on_actionChange_Stitching_Model_triggered();
 
 private:
     Ui::MainWindow *ui;

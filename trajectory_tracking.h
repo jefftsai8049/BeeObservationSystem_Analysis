@@ -40,13 +40,25 @@ public:
 
     void setShowImage(const bool &status);
 
+    void setSVMModelFileName(const std::string &fileName);
+
+    void setPCAModelFileName(const std::string &fileName);
+
+    void setManualStitchingFileName(const std::string &fileName);
+
+    void setTagBinaryThreshold(const double &value);
+
     void stopStitch();
+
+
 
 signals:
 
     void finish();
 
     void sendFPS(const double &fps);
+
+    void sendImage(const cv::Mat &src);
 
 public slots:
 
@@ -65,17 +77,21 @@ private:
     bool showImage = true;
 
     //Hough Circle Parameters
-    int dp = 2;
+    int dp;
 
-    int minDist = 20;
+    int minDist;
 
-    int para_1 = 150;
+    int para_1;
 
-    int para_2 = 25;
+    int para_2;
 
-    int minRadius = 6;
+    int minRadius;
 
-    int maxRadius = 9;
+    int maxRadius;
+
+    std::string SVMModelFileName;
+
+    std::string PCAModelFileName;
 
     void run();
 

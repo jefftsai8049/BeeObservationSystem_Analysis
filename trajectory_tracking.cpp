@@ -92,6 +92,34 @@ void trajectory_tracking::setShowImage(const bool &status)
     showImage = status;
 }
 
+void trajectory_tracking::setSVMModelFileName(const std::string &fileName)
+{
+    this->SVMModelFileName = fileName;
+}
+
+void trajectory_tracking::setPCAModelFileName(const std::string &fileName)
+{
+    this->PCAModelFileName = fileName;
+}
+
+void trajectory_tracking::setManualStitchingFileName(const std::string &fileName)
+{
+    cv::FileStorage f(fileName,cv::FileStorage::READ);
+    std::vector<cv::Point> p;
+    if (f.isOpened())
+    {
+
+        f["point"] >> p;
+        f.release();
+    }
+    this->setImageShiftOriginPoint(p);
+}
+
+void trajectory_tracking::setTagBinaryThreshold(const double &value)
+{
+    TR->setTagBinaryThreshold(value);
+}
+
 void trajectory_tracking::stopStitch()
 {
     this->stopped = true;
@@ -111,22 +139,17 @@ void trajectory_tracking::run()
     }
 
     //load SVM model
-    if(!TR->loadSVMModel("model.yaml"))
+    if(!TR->loadSVMModel(SVMModelFileName))
     {
         return;
     }
-    if(!TR->loadPCAModel("PCA_Model.txt"))
+    if(!TR->loadPCAModel(PCAModelFileName))
     {
         return;
     }
-//        if(!TR->loadSVMModel("svm_grid_search_opt.yaml"))
-//    {
-//        return;
-//    }
 
     //thread stop flag
     this->stopped = false;
-
     int frameCount = 0;
 
     //main processing loop
@@ -179,8 +202,6 @@ void trajectory_tracking::run()
         for (int i=0;i<circles.size();i++)
         {
             cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2-1,circles[i][2]*2*2-1),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
-//            cv::imshow("word1",circleImg[i]);
-            //            cv::imshow("word2",word2);
             cv::Mat word1,word2;
             TR->tagImgProc(circleImg[i],word1,word2);
 
@@ -210,34 +231,19 @@ void trajectory_tracking::run()
                 cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
                 cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
             }
-
-//            cv::Mat wordReshpae1 = word1.clone();
-//            cv::Mat wordReshpae2 = word2.clone();
-
-
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
-            //                //show image
-            cv::imshow("Stitch",panoDrawCircle);
-            //                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_1.jpg",word1);
-            //                //                cv::imwrite("word/"+std::to_string(frameCount)+"_"+std::to_string(i)+"_2.jpg",word2);
-            //                //                cv::imshow("tag",circleImg[i]);
-            //                //                cv::waitKey(100);
-            //                //            cv::imwrite("tag/"+std::to_string(frameCount)+"_"+std::to_string(i)+".jpg",circleImg[i]);
-            //                //                }
-            ////                cv::waitKey(50);
-
-
+            emit sendImage(panoDrawCircle);
 
         }
 
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
 
-//        cv::waitKey(10000);
+//        cv::waitKey(1000);
     }
 
 
-
+    //close video file and emit finish signal
     for(int i = 0; i < 3; i++)
     {
         cap[i].release();
@@ -250,6 +256,7 @@ void trajectory_tracking::run()
 
 cv::Mat trajectory_tracking::imageCutBlack(cv::Mat src)
 {
+
     cv::Mat dst(src, cv::Rect(0, 0, originPoint[2].x+imgSizeX, imgSizeY));
     return dst;
 }

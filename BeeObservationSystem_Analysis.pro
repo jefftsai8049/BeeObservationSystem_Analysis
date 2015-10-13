@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,13 +17,17 @@ SOURCES += main.cpp\
     stitcherfix/stitcherfix.cpp \
     cam_input.cpp \
     trajectory_tracking.cpp \
-    tag_recognition.cpp
+    tag_recognition.cpp \
+    qsmartgraphicsview/qsmartgraphicsview.cpp \
+    qsmartgraphicsview/qsmartlabel.cpp
 
 HEADERS  += mainwindow.h \
     stitcherfix/stitcherfix.h \
     cam_input.h \
     trajectory_tracking.h \
-    tag_recognition.h
+    tag_recognition.h \
+    qsmartgraphicsview/qsmartgraphicsview.h \
+    qsmartgraphicsview/qsmartlabel.h
 
 FORMS    += mainwindow.ui
 

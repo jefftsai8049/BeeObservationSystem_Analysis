@@ -1,4 +1,4 @@
-#include "tag_recognition.h"
+ #include "tag_recognition.h"
 
 tag_recognition::tag_recognition(QObject *parent) : QObject(parent)
 {
@@ -27,7 +27,8 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
     //convert to binary image
     cv::Mat srcBinary;
-    cv::threshold(srcNoCircle,srcBinary,tagBinaryThreshold,255,CV_THRESH_BINARY_INV);
+//    qDebug() << binaryThreshold;
+    cv::threshold(srcNoCircle,srcBinary,binaryThreshold,255,CV_THRESH_BINARY_INV);
 
 
     //normalize from 0-255 to 0-1
@@ -89,11 +90,10 @@ void tag_recognition::wordImage2Data(cv::Mat &src)
 
 int tag_recognition::wordRecognition(cv::Mat &src)
 {
-//    cv::imwrite("m.jpg",src);
     //check input image
     if((src.cols == 1 && src.rows == 1) || (src.cols > 18 || src.rows > 20) || ((float)src.rows/(float)src.cols < 1.0) )
     {
-        qDebug() << "!";
+        //qDebug() << "!";
         return '!';
     }
     else
@@ -116,9 +116,7 @@ int tag_recognition::wordRecognition(cv::Mat &src)
         pca.project(src,src);
         int  result = SVMModel->predict(src);
         int resultMap = this->wordMapping(result);
-        qDebug() << result << resultMap;
-
-//                qDebug() << "result" << result;
+        //qDebug() << result << resultMap;
         return resultMap;
     }
 
@@ -204,16 +202,11 @@ void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::M
         {
             cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
             this->wordImage2Data(src);
-//            this->wordRecognition(src);
-
             trainData.push_back(src.reshape(1,1));
-
             trainLabel.push_back(fileFolder.indexOf(fileDir.dirName().at(0)));
         }
 
         fileDir.cd("..");
-
-        qDebug() << fileDir.absolutePath();
     }
     trainLabel.convertTo(trainLabel,CV_32SC1);
 
@@ -225,13 +218,11 @@ void tag_recognition::loadTestData(const QString &path, std::vector<cv::Mat> &te
     QStringList fileFolder = fileDir.entryList(QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
     qDebug() << fileFolder;
 
-
-
     for(int i=0;i<fileFolder.size();i++)
     {
         fileDir.cd(fileFolder[i]);
         QStringList imageFileNames = fileDir.entryList(QDir::Files|QDir::NoDotAndDotDot,QDir::Name);
-        qDebug() << fileDir.dirName();
+        //qDebug() << fileDir.dirName();
         for(int j=0;j<imageFileNames.size();j++)
         {
             cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
@@ -243,14 +234,12 @@ void tag_recognition::loadTestData(const QString &path, std::vector<cv::Mat> &te
 
         fileDir.cd("..");
 
-        qDebug() << fileDir.absolutePath();
     }
-    //    testLabel.convertTo(testLabel,CV_32SC1);
 }
 
 bool tag_recognition::loadPCAModel(const std::string &fileName)
 {
-
+    //load PCA model
     QFileInfo fileInfo;
     fileInfo.setFile(QString::fromStdString(fileName));
     if(fileInfo.exists())
@@ -267,6 +256,13 @@ bool tag_recognition::loadPCAModel(const std::string &fileName)
     }
 
 
+}
+
+void tag_recognition::setTagBinaryThreshold(const int &value)
+{
+    //set tag recognition binary threshold
+
+    this->binaryThreshold = value;
 }
 
 void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv::Point2f> > &blobs)

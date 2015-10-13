@@ -12,20 +12,28 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    this->setWindowIcon(QIcon("icon/honeybee.jpg"));
+
     stitcher = new cam_input;
     TT = new trajectory_tracking;
-    TR = new tag_recognition;
-    
+
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
     connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
     
     
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
-    
-#ifdef DEBUG_TSAI
-    qDebug() << "Running a debug build";
-#endif
+    connect(TT,SIGNAL(sendImage(cv::Mat)),this,SLOT(receiveShowImage(cv::Mat)));
+
+
+    TT->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
+    TT->setManualStitchingFileName("manual_stitching.xml");
+    TT->setSVMModelFileName("model.yaml");
+    TT->setPCAModelFileName("PCA_Model.txt");
+    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+
+
 }
 
 MainWindow::~MainWindow()
@@ -51,9 +59,7 @@ void MainWindow::on_actionLoad_Raw_Video_File_triggered()
         videoList.push_back(dir.entryList(nameFilter,QDir::Files,QDir::Name));
         dir.cdUp();
     }
-#ifdef DEBUG_TSAI
-    qDebug () << videoList[0] << videoList[1] << videoList[2];
-#endif
+
     for (int k = 0;k<videoList[0].size();k++)
     {
         QString fileName = videoList[0][k]+"\n";
@@ -91,6 +97,20 @@ void MainWindow::receiveFPS(const double &fpsRun)
     ui->processing_lcdNumber->display(fpsRun);
 }
 
+void MainWindow::receiveShowImage(const cv::Mat &src)
+{
+
+    static bool status = 0;
+    if(status == 0)
+    {
+        ui->imageShow_widget->initialize(1,src.cols,src.rows);
+        status = 1;
+    }
+    cv::Mat dst;
+    cv::cvtColor(src,dst,cv::COLOR_GRAY2BGR);
+    ui->imageShow_widget->setImage(dst);
+}
+
 void MainWindow::stitchImage()
 {
     qDebug() << "start";
@@ -109,11 +129,8 @@ void MainWindow::stitchImage()
     }
     else if(stitchMode == 0)
     {
-        if(manualLoad)
-        {
-            TT->setVideoName(fileNames);
-            TT->start();
-        }
+        TT->setVideoName(fileNames);
+        TT->start();
     }
     ui->statusBar->showMessage(QString::fromStdString(fileNames[1])+" is processing...");
     
@@ -211,7 +228,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
-    cv::namedWindow("Stitch",cv::WINDOW_AUTOSIZE);
+    //    TR->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
     connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
     //    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     stitchImage();
@@ -223,21 +240,6 @@ void MainWindow::on_stitchingStop_pushButton_clicked()
     stitcher->stopStitch(true);
     TT->stopStitch();
     
-}
-
-void MainWindow::on_actionLoad_Maunal_Stitching_Setting_triggered()
-{
-    cv::FileStorage f("manual_stitching.xml",cv::FileStorage::READ);
-    std::vector<cv::Point> p;
-    if (f.isOpened())
-    {
-        
-        f["point"] >> p;
-        f.release();
-    }
-    TT->setImageShiftOriginPoint(p);
-    manualLoad = 1;
-    ui->statusBar->showMessage("Manual Stitching Setting Loaded");
 }
 
 void MainWindow::on_stitching_pushButton_clicked()
@@ -322,15 +324,6 @@ void MainWindow::on_show_image_checkBox_clicked()
 void MainWindow::on_load_training_data_pushButton_clicked()
 {
     
-#ifdef QT_DEBUG
-    
-#endif
-    
-    //    cv::Ptr<cv::ml::SVM> SVMModel;
-    //    cv::Ptr<cv::ml::TrainData> data;
-    //    data->create();
-    //    SVMModel->trainAuto(data);
-    
 }
 
 void MainWindow::on_test_recognition_pushButton_clicked()
@@ -369,38 +362,61 @@ void MainWindow::on_test_recognition_pushButton_clicked()
         cv::normalize(testData[i],testData[i],0,1,cv::NORM_MINMAX);
     }
 
-    //    for(int j=0;j<(C_upper-C_lower);j++)
-    //    {
-    //        for(int k=0;k<(Gamma_upper-Gamma_lower);k++)
-    //        {
-    //    int j=3;
-    //train SVM model
-    qDebug() << "SVM";
-
-//    SVMModel->setGamma(pow(2,k+Gamma_lower));
-//    SVMModel->setC(pow(2,j+C_lower));
-    SVMModel->setGamma(pow(2,-12));
-    SVMModel->setC(pow(2,9));
-//    qDebug() << "Set" << j+C_lower << k+Gamma_lower;
-    cv::Ptr<cv::ml::TrainData> data;
-    data = cv::ml::TrainData::create(trainData,cv::ml::ROW_SAMPLE,trainLabel);
-    qDebug() << "Data OK";
-    SVMModel->train(data);
-    qDebug() << "Train Finish";
-    SVMModel->save("model.yaml");
-    qDebug() << "Saved";
-
-
-    //calculate accuracy
-    int correct = 0;
-    for(int i=0;i<testData.size();i++)
+    for(int j=0;j<(C_upper-C_lower);j++)
     {
-        if(SVMModel->predict(testData[i]) == testLabel[i])
-            correct++;
+        for(int k=0;k<(Gamma_upper-Gamma_lower);k++)
+        {
+            //train SVM model
+            qDebug() << "SVM";
+
+            SVMModel->setGamma(pow(2,k+Gamma_lower));
+            SVMModel->setC(pow(2,j+C_lower));
+            //            SVMModel->setGamma(pow(2,-12));
+            //            SVMModel->setC(pow(2,9));
+            qDebug() << "Set" << j+C_lower << k+Gamma_lower;
+            cv::Ptr<cv::ml::TrainData> data;
+            data = cv::ml::TrainData::create(trainData,cv::ml::ROW_SAMPLE,trainLabel);
+            SVMModel->train(data);
+            SVMModel->save("model.yaml");
+            qDebug() << "Saved";
+
+
+            //calculate accuracy
+            int correct = 0;
+            for(int i=0;i<testData.size();i++)
+            {
+                if(SVMModel->predict(testData[i]) == testLabel[i])
+                    correct++;
+            }
+            qDebug() << (double)correct/(double)testData.size();
+        }
     }
-    qDebug() << (double)correct/(double)testData.size();
-    //        }
-    //    }
 
 }
 
+
+void MainWindow::on_binarythreshold_spinBox_valueChanged(int arg1)
+{
+    TT->setTagBinaryThreshold(arg1);
+}
+
+void MainWindow::on_actionChange_SVM_Model_triggered()
+{
+    QString fileNameQ = QFileDialog::getOpenFileName(this,"SVM Model (.yaml)","","Model Files (*.yaml)");
+    TT->setSVMModelFileName(fileNameQ.toStdString());
+    ui->statusBar->showMessage("Change SVM model "+fileNameQ);
+}
+
+void MainWindow::on_actionChange_PCA_Model_triggered()
+{
+    QString fileNameQ = QFileDialog::getOpenFileName(this,"PCA Model (.txt)","","Model Files (*.txt)");
+    TT->setPCAModelFileName(fileNameQ.toStdString());
+    ui->statusBar->showMessage("Change PCA model "+fileNameQ);
+}
+
+void MainWindow::on_actionChange_Stitching_Model_triggered()
+{
+    QString fileNameQ = QFileDialog::getOpenFileName(this,"Stitching Model (.xml)","","Model Files (*.xml)");
+    TT->setManualStitchingFileName(fileNameQ.toStdString());
+    ui->statusBar->showMessage("Change Stitching model "+fileNameQ);
+}

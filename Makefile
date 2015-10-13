@@ -209,6 +209,7 @@ Makefile: BeeObservationSystem_Analysis.pro C:\Qt\5.5\msvc2013_64\mkspecs\win32-
 		C:\Qt\5.5\msvc2013_64\mkspecs\features\lex.prf \
 		BeeObservationSystem_Analysis.pro \
 		C:/Qt/5.5/msvc2013_64/lib/qtmain.prl \
+		C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGL.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Widgets.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Gui.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Core.prl
@@ -349,6 +350,7 @@ C:\Qt\5.5\msvc2013_64\mkspecs\features\yacc.prf:
 C:\Qt\5.5\msvc2013_64\mkspecs\features\lex.prf:
 BeeObservationSystem_Analysis.pro:
 C:/Qt/5.5/msvc2013_64/lib/qtmain.prl:
+C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGL.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Widgets.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Gui.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Core.prl:
