@@ -76,17 +76,28 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     this->cutWords(wordsMask,rawDst,word1,word2);
 }
 
-char tag_recognition::wordRecognition(cv::Mat &src)
+void tag_recognition::wordImage2Data(cv::Mat &src)
 {
+    int leftPadding = round((src.rows-src.cols)/2.0);
+    int rightPadding = floor((src.rows-src.cols)/2.0);
+    cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
+    cv::resize(src,src,cv::Size(16,16));
+    cv::equalizeHist(src,src);
+    cv::normalize(src,src,0,1,cv::NORM_MINMAX);
+    src.convertTo(src,CV_32FC1);
+}
+
+int tag_recognition::wordRecognition(cv::Mat &src)
+{
+//    cv::imwrite("m.jpg",src);
     //check input image
     if((src.cols == 1 && src.rows == 1) || (src.cols > 18 || src.rows > 20) || ((float)src.rows/(float)src.cols < 1.0) )
     {
+        qDebug() << "!";
         return '!';
     }
     else
     {
-//        cv::imshow("src",src);
-
         //find padding size
         int leftPadding = round((src.rows-src.cols)/2.0);
         int rightPadding = floor((src.rows-src.cols)/2.0);
@@ -95,18 +106,65 @@ char tag_recognition::wordRecognition(cv::Mat &src)
         cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
         cv::resize(src,src,cv::Size(16,16));
         cv::equalizeHist(src,src);
-//        cv::imshow("padding",src);
 
         src = src.reshape(1,1);
         cv::normalize(src,src,0,1,cv::NORM_MINMAX);
         src.convertTo(src,CV_32FC1);
 
-        //predict
-        char result = SVMModel->predict(src);
 
-        //        qDebug() << "result" << result;
-        return result;
+        //predict
+        pca.project(src,src);
+        int  result = SVMModel->predict(src);
+        int resultMap = this->wordMapping(result);
+        qDebug() << result << resultMap;
+
+//                qDebug() << "result" << result;
+        return resultMap;
     }
+
+}
+
+int tag_recognition::wordMapping(const int &result)
+{
+    QMap<int,int> map;
+//    map.insert(0,'!');
+//    map.insert(1,'A');
+//    map.insert(2,'B');
+//    map.insert(3,'C');
+//    map.insert(4,'E');
+//    map.insert(5,'F');
+//    map.insert(6,'G');
+//    map.insert(7,'H');
+//    map.insert(8,'K');
+//    map.insert(9,'L');
+//    map.insert(10,'O');
+//    map.insert(11,'P');
+//    map.insert(12,'R');
+//    map.insert(13,'S');
+//    map.insert(14,'T');
+//    map.insert(15,'U');
+//    map.insert(16,'Y');
+//    map.insert(17,'Z');
+
+    map.insert(0,'A');
+    map.insert(1,'B');
+    map.insert(2,'C');
+    map.insert(3,'E');
+    map.insert(4,'F');
+    map.insert(5,'G');
+    map.insert(6,'H');
+    map.insert(7,'K');
+    map.insert(8,'L');
+    map.insert(9,'O');
+    map.insert(10,'P');
+    map.insert(11,'R');
+    map.insert(12,'S');
+    map.insert(13,'T');
+    map.insert(14,'U');
+    map.insert(15,'Y');
+    map.insert(16,'Z');
+
+    return map[result];
 
 }
 
@@ -145,17 +203,12 @@ void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::M
         for(int j=0;j<imageFileNames.size();j++)
         {
             cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
-
-            int leftPadding = round((src.rows-src.cols)/2.0);
-            int rightPadding = floor((src.rows-src.cols)/2.0);
-            cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
-            cv::resize(src,src,cv::Size(16,16));
-
-            cv::normalize(src,src,0,1,cv::NORM_MINMAX);
-            src.convertTo(src,CV_32FC1);
+            this->wordImage2Data(src);
+//            this->wordRecognition(src);
 
             trainData.push_back(src.reshape(1,1));
-            trainLabel.push_back((int)fileDir.dirName().at(0).toLatin1());
+
+            trainLabel.push_back(fileFolder.indexOf(fileDir.dirName().at(0)));
         }
 
         fileDir.cd("..");
@@ -163,7 +216,57 @@ void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::M
         qDebug() << fileDir.absolutePath();
     }
     trainLabel.convertTo(trainLabel,CV_32SC1);
-//    qDebug() << trainData.cols <<trainData.rows;
+
+}
+
+void tag_recognition::loadTestData(const QString &path, std::vector<cv::Mat> &testData, std::vector<int> &testLabel)
+{
+    QDir fileDir(path);
+    QStringList fileFolder = fileDir.entryList(QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
+    qDebug() << fileFolder;
+
+
+
+    for(int i=0;i<fileFolder.size();i++)
+    {
+        fileDir.cd(fileFolder[i]);
+        QStringList imageFileNames = fileDir.entryList(QDir::Files|QDir::NoDotAndDotDot,QDir::Name);
+        qDebug() << fileDir.dirName();
+        for(int j=0;j<imageFileNames.size();j++)
+        {
+            cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
+            this->wordImage2Data(src);
+            testData.push_back(src.reshape(1,1));
+
+            testLabel.push_back(fileFolder.indexOf(fileDir.dirName().at(0)));
+        }
+
+        fileDir.cd("..");
+
+        qDebug() << fileDir.absolutePath();
+    }
+    //    testLabel.convertTo(testLabel,CV_32SC1);
+}
+
+bool tag_recognition::loadPCAModel(const std::string &fileName)
+{
+
+    QFileInfo fileInfo;
+    fileInfo.setFile(QString::fromStdString(fileName));
+    if(fileInfo.exists())
+    {
+        cv::FileStorage PCA_read(fileName,cv::FileStorage::READ);
+        PCA_read["mean"] >> pca.mean;
+        PCA_read["vectors"] >> pca.eigenvectors;
+        PCA_read["values"] >> pca.eigenvalues;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+
 }
 
 void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv::Point2f> > &blobs)
@@ -213,9 +316,10 @@ void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv
 
 float tag_recognition::calcualteCOV(std::vector<cv::Point2f> points)
 {
-
+    //check point size must >= 3, two words and a dot
     if(points.size() < 2)
         return NULL;
+    //calculate mean of blobs
     float meanX = 0;
     float meanY = 0;
     for(int i = 0; i < points.size(); i++)
@@ -224,18 +328,18 @@ float tag_recognition::calcualteCOV(std::vector<cv::Point2f> points)
         meanY += points[i].y/(float)points.size();
     }
     //    qDebug() << meanX << meanY;
+    //calculate COV
     float cov = 0;
     for(int i = 0; i < points.size(); i++)
     {
-
         cov += ((points[i].x-meanX)*(points[i].y-meanY))/(points.size()-1);
-
     }
     return abs(cov);
 }
 
 void tag_recognition::sortblobs(std::vector<std::vector<cv::Point2f>> &blobs)
 {
+    //sort blobs by COV
     for (int i = 0;i < blobs.size()-1; i++)
     {
         for(int j = i+1;j < blobs.size(); j++)
@@ -252,6 +356,7 @@ void tag_recognition::sortblobs(std::vector<std::vector<cv::Point2f>> &blobs)
 
 void tag_recognition::sortblobsSize(std::vector<std::vector<cv::Point2f> > &blobs)
 {
+    //sort blobs by size
     for (int i = 0;i < blobs.size()-1; i++)
     {
         for(int j = i+1;j < blobs.size(); j++)
@@ -268,9 +373,11 @@ void tag_recognition::sortblobsSize(std::vector<std::vector<cv::Point2f> > &blob
 
 std::vector<std::vector<cv::Point2f> > tag_recognition::removeImpossibleBlobs(std::vector<std::vector<cv::Point2f> > blobs)
 {
+    //remove useless blobs
     for(int i = 0; i < blobs.size(); i++)
     {
         //        qDebug() << i << blobs[i].size() << this->calcualteCOV(blobs[i]) <<this->calcualteCOV(blobs[i])*blobs[i].size();
+        //if blobs size < 5 pixel is useless and for two words
         if(blobs[i].size() < 5 || i > 2)
         {
             blobs.erase(blobs.begin()+i);

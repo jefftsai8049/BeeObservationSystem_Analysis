@@ -44,7 +44,7 @@ void cam_input::run()
 
 
     stopped = false;
-    cv::VideoCapture c;
+
 
 
     cv::Mat pano;

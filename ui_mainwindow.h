@@ -73,7 +73,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(607, 462);
+        MainWindow->resize(1132, 662);
         QFont font;
         font.setFamily(QStringLiteral("Noto Sans CJK TC DemiLight"));
         font.setPointSize(14);
@@ -89,33 +89,33 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 0, 591, 401));
+        tabWidget->setGeometry(QRect(860, 20, 251, 581));
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         stitching_pushButton = new QPushButton(tab);
         stitching_pushButton->setObjectName(QStringLiteral("stitching_pushButton"));
-        stitching_pushButton->setGeometry(QRect(10, 150, 151, 91));
+        stitching_pushButton->setGeometry(QRect(10, 69, 101, 51));
         stitchingStart_pushButton = new QPushButton(tab);
         stitchingStart_pushButton->setObjectName(QStringLiteral("stitchingStart_pushButton"));
-        stitchingStart_pushButton->setGeometry(QRect(10, 260, 151, 91));
+        stitchingStart_pushButton->setGeometry(QRect(10, 129, 101, 51));
         stitchingStop_pushButton = new QPushButton(tab);
         stitchingStop_pushButton->setObjectName(QStringLiteral("stitchingStop_pushButton"));
-        stitchingStop_pushButton->setGeometry(QRect(180, 260, 151, 91));
+        stitchingStop_pushButton->setGeometry(QRect(120, 129, 101, 51));
         label = new QLabel(tab);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(350, 0, 141, 41));
+        label->setGeometry(QRect(10, 179, 141, 41));
         videoName_textBrowser = new QTextBrowser(tab);
         videoName_textBrowser->setObjectName(QStringLiteral("videoName_textBrowser"));
-        videoName_textBrowser->setGeometry(QRect(350, 41, 221, 311));
+        videoName_textBrowser->setGeometry(QRect(10, 220, 221, 311));
         QFont font1;
         font1.setPointSize(10);
         videoName_textBrowser->setFont(font1);
         processing_lcdNumber = new QLCDNumber(tab);
         processing_lcdNumber->setObjectName(QStringLiteral("processing_lcdNumber"));
-        processing_lcdNumber->setGeometry(QRect(30, 20, 101, 51));
+        processing_lcdNumber->setGeometry(QRect(120, 9, 101, 51));
         show_image_checkBox = new QCheckBox(tab);
         show_image_checkBox->setObjectName(QStringLiteral("show_image_checkBox"));
-        show_image_checkBox->setGeometry(QRect(190, 190, 141, 51));
+        show_image_checkBox->setGeometry(QRect(120, 69, 111, 51));
         show_image_checkBox->setChecked(true);
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
@@ -172,15 +172,15 @@ public:
         tab_3->setObjectName(QStringLiteral("tab_3"));
         load_training_data_pushButton = new QPushButton(tab_3);
         load_training_data_pushButton->setObjectName(QStringLiteral("load_training_data_pushButton"));
-        load_training_data_pushButton->setGeometry(QRect(10, 10, 181, 81));
+        load_training_data_pushButton->setGeometry(QRect(10, 370, 181, 81));
         test_recognition_pushButton = new QPushButton(tab_3);
         test_recognition_pushButton->setObjectName(QStringLiteral("test_recognition_pushButton"));
-        test_recognition_pushButton->setGeometry(QRect(10, 100, 181, 81));
+        test_recognition_pushButton->setGeometry(QRect(10, 460, 181, 81));
         tabWidget->addTab(tab_3, QString());
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 607, 21));
+        menuBar->setGeometry(QRect(0, 0, 1132, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
@@ -199,7 +199,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

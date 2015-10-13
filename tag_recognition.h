@@ -12,7 +12,7 @@
 #include <QDir>
 #include <QString>
 #include <QStringList>
-
+#include <QMap>
 
 #include <opencv.hpp>
 #include <core/ocl.hpp>
@@ -27,11 +27,19 @@ public:
 
     void tagImgProc(cv::Mat src, cv::Mat &word1, cv::Mat &word2);
 
-    char wordRecognition(cv::Mat &src);
+    void wordImage2Data(cv::Mat &src);
+
+    int wordRecognition(cv::Mat &src);
+
+    int wordMapping(const int &result);
 
     bool loadSVMModel(const std::string &fileName);
 
     void loadTrainData(const QString &path, cv::Mat &trainData, cv::Mat &trainLabel);
+
+    void loadTestData(const QString &path, std::vector<cv::Mat> &testData, std::vector<int> &testLabel);
+
+    bool loadPCAModel(const std::string &fileName);
 
 signals:
 
@@ -63,6 +71,8 @@ private:
     void cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1, cv::Mat &word2);
 
     cv::Ptr<cv::ml::SVM> SVMModel;
+
+    cv::PCA pca;
 };
 
 #endif // TAG_RECOGNITION_H

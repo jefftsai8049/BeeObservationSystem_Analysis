@@ -9,7 +9,7 @@
 #include <omp.h>
 
 #include <QMainWindow>
-#include <QCameraInfo>
+#include <QDataStream>
 #include <QDebug>
 #include <QFileDialog>
 #include <QTime>

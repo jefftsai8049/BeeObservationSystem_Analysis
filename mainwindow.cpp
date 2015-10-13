@@ -335,26 +335,72 @@ void MainWindow::on_load_training_data_pushButton_clicked()
 
 void MainWindow::on_test_recognition_pushButton_clicked()
 {
+    //load train data
     QString fileName = QFileDialog::getExistingDirectory();
     cv::Mat trainData;
     cv::Mat trainLabel;
-    
     TR->loadTrainData(fileName,trainData,trainLabel);
-    qDebug() << "SVM";
+    //load test data
+    QString fileName2 = QFileDialog::getExistingDirectory();
+    std::vector<cv::Mat> testData;
+    std::vector<int> testLabel;
+    TR->loadTestData(fileName2,testData,testLabel);
+
+    //train PCA model and save
+    cv::PCA pca(trainData,cv::Mat(),cv::PCA::DATA_AS_ROW,25);
+    trainData = pca.project(trainData);
+    cv::normalize(trainData,trainData,0,1,cv::NORM_MINMAX);
+    cv::FileStorage PCA_save("PCA_Model.txt",cv::FileStorage::WRITE);
+    pca.write(PCA_save);
+
+
     cv::Ptr<cv::ml::SVM> SVMModel = cv::ml::SVM::create();
     SVMModel->setType(cv::ml::SVM::C_SVC);
     SVMModel->setKernel(cv::ml::SVM::RBF);
-    SVMModel->setGamma(0.1);
-    SVMModel->setC(1);
-    qDebug() << "Set";
-//    SVMModel->create();
-    qDebug() << trainLabel.at<int>(1,1);
+    int C_lower = -5;
+    int C_upper = 15;
+    int Gamma_lower = -15;
+    int Gamma_upper = 3;
+
+    //calculate accuracy
+    for(int i=0;i<testData.size();i++)
+    {
+        testData[i] = pca.project(testData[i]);
+        cv::normalize(testData[i],testData[i],0,1,cv::NORM_MINMAX);
+    }
+
+    //    for(int j=0;j<(C_upper-C_lower);j++)
+    //    {
+    //        for(int k=0;k<(Gamma_upper-Gamma_lower);k++)
+    //        {
+    //    int j=3;
+    //train SVM model
+    qDebug() << "SVM";
+
+//    SVMModel->setGamma(pow(2,k+Gamma_lower));
+//    SVMModel->setC(pow(2,j+C_lower));
+    SVMModel->setGamma(pow(2,-12));
+    SVMModel->setC(pow(2,9));
+//    qDebug() << "Set" << j+C_lower << k+Gamma_lower;
     cv::Ptr<cv::ml::TrainData> data;
     data = cv::ml::TrainData::create(trainData,cv::ml::ROW_SAMPLE,trainLabel);
     qDebug() << "Data OK";
-    SVMModel->trainAuto(data);
+    SVMModel->train(data);
     qDebug() << "Train Finish";
-    SVMModel->save("model.yml");
+    SVMModel->save("model.yaml");
     qDebug() << "Saved";
+
+
+    //calculate accuracy
+    int correct = 0;
+    for(int i=0;i<testData.size();i++)
+    {
+        if(SVMModel->predict(testData[i]) == testLabel[i])
+            correct++;
+    }
+    qDebug() << (double)correct/(double)testData.size();
+    //        }
+    //    }
+
 }
 
