@@ -14,6 +14,7 @@
 #include <QMap>
 
 #include <opencv.hpp>
+#include "omp.h"
 #include <core/ocl.hpp>
 
 
@@ -28,19 +29,23 @@ public:
 
     void wordImage2Data(cv::Mat &src);
 
+    void wordImage2DataHOG(cv::Mat &src);
+
     int wordRecognition(cv::Mat &src);
 
     int wordMapping(const int &result);
 
     bool loadSVMModel(const std::string &fileName);
 
-    void loadTrainData(const QString &path, cv::Mat &trainData, cv::Mat &trainLabel);
+    void loadTrainData(const QString &path, cv::Mat &trainData, cv::Mat &trainLabel, const bool HOG);
 
-    void loadTestData(const QString &path, std::vector<cv::Mat> &testData, std::vector<int> &testLabel);
+    void loadTestData(const QString &path, std::vector<cv::Mat> &testData, std::vector<int> &testLabel, const bool HOG);
 
     bool loadPCAModel(const std::string &fileName);
 
     void setTagBinaryThreshold(const int &value);
+
+    void setPCAandHOG(const bool &PCAS,const bool &HOGS);
 
     int binaryThreshold;
 signals:
@@ -77,6 +82,10 @@ private:
     cv::Ptr<cv::ml::SVM> SVMModel;
 
     cv::PCA pca;
+
+    bool HOGStatus;
+
+    bool PCAStatus;
 
 
 };

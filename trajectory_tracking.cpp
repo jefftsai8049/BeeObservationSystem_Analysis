@@ -120,6 +120,11 @@ void trajectory_tracking::setTagBinaryThreshold(const double &value)
     TR->setTagBinaryThreshold(value);
 }
 
+void trajectory_tracking::setPCAandHOG(const bool &PCAS, const bool &HOGS)
+{
+    TR->setPCAandHOG(PCAS,HOGS);
+}
+
 void trajectory_tracking::stopStitch()
 {
     this->stopped = true;
@@ -184,13 +189,11 @@ void trajectory_tracking::run()
 
         cv::Mat pano;
         //stitching image
-
         pano = this->imageShiftLoaded(frameGray);
         pano = this->imageCutBlack(pano);
 
         //hough circle detection
         std::vector<cv::Vec3f> circles;
-        //            cv::Size downSample = cv::Size(pano.cols/2,pano.rows/2);
         cv::Mat panoSmall;
         cv::resize(pano,panoSmall,cv::Size(pano.cols/2,pano.rows/2));
         cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
@@ -199,8 +202,11 @@ void trajectory_tracking::run()
         std::vector<std::string> w1,w2;
         w1.resize(circles.size());
         w2.resize(circles.size());
+
+        #pragma omp parallel for
         for (int i=0;i<circles.size();i++)
         {
+            qDebug() << i;
             cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2-1,circles[i][2]*2*2-1),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
             cv::Mat word1,word2;
             TR->tagImgProc(circleImg[i],word1,word2);
@@ -222,14 +228,15 @@ void trajectory_tracking::run()
         if (showImage)
         {
             //draw cicle
-            cv::Mat panoDrawCircle = pano.clone();
+            cv::Mat panoDrawCircle;
+            cv::cvtColor(pano,panoDrawCircle,cv::COLOR_GRAY2BGR);
             for(int i = 0; i < circles.size(); i++ )
             {
                 cv::Point center(circles[i][0]*2, circles[i][1]*2);
                 int radius = circles[i][2]*2;
-                cv::circle( panoDrawCircle, center, radius, cv::Scalar(255), 1, 8, 0 );
-                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
-                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(255));
+                cv::circle( panoDrawCircle, center, radius, cv::Scalar(0,0,255), 1, 8, 0 );
+                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
+                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
             }
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
             emit sendImage(panoDrawCircle);

@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -326,11 +326,6 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Model</string>
-     </attribute>
-    </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>Tag</string>
@@ -345,7 +340,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Load Data</string>
+       <string>Train</string>
       </property>
      </widget>
      <widget class="QPushButton" name="test_recognition_pushButton">
@@ -359,6 +354,25 @@
       </property>
       <property name="text">
        <string>Test</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="PCARemains_spinBox">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>270</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>256</number>
+      </property>
+      <property name="value">
+       <number>25</number>
       </property>
      </widget>
     </widget>
@@ -424,9 +438,19 @@
     <addaction name="actionChange_SVM_Model"/>
     <addaction name="actionChange_PCA_Model"/>
     <addaction name="actionChange_Stitching_Model"/>
+    <addaction name="separator"/>
+    <addaction name="actionWith_PCA"/>
+    <addaction name="actionWith_HOG"/>
+   </widget>
+   <widget class="QMenu" name="menuModel">
+    <property name="title">
+     <string>Model</string>
+    </property>
+    <addaction name="actionTrain_New_Tag_Model"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSet"/>
+   <addaction name="menuModel"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -450,11 +474,6 @@
     <string>Load Stitching Image</string>
    </property>
   </action>
-  <action name="actionLoad_Maunal_Stitching_Setting">
-   <property name="text">
-    <string>Load Maunal Stitching Setting</string>
-   </property>
-  </action>
   <action name="actionChange_SVM_Model">
    <property name="text">
     <string>Change SVM Model</string>
@@ -468,6 +487,33 @@
   <action name="actionChange_Stitching_Model">
    <property name="text">
     <string>Change Stitching Model</string>
+   </property>
+  </action>
+  <action name="actionWith_PCA">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>With PCA</string>
+   </property>
+  </action>
+  <action name="actionWith_HOG">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>With HOG</string>
+   </property>
+  </action>
+  <action name="actionTrain_New_Tag_Model">
+   <property name="text">
+    <string>Train New Tag Model</string>
    </property>
   </action>
  </widget>

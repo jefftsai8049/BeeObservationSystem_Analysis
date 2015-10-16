@@ -1,4 +1,4 @@
- #include "tag_recognition.h"
+#include "tag_recognition.h"
 
 tag_recognition::tag_recognition(QObject *parent) : QObject(parent)
 {
@@ -27,7 +27,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
     //convert to binary image
     cv::Mat srcBinary;
-//    qDebug() << binaryThreshold;
+    //    qDebug() << binaryThreshold;
     cv::threshold(srcNoCircle,srcBinary,binaryThreshold,255,CV_THRESH_BINARY_INV);
 
 
@@ -79,13 +79,40 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
 void tag_recognition::wordImage2Data(cv::Mat &src)
 {
+    //padding and histogram equalization
     int leftPadding = round((src.rows-src.cols)/2.0);
     int rightPadding = floor((src.rows-src.cols)/2.0);
     cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
     cv::resize(src,src,cv::Size(16,16));
     cv::equalizeHist(src,src);
     cv::normalize(src,src,0,1,cv::NORM_MINMAX);
+
+    //convert to 32FC1 and reshape to row vector
     src.convertTo(src,CV_32FC1);
+    src = src.reshape(1,1);
+}
+
+void tag_recognition::wordImage2DataHOG(cv::Mat &src)
+{
+    //padding and histogram equalization
+    int leftPadding = round((src.rows-src.cols)/2.0);
+    int rightPadding = floor((src.rows-src.cols)/2.0);
+    cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
+    cv::resize(src,src,cv::Size(16,16));
+    cv::equalizeHist(src,src);
+
+    std::vector<float> descriptors;
+    //winSize(64,128), blockSize(16,16), blockStride(8,8),cellSize(8,8), nbins(9)
+    cv::HOGDescriptor hog(cv::Size(12,12),cv::Size(6,6),cv::Size(3,3),cv::Size(3,3),9);
+    hog.compute(src,descriptors);
+
+    //    qDebug() << descriptors.size();
+
+    cv::Mat dst(descriptors);
+    cv::transpose(dst,dst);
+    cv::normalize(dst,dst,0,1,cv::NORM_MINMAX);
+    dst.convertTo(src,CV_32FC1);
+    //    src = src.reshape(1,1);
 }
 
 int tag_recognition::wordRecognition(cv::Mat &src)
@@ -98,23 +125,17 @@ int tag_recognition::wordRecognition(cv::Mat &src)
     }
     else
     {
-        //find padding size
-        int leftPadding = round((src.rows-src.cols)/2.0);
-        int rightPadding = floor((src.rows-src.cols)/2.0);
+        if(HOGStatus)
+        {
+            wordImage2DataHOG(src);
+        }
 
-        //padding and resize
-        cv::copyMakeBorder(src,src,0,0,leftPadding,rightPadding,cv::BORDER_CONSTANT,cv::Scalar(255));
-        cv::resize(src,src,cv::Size(16,16));
-        cv::equalizeHist(src,src);
-
-        src = src.reshape(1,1);
-        cv::normalize(src,src,0,1,cv::NORM_MINMAX);
-        src.convertTo(src,CV_32FC1);
-
-
+        if(PCAStatus)
+        {
+            pca.project(src,src);
+        }
         //predict
-        pca.project(src,src);
-        int  result = SVMModel->predict(src);
+        int result = SVMModel->predict(src);
         int resultMap = this->wordMapping(result);
         //qDebug() << result << resultMap;
         return resultMap;
@@ -125,24 +146,24 @@ int tag_recognition::wordRecognition(cv::Mat &src)
 int tag_recognition::wordMapping(const int &result)
 {
     QMap<int,int> map;
-//    map.insert(0,'!');
-//    map.insert(1,'A');
-//    map.insert(2,'B');
-//    map.insert(3,'C');
-//    map.insert(4,'E');
-//    map.insert(5,'F');
-//    map.insert(6,'G');
-//    map.insert(7,'H');
-//    map.insert(8,'K');
-//    map.insert(9,'L');
-//    map.insert(10,'O');
-//    map.insert(11,'P');
-//    map.insert(12,'R');
-//    map.insert(13,'S');
-//    map.insert(14,'T');
-//    map.insert(15,'U');
-//    map.insert(16,'Y');
-//    map.insert(17,'Z');
+    //    map.insert(0,'!');
+    //    map.insert(1,'A');
+    //    map.insert(2,'B');
+    //    map.insert(3,'C');
+    //    map.insert(4,'E');
+    //    map.insert(5,'F');
+    //    map.insert(6,'G');
+    //    map.insert(7,'H');
+    //    map.insert(8,'K');
+    //    map.insert(9,'L');
+    //    map.insert(10,'O');
+    //    map.insert(11,'P');
+    //    map.insert(12,'R');
+    //    map.insert(13,'S');
+    //    map.insert(14,'T');
+    //    map.insert(15,'U');
+    //    map.insert(16,'Y');
+    //    map.insert(17,'Z');
 
     map.insert(0,'A');
     map.insert(1,'B');
@@ -184,7 +205,7 @@ bool tag_recognition::loadSVMModel(const std::string &fileName)
 
 }
 
-void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::Mat &trainLabel)
+void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::Mat &trainLabel,const bool HOG)
 {
 
     QDir fileDir(path);
@@ -201,8 +222,15 @@ void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::M
         for(int j=0;j<imageFileNames.size();j++)
         {
             cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
-            this->wordImage2Data(src);
-            trainData.push_back(src.reshape(1,1));
+            if(HOG)
+            {
+                this->wordImage2DataHOG(src);
+            }
+            else
+            {
+                this->wordImage2Data(src);
+            }
+            trainData.push_back(src);
             trainLabel.push_back(fileFolder.indexOf(fileDir.dirName().at(0)));
         }
 
@@ -212,7 +240,7 @@ void tag_recognition::loadTrainData(const QString &path,cv::Mat &trainData,cv::M
 
 }
 
-void tag_recognition::loadTestData(const QString &path, std::vector<cv::Mat> &testData, std::vector<int> &testLabel)
+void tag_recognition::loadTestData(const QString &path, std::vector<cv::Mat> &testData, std::vector<int> &testLabel, const bool HOG)
 {
     QDir fileDir(path);
     QStringList fileFolder = fileDir.entryList(QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
@@ -226,8 +254,15 @@ void tag_recognition::loadTestData(const QString &path, std::vector<cv::Mat> &te
         for(int j=0;j<imageFileNames.size();j++)
         {
             cv::Mat src = cv::imread((fileDir.absolutePath()+"/"+imageFileNames[j]).toStdString(),CV_8UC1);
-            this->wordImage2Data(src);
-            testData.push_back(src.reshape(1,1));
+            if(HOG)
+            {
+                this->wordImage2DataHOG(src);
+            }
+            else
+            {
+                this->wordImage2Data(src);
+            }
+            testData.push_back(src);
 
             testLabel.push_back(fileFolder.indexOf(fileDir.dirName().at(0)));
         }
@@ -263,6 +298,12 @@ void tag_recognition::setTagBinaryThreshold(const int &value)
     //set tag recognition binary threshold
 
     this->binaryThreshold = value;
+}
+
+void tag_recognition::setPCAandHOG(const bool &PCAS, const bool &HOGS)
+{
+    this->HOGStatus = HOGS;
+    this->PCAStatus = PCAS;
 }
 
 void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv::Point2f> > &blobs)
@@ -544,7 +585,7 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
     if(rotatedBlobs.size() < 2)
     {
         cv::normalize(wordsMask,wordsMask,0,255,cv::NORM_MINMAX);
-//        cv::imshow("WTF",wordsMask);
+        //        cv::imshow("WTF",wordsMask);
         word1 = cv::Mat::zeros(1,1,CV_8UC1);
         word2 = cv::Mat::zeros(1,1,CV_8UC1);
         return;

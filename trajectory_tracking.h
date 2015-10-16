@@ -48,6 +48,8 @@ public:
 
     void setTagBinaryThreshold(const double &value);
 
+    void setPCAandHOG(const bool &PCAS,const bool &HOGS);
+
     void stopStitch();
 
 
@@ -75,6 +77,8 @@ private:
     bool stopped;
 
     bool showImage = true;
+
+
 
     //Hough Circle Parameters
     int dp;

@@ -96,6 +96,8 @@ private slots:
 
     void on_actionChange_Stitching_Model_triggered();
 
+    void on_actionTrain_New_Tag_Model_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -104,6 +106,8 @@ private:
     trajectory_tracking *TT;
 
     tag_recognition *TR;
+
+    cv::PCA *pca;
 
     std::vector<std::string> getVideoName(QVector<QStringList> list, std::string path);
 
