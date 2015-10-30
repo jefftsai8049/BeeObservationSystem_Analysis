@@ -53,11 +53,9 @@ signals:
 public slots:
 
 
-
-
 private:
 
-    void findBlobs(const cv::Mat binary,std::vector<std::vector<cv::Point2f>> &blobs);
+    void findBlobs(const cv::Mat &binary, std::vector<std::vector<cv::Point2f>> &blobs);
 
     float calcualteCOV(std::vector<cv::Point2f> points);
 
@@ -67,11 +65,13 @@ private:
 
     std::vector<std::vector<cv::Point2f> > removeImpossibleBlobs(std::vector<std::vector<cv::Point2f> > blobs);
 
+    std::vector<std::vector<cv::Point2f> > removeImpossibleBlobsCOV(std::vector<std::vector<cv::Point2f> > blobs);
+
     float findRotateAngle(cv::Point2f circleCenter,cv::Point2f imgCenter);
 
     float findRotateAngle(std::vector<cv::Point2f> blobsCenter, cv::Point2f &imgCenter);
 
-    cv::Mat drawBlob(std::vector<std::vector<cv::Point2f> > blobs);
+    void drawBlob(cv::Mat &dst, std::vector<std::vector<cv::Point2f> > blobs);
 
     cv::Mat drawBlobMask(std::vector<std::vector<cv::Point2f> > blobs);
 

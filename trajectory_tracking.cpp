@@ -209,7 +209,7 @@ void trajectory_tracking::run()
         for (int i=0;i<circles.size();i++)
         {
             //            qDebug() << i;
-            cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2-1,circles[i][2]*2*2-1),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
+            cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2+11,circles[i][2]*2*2+11),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
             cv::Mat word1,word2;
             TR->tagImgProc(circleImg[i],word1,word2);
 
