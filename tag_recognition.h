@@ -67,7 +67,9 @@ private:
 
     std::vector<std::vector<cv::Point2f> > removeImpossibleBlobsCOV(std::vector<std::vector<cv::Point2f> > blobs);
 
-    float findRotateAngle(cv::Point2f circleCenter,cv::Point2f imgCenter);
+//    float findRotateAngle(cv::Point2f circleCenter,cv::Point2f imgCenter);
+
+    void shiftCircle(cv::Mat &src);
 
     float findRotateAngle(std::vector<cv::Point2f> blobsCenter, cv::Point2f &imgCenter);
 

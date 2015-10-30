@@ -198,33 +198,41 @@ void trajectory_tracking::run()
         cv::resize(pano,panoSmall,cv::Size(pano.cols/2,pano.rows/2));
         cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
 
-        std::vector<cv::Mat> circleImg(circles.size());
-        std::vector<std::string> w1,w2;
-        w1.resize(circles.size());
-        w2.resize(circles.size());
-
+//        std::vector<cv::Mat> circleImg;
+//        circleImg.resize(circles.size());
+//        int circleSize = circleImg.size();
+#ifndef DEBUG_TAG_RECOGNITION
+        //        std::vector<std::string> w1;
+        //        std::vector<std::string> w2;
+        //        w1.resize(circles.size());
+        //        w2.resize(circles.size());
+#endif
 #ifndef DEBUG_TAG_RECOGNITION
 #pragma omp parallel for
 #endif
-        for (int i=0;i<circles.size();i++)
+
+        for (int j=0;j<circles.size();j++)
         {
             //            qDebug() << i;
-            cv::getRectSubPix(pano,cv::Size(circles[i][2]*2*2+11,circles[i][2]*2*2+11),cv::Point(circles[i][0]*2, circles[i][1]*2),circleImg[i]);
+//            int radius = circles[j][0]*2-(circles[j][2]*2*2+11)/2;
+            cv::Mat tagImg;
+//            = pano(cv::Rect(radius, radius,circles[j][2]*2*2+11,circles[j][2]*2*2+11));
+            cv::getRectSubPix(pano,cv::Size(circles[j][2]*2*2+11,circles[j][2]*2*2+11),cv::Point(circles[j][0]*2, circles[j][1]*2),tagImg);
             cv::Mat word1,word2;
-            TR->tagImgProc(circleImg[i],word1,word2);
+            TR->tagImgProc(tagImg,word1,word2);
 
 
 #ifndef DEBUG_TAG_RECOGNITION
-            w1[i].push_back(TR->wordRecognition(word1));
-            w2[i].push_back(TR->wordRecognition(word2));
+            w1[j].push_back(TR->wordRecognition(word1));
+            w2[j].push_back(TR->wordRecognition(word2));
             //            cv::imshow("w1",word1);
             //            cv::imshow("w2",word2);
 
             //            cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
             //            cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
-            //            cv::imwrite("SVM/"+w1[i]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
-            //            cv::imwrite("SVM/"+w2[i]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
-            //            qDebug() << QString::fromStdString(w1[i]) << QString::fromStdString(w2[i]);
+            //            cv::imwrite("SVM/"+w1[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
+            //            cv::imwrite("SVM/"+w2[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
+            //            qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
 #endif
         }
 
@@ -234,7 +242,7 @@ void trajectory_tracking::run()
             //draw cicle
             cv::Mat panoDrawCircle;
             cv::cvtColor(pano,panoDrawCircle,cv::COLOR_GRAY2BGR);
-            #ifndef DEBUG_TAG_RECOGNITION
+#ifndef DEBUG_TAG_RECOGNITION
             for(int i = 0; i < circles.size(); i++ )
             {
                 cv::Point center(circles[i][0]*2, circles[i][1]*2);
@@ -243,7 +251,7 @@ void trajectory_tracking::run()
                 cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
                 cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
             }
-            #endif
+#endif
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
             emit sendImage(panoDrawCircle);
 

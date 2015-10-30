@@ -12,13 +12,14 @@ tag_recognition::~tag_recognition()
 
 void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 {
-    //resize and histogram equalize
-    //    cv::resize(src,src,cv::Size(tagSize,tagSize));
+    //histogram equalize
     cv::equalizeHist(src,src);
-    cv::Mat circleMask(src.rows,src.cols,CV_8UC1,cv::Scalar::all(0));
 
+    //shift circle to center
+    this->shiftCircle(src);
 
     //remove the black circle
+    cv::Mat circleMask(src.rows,src.cols,CV_8UC1,cv::Scalar::all(0));
     cv::circle(circleMask,cv::Point2f(src.rows/2,src.cols/2),src.cols/2,cv::Scalar(255),-1);
     cv::Mat srcNoCircle(src.rows,src.cols,CV_8UC1,cv::Scalar::all(255));
     src.copyTo(srcNoCircle,circleMask);
@@ -56,6 +57,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     this->drawBlob(srcBlobFind,blobs);
     cv::imshow("blob find",srcBlobFind);
 #endif
+
     //remove those impossible blobs
     blobs = this->removeImpossibleBlobs(blobs);
 
@@ -65,11 +67,11 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //remove blobs with too big COV
     blobs = this->removeImpossibleBlobsCOV(blobs);
 
-    //    //sort the blobs area by cov
-    //    this->sortblobs(blobs);
+    //sort the blobs area by cov
+    this->sortblobs(blobs);
 
 #ifdef DEBUG_TAG_RECOGNITION
-    //draw blob image
+//    draw blob image
     cv::Mat srcBlobFindKick = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC3);
     this->drawBlob(srcBlobFindKick,blobs);
     cv::imshow("blob find kick",srcBlobFindKick);
@@ -91,22 +93,22 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //find blobs center
     std::vector<cv::Point2f> blobCenter;
     this->findBlobCenter(blobs,blobCenter);
-    cv::Point2f imgCenter;
-//    = (blobCenter[1]+blobCenter[2])/2;
 
+    cv::Point2f imgCenter;
     //find angle
     float angle = this->findRotateAngle(blobCenter,imgCenter);
-#ifdef DEBUG_TAG_RECOGNITION
-    qDebug()  << "angle:"<< angle;
 
-#endif
 
     //rotate image
     cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, angle, 1.0);
     cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
 
+#ifdef DEBUG_TAG_RECOGNITION
+    qDebug()  << "angle:"<< angle;
     cv::imshow("rotate",srcNoCircle);
     cv::waitKey(4000);
+#endif
+
     //    cv::Mat wordsMask;
     //    cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(src.rows,src.cols),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
 
@@ -483,97 +485,36 @@ std::vector<std::vector<cv::Point2f> > tag_recognition::removeImpossibleBlobsCOV
     return blobs;
 }
 
-float tag_recognition::findRotateAngle(cv::Point2f circleCenter, cv::Point2f imgCenter)
+void tag_recognition::shiftCircle(cv::Mat &src)
 {
-    float angle;
-    float x,y,r;
-    x = circleCenter.x-imgCenter.x;
-    y = -(circleCenter.y-imgCenter.y);
-    r = sqrt(pow(x,2)+pow(y,2));
 
-    //        qDebug() << x << y << r;
-    float sinVal = y/r;
-    float cosVal = x/r;
-    float asinVal = asin(sinVal)/(2.0*3.1415926)*360.0;
-    float acosVal = acos(cosVal)/(2.0*3.1415926)*360.0;
+    cv::Mat dst;
+    dst = src.clone();
 
-    //        qDebug() << sinVal << cosVal;
-    //        qDebug() << asinVal << acosVal;
-    //I
-    if(sinVal > 0 && cosVal > 0)
-    {
-        angle = asinVal;
-    }
-    //II
-    else if(sinVal > 0 && cosVal < 0)
-    {
-        angle = acosVal;
-    }
-    //III
-    else if(sinVal < 0 && cosVal < 0)
-    {
-        angle = -acosVal;
-    }
-    //IV
-    else if(sinVal < 0 && cosVal > 0)
-    {
-        angle = asinVal;
-    }
-    //x-axis right direction
-    else if(sinVal == 0 && cosVal > 0)
-    {
-        angle = 0;
-    }
-    //x-axis left direction
-    else if(sinVal == 0 && cosVal < 0)
-    {
-        angle = 180;
-    }
-    //y-axis up direction
-    else if(sinVal > 0 && cosVal == 0)
-    {
-        angle = 90;
-    }
-    //y-axis down direction
-    else if(sinVal > 0 && cosVal == 0)
-    {
-        angle = -90;
-    }
-    else
-    {
-        angle = 0;
-    }
-    //    qDebug() << angle;
-    //    cv::imshow("labelled", output);
-    return angle;
+    cv::Mat circleMask;
+    circleMask = cv::Mat::zeros(cv::Size(src.rows-4,src.cols-4),src.type());
+    cv::circle(circleMask,cv::Point(circleMask.rows/2,circleMask.cols/2),circleMask.cols/2-2,cv::Scalar(255),2);
+
+    cv::imshow("circle mask",circleMask);
 }
+
 
 float tag_recognition::findRotateAngle(std::vector<cv::Point2f> blobsCenter, cv::Point2f &imgCenter)
 {
     float angle;
-
-    //    cv::Point2f wordsCenter;
     imgCenter = (blobsCenter[1]+blobsCenter[2])/2.0;
-    //    qDebug() << blobsCenter[1].x << blobsCenter[1].y << blobsCenter[2].x << blobsCenter[2].y << imgCenter.x <<imgCenter.y;
-
-    //    std::vector<cv::Point2f> vec2Center(3);
-    //    for(int i=0;i<blobsCenter.size();i++)
-    //    {
-    //        blobsCenter[i].y = imgCenter.y-blobsCenter[i].y;
-    //        vec2Center[i] = blobsCenter[i]-imgCenter;
-    //    }
     cv::Point2f vecAngle;
     vecAngle = blobsCenter[0]-imgCenter;
     float r = sqrt(pow(vecAngle.x,2)+pow(vecAngle.y,2));
     angle = asin(vecAngle.y/r)/2.0/3.1415926*360.0;
-    qDebug() << "angle" << angle;
+//    qDebug() << "angle" << angle;
     if(vecAngle.x >= 0)
     {
-            angle = angle+90;
+        angle = angle+90;
     }
     else
     {
-        angle = angle+90;
+        angle = -(angle+90);
     }
     return angle;
 }
