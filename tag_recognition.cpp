@@ -90,25 +90,29 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
     //find blobs center
     std::vector<cv::Point2f> blobCenter;
-    this->findBlobCenetr(blobs,blobCenter);
-    cv::Point2f imgCenter = (blobCenter[1]+blobCenter[2])/2;
+    this->findBlobCenter(blobs,blobCenter);
+    cv::Point2f imgCenter;
+//    = (blobCenter[1]+blobCenter[2])/2;
 
     //find angle
-    float angle = this->findRotateAngle(blobCenter[0],imgCenter);
+    float angle = this->findRotateAngle(blobCenter,imgCenter);
 #ifdef DEBUG_TAG_RECOGNITION
     qDebug()  << "angle:"<< angle;
-    cv::waitKey(4000);
+
 #endif
 
-//    //rotate image
-//    cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, -(angle-90), 1.0);
-//    cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
-//    cv::Mat wordsMask;
-//    cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(src.rows,src.cols),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
+    //rotate image
+    cv::Mat rotateInfo = cv::getRotationMatrix2D(imgCenter, angle, 1.0);
+    cv::warpAffine(srcNoCircle,srcNoCircle,rotateInfo,srcNoCircle.size(),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(255));
 
-//    //copy with mask
-//    cv::Mat rawDst(src.rows,src.cols,CV_8UC1,cv::Scalar::all(255));
-//    srcNoCircle.copyTo(rawDst,wordsMask);
+    cv::imshow("rotate",srcNoCircle);
+    cv::waitKey(4000);
+    //    cv::Mat wordsMask;
+    //    cv::warpAffine(this->drawBlobMask(blobs),wordsMask,rotateInfo,cv::Size(src.rows,src.cols),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
+
+    //    //copy with mask
+    //    cv::Mat rawDst(src.rows,src.cols,CV_8UC1,cv::Scalar::all(255));
+    //    srcNoCircle.copyTo(rawDst,wordsMask);
 
 
     //    //cut word
@@ -552,21 +556,24 @@ float tag_recognition::findRotateAngle(std::vector<cv::Point2f> blobsCenter, cv:
     imgCenter = (blobsCenter[1]+blobsCenter[2])/2.0;
     //    qDebug() << blobsCenter[1].x << blobsCenter[1].y << blobsCenter[2].x << blobsCenter[2].y << imgCenter.x <<imgCenter.y;
 
-    std::vector<cv::Point2f> vec2Center(3);
-    for(int i=0;i<blobsCenter.size();i++)
-    {
-        blobsCenter[i].y = imgCenter.y-blobsCenter[i].y;
-        vec2Center[i] = blobsCenter[i]-imgCenter;
-    }
+    //    std::vector<cv::Point2f> vec2Center(3);
+    //    for(int i=0;i<blobsCenter.size();i++)
+    //    {
+    //        blobsCenter[i].y = imgCenter.y-blobsCenter[i].y;
+    //        vec2Center[i] = blobsCenter[i]-imgCenter;
+    //    }
     cv::Point2f vecAngle;
-    vecAngle = vec2Center[1]-vec2Center[0];
-    if(vec2Center[0].y <= 0)
+    vecAngle = blobsCenter[0]-imgCenter;
+    float r = sqrt(pow(vecAngle.x,2)+pow(vecAngle.y,2));
+    angle = asin(vecAngle.y/r)/2.0/3.1415926*360.0;
+    qDebug() << "angle" << angle;
+    if(vecAngle.x >= 0)
     {
-        angle = (atan(vecAngle.y/vecAngle.x)/(2.0*3.1415926)*360.0-90.0);
+            angle = angle+90;
     }
     else
     {
-        angle = (atan(vecAngle.y/vecAngle.x)/(2.0*3.1415926)*360.0-90.0);
+        angle = angle+90;
     }
     return angle;
 }
@@ -602,7 +609,7 @@ cv::Mat tag_recognition::drawBlobMask(std::vector<std::vector<cv::Point2f> > blo
     return output;
 }
 
-void tag_recognition::findBlobCenetr(std::vector<std::vector<cv::Point2f>> blobs,std::vector<cv::Point2f> &blobCenter)
+void tag_recognition::findBlobCenter(std::vector<std::vector<cv::Point2f> > blobs, std::vector<cv::Point2f> &blobCenter)
 {
     //    std::vector<cv::Point2f> blobCenter;
     for(int i = 0; i < blobs.size(); i++)
@@ -671,4 +678,3 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
     }
 
 }
-
