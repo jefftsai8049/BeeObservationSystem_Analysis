@@ -18,7 +18,6 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::Mat circleMask(tagSize,tagSize,CV_8UC1,cv::Scalar::all(0));
 
 
-
     //remove the black circle
     cv::circle(circleMask,cv::Point2f(12,12),11,cv::Scalar(255),-1);
     cv::Mat srcNoCircle(tagSize,tagSize,CV_8UC1,cv::Scalar::all(255));
@@ -34,6 +33,14 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
     cv::normalize(srcBinary,srcBinaryZeroOne,0,1,cv::NORM_MINMAX);
+
+#ifdef DEBUG_TAG_RECOGNITION
+    cv::imshow("after his eq",src);
+    cv::imshow("remove circle",srcNoCircle);
+    cv::imshow("binary",srcBinary);
+    cv::waitKey(2000);
+#endif
+
 
     //find white blobs
     std::vector < std::vector<cv::Point2f> > blobs;
@@ -106,7 +113,7 @@ void tag_recognition::wordImage2DataHOG(cv::Mat &src)
     cv::HOGDescriptor hog(cv::Size(12,12),cv::Size(6,6),cv::Size(3,3),cv::Size(3,3),9);
     hog.compute(src,descriptors);
 
-        qDebug() << descriptors.size();
+//    qDebug() << descriptors.size();
 
     cv::Mat dst(descriptors);
     cv::transpose(dst,dst);
@@ -348,7 +355,7 @@ void tag_recognition::findBlobs(const cv::Mat binary, std::vector<std::vector<cv
             label_count++;
         }
     }
-    //    qDebug() << blobs.size();
+
 }
 
 float tag_recognition::calcualteCOV(std::vector<cv::Point2f> points)

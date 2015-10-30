@@ -12,21 +12,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    //load icon image
     this->setWindowIcon(QIcon("icon/honeybee.jpg"));
-
-//    stitcher = new cam_input;
+    //for tracking honeybee position
     TT = new trajectory_tracking;
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
-//    connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
-//    connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
-
-
+    //send execute speed back to mainwindow
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
+    //send image back to mainwindow
     connect(TT,SIGNAL(sendImage(cv::Mat)),this,SLOT(receiveShowImage(cv::Mat)));
 
-
+    //trajectory tracking parameters setting
     TT->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
     TT->setManualStitchingFileName("manual_stitching.xml");
     TT->setSVMModelFileName("model/model_HOG_PCA_25_1_0.984706.yaml");
@@ -81,8 +78,6 @@ void MainWindow::on_actionLoad_Stitching_Image_triggered()
     {
         fileNamesVec.push_back(fileNames[i].toStdString());
     }
-//    stitcher->initialVideo(fileNamesVec);
-
 }
 
 void MainWindow::receivePano(cv::Mat pano)
@@ -107,6 +102,7 @@ void MainWindow::receiveShowImage(const cv::Mat &src)
         status = 1;
     }
     ui->imageShow_widget->setImage(src);
+
 }
 
 void MainWindow::stitchImage()
@@ -128,10 +124,6 @@ void MainWindow::stitchImage()
 
 }
 
-void MainWindow::changeStitchMode()
-{
-    stitchMode = 1;//auto
-}
 
 std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std::string path)
 {
@@ -229,7 +221,7 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
     disconnect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
-//    stitcher->stopStitch(true);
+
     TT->stopStitch();
 
 }

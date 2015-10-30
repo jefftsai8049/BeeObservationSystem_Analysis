@@ -94,7 +94,7 @@ LIBS +=  C:\\opencv300_x64_vc2013\\lib\\opencv_world300.lib \
 
 
 DEFINES += HAVE_OPENCV \
-#        += DEBUG_TSAI
+#        += DEBUG_TAG_RECOGNITION
 
 RESOURCES += \
     icon.qrc

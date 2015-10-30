@@ -1668,7 +1668,55 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\QImage \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLabel \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlabel.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QVariant \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QAction \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qaction.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qactiongroup.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QButtonGroup \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qbuttongroup.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QCheckBox \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qcheckbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractbutton.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QGroupBox \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qgroupbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QHeaderView \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qheaderview.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qvalidator.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qregularexpression.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qslider.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyle.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLCDNumber \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlcdnumber.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMenu \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenu.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMenuBar \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenubar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QPushButton \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qpushbutton.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QSpinBox \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qspinbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QStatusBar \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstatusbar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QTabWidget \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QTextBrowser \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtextbrowser.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtextedit.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtextdocument.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtextcursor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtextformat.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QToolBar \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtoolbar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QWidget
 
 release\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \

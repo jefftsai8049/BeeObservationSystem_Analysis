@@ -58,7 +58,6 @@ private slots:
 
     void stitchImage();
 
-    void changeStitchMode();
 
     void on_actionLoad_Raw_Video_File_triggered();
 
@@ -100,7 +99,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
 
     trajectory_tracking *TT;
 
