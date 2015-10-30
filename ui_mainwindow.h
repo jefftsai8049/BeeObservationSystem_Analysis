@@ -258,7 +258,6 @@ public:
 
         retranslateUi(MainWindow);
 
-
         tabWidget->setCurrentIndex(2);
 
 

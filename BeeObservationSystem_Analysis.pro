@@ -14,16 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    stitcherfix/stitcherfix.cpp \
-    cam_input.cpp \
     trajectory_tracking.cpp \
     tag_recognition.cpp \
     qsmartgraphicsview/qsmartgraphicsview.cpp \
     qsmartgraphicsview/qsmartlabel.cpp
 
 HEADERS  += mainwindow.h \
-    stitcherfix/stitcherfix.h \
-    cam_input.h \
     trajectory_tracking.h \
     tag_recognition.h \
     qsmartgraphicsview/qsmartgraphicsview.h \

@@ -106,7 +106,7 @@ void tag_recognition::wordImage2DataHOG(cv::Mat &src)
     cv::HOGDescriptor hog(cv::Size(12,12),cv::Size(6,6),cv::Size(3,3),cv::Size(3,3),9);
     hog.compute(src,descriptors);
 
-    //    qDebug() << descriptors.size();
+        qDebug() << descriptors.size();
 
     cv::Mat dst(descriptors);
     cv::transpose(dst,dst);

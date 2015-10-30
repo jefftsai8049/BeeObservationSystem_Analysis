@@ -19,7 +19,7 @@
 #include <QDir>
 #include <QVector>
 
-#include "cam_input.h"
+//#include "cam_input.h"
 #include "trajectory_tracking.h"
 #include "tag_recognition.h"
 
@@ -101,7 +101,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    cam_input *stitcher;
 
     trajectory_tracking *TT;
 

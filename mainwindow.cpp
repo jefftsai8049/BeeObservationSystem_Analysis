@@ -15,12 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->setWindowIcon(QIcon("icon/honeybee.jpg"));
 
-    stitcher = new cam_input;
+//    stitcher = new cam_input;
     TT = new trajectory_tracking;
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
-    connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
-    connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
+//    connect(stitcher,SIGNAL(sendPano(cv::Mat)),this,SLOT(receivePano(cv::Mat)));
+//    connect(stitcher,SIGNAL(stitchFinish()),this,SLOT(stitchImage()));
 
 
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
@@ -81,7 +81,7 @@ void MainWindow::on_actionLoad_Stitching_Image_triggered()
     {
         fileNamesVec.push_back(fileNames[i].toStdString());
     }
-    stitcher->initialVideo(fileNamesVec);
+//    stitcher->initialVideo(fileNamesVec);
 
 }
 
@@ -120,16 +120,10 @@ void MainWindow::stitchImage()
         videoList[i].erase(videoList[i].begin());
     }
 
-    if (stitchMode == 1)
-    {
-        stitcher->setVideoName(fileNames);
-        stitcher->start();
-    }
-    else if(stitchMode == 0)
-    {
-        TT->setVideoName(fileNames);
-        TT->start();
-    }
+
+    TT->setVideoName(fileNames);
+    TT->start();
+
     ui->statusBar->showMessage(QString::fromStdString(fileNames[1])+" is processing...");
 
 }
@@ -235,7 +229,7 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
     disconnect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
-    stitcher->stopStitch(true);
+//    stitcher->stopStitch(true);
     TT->stopStitch();
 
 }
@@ -409,52 +403,52 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
     {
         if(ui->actionWith_PCA->isChecked())
         {
-                testData[i] = pca->project(testData[i]);
+            testData[i] = pca->project(testData[i]);
         }
         cv::normalize(testData[i],testData[i],0,1,cv::NORM_MINMAX);
     }
 
     for(int j=0;j<(C_upper-C_lower);j++)
     {
-//        for(int k=0;k<(Gamma_upper-Gamma_lower);k++)
-//        {
-            //train SVM model
-            qDebug() << "SVM";
+        //        for(int k=0;k<(Gamma_upper-Gamma_lower);k++)
+        //        {
+        //train SVM model
+        qDebug() << "SVM";
 
-//            int k =3;
-//            int j = 14;
-//            SVMModel->setGamma(pow(2,k+Gamma_lower));
-            SVMModel->setC(pow(2,j+C_lower));
-//                                    SVMModel->setGamma(pow(2,-12));
-//                                    SVMModel->setC(pow(2,9));
-//            qDebug() << "Set" << j+C_lower << k+Gamma_lower;
-            qDebug() << "Set" << j+C_lower;
-            cv::Ptr<cv::ml::TrainData> data;
-            data = cv::ml::TrainData::create(trainData,cv::ml::ROW_SAMPLE,trainLabel);
-            SVMModel->train(data);
+        //            int k =3;
+        //            int j = 14;
+        //            SVMModel->setGamma(pow(2,k+Gamma_lower));
+        SVMModel->setC(pow(2,j+C_lower));
+        //                                    SVMModel->setGamma(pow(2,-12));
+        //                                    SVMModel->setC(pow(2,9));
+        //            qDebug() << "Set" << j+C_lower << k+Gamma_lower;
+        qDebug() << "Set" << j+C_lower;
+        cv::Ptr<cv::ml::TrainData> data;
+        data = cv::ml::TrainData::create(trainData,cv::ml::ROW_SAMPLE,trainLabel);
+        SVMModel->train(data);
 
 
-            //calculate accuracy
-            int correct = 0;
-            for(int i=0;i<testData.size();i++)
-            {
-                if(SVMModel->predict(testData[i]) == testLabel[i])
-                    correct++;
-            }
-            double accuracy = (double)correct/(double)testData.size();
-            qDebug() << accuracy;
-            //            SVMModel->save("model_test.yaml");
-            QString name = "model/model_";
-            if(ui->actionWith_HOG->isChecked())
-            {
-                name = name+"HOG_";
-            }
-            if(ui->actionWith_PCA->isChecked())
-            {
-                name = name+"PCA_"+QString::number(ui->PCARemains_spinBox->value())+"_";
-            }
-            SVMModel->save((name+QString::number(j+C_lower)+"_"+QString::number(accuracy)+".yaml").toStdString());
-//            SVMModel->save((name+QString::number(j+C_lower)+"_"+QString::number(k+Gamma_lower)+"_"+QString::number(accuracy)+".yaml").toStdString());
-//        }
+        //calculate accuracy
+        int correct = 0;
+        for(int i=0;i<testData.size();i++)
+        {
+            if(SVMModel->predict(testData[i]) == testLabel[i])
+                correct++;
+        }
+        double accuracy = (double)correct/(double)testData.size();
+        qDebug() << accuracy;
+        //            SVMModel->save("model_test.yaml");
+        QString name = "model/model_";
+        if(ui->actionWith_HOG->isChecked())
+        {
+            name = name+"HOG_";
+        }
+        if(ui->actionWith_PCA->isChecked())
+        {
+            name = name+"PCA_"+QString::number(ui->PCARemains_spinBox->value())+"_";
+        }
+        SVMModel->save((name+QString::number(j+C_lower)+"_"+QString::number(accuracy)+".yaml").toStdString());
+        //            SVMModel->save((name+QString::number(j+C_lower)+"_"+QString::number(k+Gamma_lower)+"_"+QString::number(accuracy)+".yaml").toStdString());
+        //        }
     }
 }
