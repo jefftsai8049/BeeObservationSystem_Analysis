@@ -20,18 +20,14 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
     //remove the black circle
     cv::Mat circleMask(src.rows,src.cols,CV_8UC1,cv::Scalar::all(0));
-    cv::circle(circleMask,cv::Point2f(src.rows/2,src.cols/2),src.cols/2,cv::Scalar(255),-1);
+    cv::circle(circleMask,cv::Point2f(src.rows/2,src.cols/2),src.cols/2-2,cv::Scalar(255),-1);
     cv::Mat srcNoCircle(src.rows,src.cols,CV_8UC1,cv::Scalar::all(255));
     src.copyTo(srcNoCircle,circleMask);
 
 
     //convert to binary image
     cv::Mat srcBinary;
-    //    qDebug() << binaryThreshold;
-
-    cv::adaptiveThreshold(srcNoCircle,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,15);
-    //    cv::threshold(srcNoCircle,srcBinary,binaryThreshold,255,CV_THRESH_TRIANGLE);
-
+    cv::adaptiveThreshold(srcNoCircle,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,10);
 
 #ifdef DEBUG_TAG_RECOGNITION
     cv::imshow("after his eq",src);
@@ -71,7 +67,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     this->sortblobs(blobs);
 
 #ifdef DEBUG_TAG_RECOGNITION
-//    draw blob image
+    //    draw blob image
     cv::Mat srcBlobFindKick = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC3);
     this->drawBlob(srcBlobFindKick,blobs);
     cv::imshow("blob find kick",srcBlobFindKick);
@@ -488,14 +484,37 @@ std::vector<std::vector<cv::Point2f> > tag_recognition::removeImpossibleBlobsCOV
 void tag_recognition::shiftCircle(cv::Mat &src)
 {
 
-    cv::Mat dst;
-    dst = src.clone();
+//    cv::Mat dst;
+////    dst = src.clone();
 
-    cv::Mat circleMask;
-    circleMask = cv::Mat::zeros(cv::Size(src.rows-4,src.cols-4),src.type());
-    cv::circle(circleMask,cv::Point(circleMask.rows/2,circleMask.cols/2),circleMask.cols/2-2,cv::Scalar(255),2);
 
-    cv::imshow("circle mask",circleMask);
+//    cv::imshow("sobel",dst);
+
+//    cv::Mat minCircle;
+//    minCircle.create(src.rows,src.cols,CV_32FC1);
+//    for(int i=0;i<src.rows;i++)
+//    {
+//        for(int j=0;j<src.cols;j++)
+//        {
+//            minCircle.at<float>(i,j) = src.at<uchar>(i,j)/255.0;
+//        }
+//    }
+
+//    //    src.convertTo(minCircle,CV_32F);
+//    cv::Point2f circleCenter;
+//    float r;
+
+//    cv::minEnclosingCircle(minCircle,circleCenter,r);
+//    //    minCircle = src.clone();
+//    cv::circle(minCircle,circleCenter,r,cv::Scalar(1),2);
+//    cv::imshow("WTF",minCircle*255);
+
+
+    //    cv::Mat circleMask;
+    //    circleMask = cv::Mat::zeros(cv::Size(src.rows-4,src.cols-4),src.type());
+    //    cv::circle(circleMask,cv::Point(circleMask.rows/2,circleMask.cols/2),circleMask.cols/2-2,cv::Scalar(255),2);
+
+    //    cv::imshow("circle mask",circleMask);
 }
 
 
@@ -507,7 +526,7 @@ float tag_recognition::findRotateAngle(std::vector<cv::Point2f> blobsCenter, cv:
     vecAngle = blobsCenter[0]-imgCenter;
     float r = sqrt(pow(vecAngle.x,2)+pow(vecAngle.y,2));
     angle = asin(vecAngle.y/r)/2.0/3.1415926*360.0;
-//    qDebug() << "angle" << angle;
+    //    qDebug() << "angle" << angle;
     if(vecAngle.x >= 0)
     {
         angle = angle+90;
