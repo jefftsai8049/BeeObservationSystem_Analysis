@@ -213,20 +213,14 @@ void trajectory_tracking::run()
         w1.resize(circles.size());
         w2.resize(circles.size());
 #endif
-#ifndef DEBUG_TAG_RECOGNITION
-//#pragma omp parallel for
-#endif
 
+//#pragma omp parallel for
         for (int j=0;j<circles.size();j++)
         {
-            //            qDebug() << i;
-            //                                int radius = circles[j][0]*2-(circles[j][2]*2*2+11)/2;
             cv::Mat tagImg;
-            //            = pano(cv::Rect(radius, radius,circles[j][2]*2*2+11,circles[j][2]*2*2+11));
             cv::getRectSubPix(pano,cv::Size(circles[j][2]*2*2+11,circles[j][2]*2*2+11),cv::Point(circles[j][0]*2, circles[j][1]*2),tagImg);
             cv::Mat word1,word2;
             TR->tagImgProc(tagImg,word1,word2);
-
 
 
 #ifndef DEBUG_TAG_RECOGNITION

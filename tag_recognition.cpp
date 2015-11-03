@@ -12,32 +12,39 @@ tag_recognition::~tag_recognition()
 
 void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 {
+//    qDebug() << "histogram equalize";
     //histogram equalize
     cv::equalizeHist(src,src);
 
+//    qDebug() << "convert to binary image";
     //convert to binary image
     cv::Mat srcBinary;
     cv::adaptiveThreshold(src,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,5);
 
+//    qDebug() << "normalize from 0-255 to 0-1";
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
     cv::normalize(srcBinary,srcBinaryZeroOne,0,1,cv::NORM_MINMAX);
 
+//    qDebug() << "find white blobs";
     //find white blobs
     std::vector < std::vector<cv::Point2f> > blobs;
     this->findBlobs(srcBinaryZeroOne,blobs);
 
+//    qDebug() << "find circle ring blob";
     //find circle ring blob
     std::vector < std::vector<cv::Point2f> > circleRing;
     circleRing.push_back(this->findCircleBlobs(blobs));
     cv::Mat circleMask = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC1);
     this->drawBlobMask(circleMask,circleRing);
 
+//    qDebug() << "make circle ring mask";
     //make circle ring mask
     cv::Mat circleRingMask = circleMask.clone();
     cv::floodFill(circleRingMask,cv::Point(circleMask.rows/2,circleMask.cols/2),cv::Scalar(255));
     circleRingMask = circleRingMask-circleMask;
 
+//    qDebug() << "remove blobs outside ring";
     //remove blobs outside ring
     blobs = this->maskRemoveBlobs(circleRingMask,blobs);
 
@@ -50,17 +57,17 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::imshow("blob find",srcBlobFind);
 #endif
 
+//    qDebug() << "remove those impossible blobs";
     //remove those impossible blobs
     blobs = this->removeImpossibleBlobs(blobs);
 
+//    qDebug() << "sort the blobs again by sizes";
     //sort the blobs again by sizes
     this->sortblobsSize(blobs);
 
+//    qDebug() << "remove blobs with too big COV";
     //remove blobs with too big COV
-    blobs = this->removeImpossibleBlobsCOV(blobs);
-
-    //    //sort the blobs area by cov
-    //    this->sortblobs(blobs);
+//    blobs = this->removeImpossibleBlobsCOV(blobs);
 
 #ifdef DEBUG_TAG_RECOGNITION
     //    draw blob image
@@ -75,6 +82,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 
 #endif
 
+//    qDebug() << "<3";
     if(blobs.size()<3)
     {
         word1 = cv::Mat::zeros(1,1,CV_8UC1);
@@ -83,17 +91,21 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     }
 
 
+//    qDebug() << "sort the blobs again by sizes";
     //sort the blobs again by sizes
     this->sortblobsSize(blobs);
 
+//    qDebug() << "find blobs center";
     //find blobs center
     std::vector<cv::Point2f> blobCenter;
     this->findBlobCenter(blobs,blobCenter);
 
+//    qDebug() << "find angle";
     //find angle
     cv::Point2f imgCenter;
     float angle = this->findRotateAngle(blobCenter,imgCenter);
 
+//    qDebug() << "rotate image";
     //rotate image
     cv::Mat srcNoCircle;
     src.copyTo(srcNoCircle,circleRingMask);
@@ -105,16 +117,19 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::imshow("rotate",srcNoCircle);
 #endif
 
+//    qDebug() << "erase dot blob";
     //erase dot blob
     blobs.erase(blobs.begin());
     cv::Mat wordsMask = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC1);
     this->drawBlobMask(wordsMask,blobs);
     cv::warpAffine(wordsMask,wordsMask,rotateInfo,cv::Size(src.rows,src.cols),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
 
+//    qDebug() << "copy with mask";
     //copy with mask
     cv::Mat rawDst(src.rows,src.cols,CV_8UC1,cv::Scalar::all(255));
     srcNoCircle.copyTo(rawDst,wordsMask);
 
+//    qDebug() << "cut word";
     //cut word
     this->cutWords(wordsMask,rawDst,word1,word2);
 
@@ -433,14 +448,10 @@ std::vector<cv::Point2f> tag_recognition::findCircleBlobs(std::vector<std::vecto
 
         if(distanceMean[i] > 10 && distanceVar[i] <2)
         {
-            qDebug() << "disVar" << i <<distanceVar[i] << distanceMean[i];
+//            qDebug() << "disVar" << i <<distanceVar[i] << distanceMean[i];
             dstBlob = blobs[i];
         }
-        else
-        {
-            //            qDebug() << "disVar" << i <<distanceVar[i] << distanceMean[i];
 
-        }
     }
     return dstBlob;
 
@@ -532,6 +543,9 @@ void tag_recognition::sortblobs(std::vector<std::vector<cv::Point2f>> &blobs)
 void tag_recognition::sortblobsSize(std::vector<std::vector<cv::Point2f> > &blobs)
 {
     //sort blobs by size
+
+    if(blobs.size() < 2)
+        return;
     for (int i = 0;i < blobs.size()-1; i++)
     {
         for(int j = i+1;j < blobs.size(); j++)
@@ -579,6 +593,7 @@ std::vector<std::vector<cv::Point2f> > tag_recognition::removeImpossibleBlobs(st
 std::vector<std::vector<cv::Point2f> > tag_recognition::removeImpossibleBlobsCOV(std::vector<std::vector<cv::Point2f> > blobs)
 {
     //remove useless blobs
+
     for(int i = 0; i < blobs.size()-2; i++)
     {
         //if blobs size < 5 pixel is useless and for two words
@@ -665,11 +680,9 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
     cv::normalize(wordsMask,wordsMask,0,1,cv::NORM_MINMAX);
     this->findBlobs(wordsMask,rotatedBlobs);
     rotatedBlobs = this->removeImpossibleBlobs(rotatedBlobs);
-    //    qDebug() << rotatedBlobs.size();
     if(rotatedBlobs.size() < 2)
     {
         cv::normalize(wordsMask,wordsMask,0,255,cv::NORM_MINMAX);
-        //        cv::imshow("WTF",wordsMask);
         word1 = cv::Mat::zeros(1,1,CV_8UC1);
         word2 = cv::Mat::zeros(1,1,CV_8UC1);
         return;
@@ -693,8 +706,6 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
             if(downRight[i].y < rotatedBlobs[i][j].y)
                 downRight[i].y = rotatedBlobs[i][j].y;
         }
-        //        qDebug() << topLeft.x << topLeft.y << downRight.x << downRight.y;
-        //        cv::imshow(std::to_string(i),dst);
     }
 
     if(topLeft[0].x < topLeft[1].x)
@@ -707,7 +718,4 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
         cv::getRectSubPix(rawDst,cv::Size(downRight[0].x-topLeft[0].x+4,downRight[0].y-topLeft[0].y+4),(downRight[0]+topLeft[0])/2,word2);
         cv::getRectSubPix(rawDst,cv::Size(downRight[1].x-topLeft[1].x+4,downRight[1].y-topLeft[1].y+4),(downRight[1]+topLeft[1])/2,word1);
     }
-    cv::imshow("final 1",word1);
-    cv::imshow("final 2",word2);
-
 }
