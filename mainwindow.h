@@ -97,6 +97,10 @@ private slots:
 
     void on_actionTrain_New_Tag_Model_triggered();
 
+    void on_contour_p1_spinBox_valueChanged(int arg1);
+
+    void on_contour_p2_spinBox_valueChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
 

@@ -68,6 +68,8 @@ public:
     QGroupBox *groupBox_2;
     QSpinBox *binarythreshold_spinBox;
     QLabel *label_8;
+    QSpinBox *contour_p2_spinBox;
+    QSpinBox *contour_p1_spinBox;
     QWidget *tab_3;
     QPushButton *load_training_data_pushButton;
     QPushButton *test_recognition_pushButton;
@@ -190,7 +192,7 @@ public:
         label_7->setGeometry(QRect(100, 100, 101, 31));
         groupBox_2 = new QGroupBox(tab_2);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(10, 280, 211, 171));
+        groupBox_2->setGeometry(QRect(10, 280, 211, 101));
         binarythreshold_spinBox = new QSpinBox(groupBox_2);
         binarythreshold_spinBox->setObjectName(QStringLiteral("binarythreshold_spinBox"));
         binarythreshold_spinBox->setGeometry(QRect(10, 60, 61, 31));
@@ -199,6 +201,16 @@ public:
         label_8 = new QLabel(groupBox_2);
         label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setGeometry(QRect(10, 30, 121, 21));
+        contour_p2_spinBox = new QSpinBox(tab_2);
+        contour_p2_spinBox->setObjectName(QStringLiteral("contour_p2_spinBox"));
+        contour_p2_spinBox->setGeometry(QRect(170, 420, 42, 22));
+        contour_p2_spinBox->setMaximum(255);
+        contour_p2_spinBox->setValue(160);
+        contour_p1_spinBox = new QSpinBox(tab_2);
+        contour_p1_spinBox->setObjectName(QStringLiteral("contour_p1_spinBox"));
+        contour_p1_spinBox->setGeometry(QRect(50, 420, 42, 22));
+        contour_p1_spinBox->setMaximum(255);
+        contour_p1_spinBox->setValue(80);
         tabWidget->addTab(tab_2, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -227,7 +239,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1344, 25));
+        menuBar->setGeometry(QRect(0, 0, 1344, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuSet = new QMenu(menuBar);
@@ -258,7 +270,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

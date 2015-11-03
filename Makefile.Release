@@ -11,7 +11,7 @@ MAKEFILE      = Makefile.Release
 
 CC            = cl
 CXX           = cl
-DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -D+= -DDEBUG_TAG_RECOGNITION -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG
+DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG
 CFLAGS        = -nologo -Zc:wchar_t -FS -O2 -MD -Zc:strictStrings -W3 $(DEFINES)
 CXXFLAGS      = -nologo -Zc:wchar_t -FS -openmp -arch:AVX -D _CRT_SECURE_NO_WARNINGS -O2 -MD -Zc:strictStrings -GR -W3 -w34100 -w34189 -w44996 -EHsc $(DEFINES)
 INCPATH       = -I. -IC:\opencv300_x64_vc2013\include -IC:\opencv300_x64_vc2013\include\opencv -IC:\opencv300_x64_vc2013\include\opencv2 -IC:\Qt\5.5\msvc2013_64\include -IC:\Qt\5.5\msvc2013_64\include\QtOpenGL -IC:\Qt\5.5\msvc2013_64\include\QtWidgets -IC:\Qt\5.5\msvc2013_64\include\QtGui -IC:\Qt\5.5\msvc2013_64\include\QtANGLE -IC:\Qt\5.5\msvc2013_64\include\QtCore -Irelease -I. -IC:\Qt\5.5\msvc2013_64\mkspecs\win32-msvc2013 

@@ -38,6 +38,8 @@ public:
 
     void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
 
+    void setContourParameters(const int &para_1,const int &para_2);
+
     void setShowImage(const bool &status);
 
     void setSVMModelFileName(const std::string &fileName);
@@ -92,6 +94,12 @@ private:
     int minRadius;
 
     int maxRadius;
+
+    //Contour Parameters
+
+    int contourParam1;
+
+    int contourParam2;
 
     std::string SVMModelFileName;
 

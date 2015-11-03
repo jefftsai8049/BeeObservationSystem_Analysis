@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     TT->setPCAModelFileName("model/PCA_HOG_PCA_25_.txt");
     TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     TT->setPCAandHOG(ui->actionWith_PCA->isChecked(),ui->actionWith_HOG->isChecked());
+    TT->setContourParameters(ui->contour_p1_spinBox->value(),ui->contour_p2_spinBox->value());
 
 }
 
@@ -443,4 +444,14 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
         //            SVMModel->save((name+QString::number(j+C_lower)+"_"+QString::number(k+Gamma_lower)+"_"+QString::number(accuracy)+".yaml").toStdString());
         //        }
     }
+}
+
+void MainWindow::on_contour_p1_spinBox_valueChanged(int arg1)
+{
+    TT->setContourParameters(ui->contour_p1_spinBox->value(),ui->contour_p2_spinBox->value());
+}
+
+void MainWindow::on_contour_p2_spinBox_valueChanged(int arg1)
+{
+    TT->setContourParameters(ui->contour_p1_spinBox->value(),ui->contour_p2_spinBox->value());
 }
