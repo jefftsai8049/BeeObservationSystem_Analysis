@@ -7,10 +7,6 @@ trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
     TR = new tag_recognition;
 
 
-    cv::ocl::setUseOpenCL(true);
-
-
-    qDebug() << "ocl" << cv::ocl::useOpenCL() << cv::ocl::haveOpenCL();
 
 }
 
@@ -63,6 +59,16 @@ cv::Mat trajectory_tracking::imageShiftLoaded(std::vector<cv::Mat> stitchFrame)
     return cat;
 }
 
+void trajectory_tracking::initOCL()
+{
+    cv::ocl::setUseOpenCL(true);
+
+    if(cv::ocl::useOpenCL())
+    {
+        emit sendSystemLog("OpenCL is enabled");
+    }
+}
+
 void trajectory_tracking::setVideoName(std::vector<std::string> videoName)
 {
     this->videoName = videoName;
@@ -72,7 +78,7 @@ void trajectory_tracking::setVideoName(std::vector<std::string> videoName)
 
 void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius)
 {
-    qDebug() << "hough circles parametrs set";
+    emit sendSystemLog("Hough circles parametrs set");
 
     this->dp = dp;
 
@@ -85,12 +91,6 @@ void trajectory_tracking::setHoughCircleParameters(const int &dp,const int &minD
     this->minRadius = minRadius;
 
     this->maxRadius = maxRadius;
-}
-
-void trajectory_tracking::setContourParameters(const int &para_1, const int &para_2)
-{
-//    qDebug() << "contour parametrs set";
-    TR->setContourParameters(para_1,para_2);
 }
 
 void trajectory_tracking::setShowImage(const bool &status)
@@ -138,8 +138,16 @@ void trajectory_tracking::stopStitch()
 
 void trajectory_tracking::run()
 {
+    emit sendSystemLog("Processing start!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
+
     //open video file
     std::vector<cv::VideoCapture> cap(3);
+    std::vector<float> deviceFPS(3);
+    std::vector<float> nowFrameCount(3);
+
+    std::stringstream msgSS;
+    msgSS << "Processing files :\n";
+
     for(int i = 0; i < 3; i++)
     {
         cap[i].open(this->videoName[i]);
@@ -147,7 +155,21 @@ void trajectory_tracking::run()
         {
             return;
         }
+        deviceFPS[i] = (float)cap[i].get(CV_CAP_PROP_FRAME_COUNT);
+        nowFrameCount[i] = 0;
+
+        msgSS << videoName[i] << " FPS :" << deviceFPS[i]/VIDEOTIME << "\n";
     }
+
+
+    emit sendSystemLog(QString::fromStdString(msgSS.str()));
+
+    float maxFPS = mf::findMax(deviceFPS[0],deviceFPS[1],deviceFPS[2]);
+    for(int j = 0;j<deviceFPS.size();j++)
+    {
+        deviceFPS[j] = deviceFPS[j]/maxFPS;
+    }
+
 
     //load SVM model
     if(!TR->loadSVMModel(SVMModelFileName))
@@ -163,30 +185,45 @@ void trajectory_tracking::run()
     this->stopped = false;
     int frameCount = 0;
 
+    std::vector<cv::Mat> frame(3);
+    std::vector<cv::Mat> frameGray(3);
+
+
+
     //main processing loop
     while(!this->stopped)
     {
+
         //calculate fps
         QTime clock;
         clock.start();
 
-        std::vector<cv::Mat> frame(3);
-        std::vector<cv::Mat> frameGray(3);
 
 
         //capture frame and convert to gray
         for(int i = 0; i < 3; i++)
         {
-            cap[i] >> frame[i];
+            //for fit different FPS
+            if(frameCount == 0)
+            {
+                cap[i] >> frame[i];
+            }
+            else
+            {
+                nowFrameCount[i] += deviceFPS[i];
+                if(nowFrameCount[i] > 1)
+                {
+                    cap[i] >> frame[i];
+                    nowFrameCount[i]--;
+                }
+            }
+            //convert to gray
             if(frame[i].channels() ==3)
             {
                 cv::cvtColor(frame[i],frameGray[i],cv::COLOR_BGR2GRAY);
             }
-            else
-            {
-                break;
-            }
         }
+        //end of file?
         if(frame[0].empty()||frame[1].empty()||frame[2].empty())
         {
             this->stopped = true;
@@ -214,7 +251,7 @@ void trajectory_tracking::run()
         w2.resize(circles.size());
 #endif
 
-//#pragma omp parallel for
+#pragma omp parallel for
         for (int j=0;j<circles.size();j++)
         {
             cv::Mat tagImg;
@@ -273,7 +310,7 @@ void trajectory_tracking::run()
     {
         cap[i].release();
     }
-    qDebug() << "finish";
+    emit sendSystemLog("Processing finish!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
     emit finish();
 
 

@@ -68,8 +68,6 @@ public:
     QGroupBox *groupBox_2;
     QSpinBox *binarythreshold_spinBox;
     QLabel *label_8;
-    QSpinBox *contour_p2_spinBox;
-    QSpinBox *contour_p1_spinBox;
     QWidget *tab_3;
     QPushButton *load_training_data_pushButton;
     QPushButton *test_recognition_pushButton;
@@ -77,6 +75,7 @@ public:
     QPushButton *stitchingStart_pushButton;
     QPushButton *stitchingStop_pushButton;
     QSmartGraphicsView *imageShow_widget;
+    QTextBrowser *system_log_textBrowser;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuSet;
@@ -88,9 +87,9 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(1344, 640);
+        MainWindow->resize(1344, 765);
         QFont font;
-        font.setFamily(QStringLiteral("Noto Sans CJK TC DemiLight"));
+        font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(14);
         MainWindow->setFont(font);
         actionLoad_Raw_Video_File = new QAction(MainWindow);
@@ -118,7 +117,7 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(1080, 10, 251, 501));
+        tabWidget->setGeometry(QRect(1080, 10, 251, 561));
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         stitching_pushButton = new QPushButton(tab);
@@ -201,16 +200,6 @@ public:
         label_8 = new QLabel(groupBox_2);
         label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setGeometry(QRect(10, 30, 121, 21));
-        contour_p2_spinBox = new QSpinBox(tab_2);
-        contour_p2_spinBox->setObjectName(QStringLiteral("contour_p2_spinBox"));
-        contour_p2_spinBox->setGeometry(QRect(170, 420, 42, 22));
-        contour_p2_spinBox->setMaximum(255);
-        contour_p2_spinBox->setValue(160);
-        contour_p1_spinBox = new QSpinBox(tab_2);
-        contour_p1_spinBox->setObjectName(QStringLiteral("contour_p1_spinBox"));
-        contour_p1_spinBox->setGeometry(QRect(50, 420, 42, 22));
-        contour_p1_spinBox->setMaximum(255);
-        contour_p1_spinBox->setValue(80);
         tabWidget->addTab(tab_2, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -229,17 +218,24 @@ public:
         tabWidget->addTab(tab_3, QString());
         stitchingStart_pushButton = new QPushButton(centralWidget);
         stitchingStart_pushButton->setObjectName(QStringLiteral("stitchingStart_pushButton"));
-        stitchingStart_pushButton->setGeometry(QRect(1090, 520, 101, 51));
+        stitchingStart_pushButton->setGeometry(QRect(1090, 610, 111, 61));
         stitchingStop_pushButton = new QPushButton(centralWidget);
         stitchingStop_pushButton->setObjectName(QStringLiteral("stitchingStop_pushButton"));
-        stitchingStop_pushButton->setGeometry(QRect(1220, 520, 101, 51));
+        stitchingStop_pushButton->setGeometry(QRect(1220, 610, 101, 61));
         imageShow_widget = new QSmartGraphicsView(centralWidget);
         imageShow_widget->setObjectName(QStringLiteral("imageShow_widget"));
         imageShow_widget->setGeometry(QRect(10, 10, 1061, 561));
+        system_log_textBrowser = new QTextBrowser(centralWidget);
+        system_log_textBrowser->setObjectName(QStringLiteral("system_log_textBrowser"));
+        system_log_textBrowser->setGeometry(QRect(10, 590, 1061, 111));
+        QFont font2;
+        font2.setFamily(QStringLiteral("Arial"));
+        font2.setPointSize(10);
+        system_log_textBrowser->setFont(font2);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1344, 21));
+        menuBar->setGeometry(QRect(0, 0, 1344, 28));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuSet = new QMenu(menuBar);
@@ -270,7 +266,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

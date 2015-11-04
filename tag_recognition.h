@@ -1,7 +1,7 @@
 #ifndef TAG_RECOGNITION_H
 #define TAG_RECOGNITION_H
 
-#define tagSize 24
+//#define tagSize 24
 
 
 #include <QObject>
@@ -44,8 +44,6 @@ public:
     bool loadPCAModel(const std::string &fileName);
 
     void setTagBinaryThreshold(const int &value);
-
-    void setContourParameters(const int &para_1,const int &para_2);
 
     void setPCAandHOG(const bool &PCAS,const bool &HOGS);
 

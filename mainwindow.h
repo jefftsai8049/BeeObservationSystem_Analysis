@@ -19,20 +19,16 @@
 #include <QDir>
 #include <QVector>
 
-//#include "cam_input.h"
 #include "trajectory_tracking.h"
 #include "tag_recognition.h"
 
 #include "qsmartgraphicsview/qsmartgraphicsview.h"
 #include "qsmartgraphicsview/qsmartlabel.h"
 
-#define fps 12
+
 #define imgSizeX 1200
 #define imgSizeY 1600
 
-#define CIRCLE_DETECTION_HOUGH 0
-#define CIRCLE_DETECTION_CONTOUR 1
-//int mouseLeft = 0;
 
 
 
@@ -56,8 +52,9 @@ private slots:
 
     void receiveShowImage(const cv::Mat &src);
 
-    void stitchImage();
+    void receiveSystemLog(const QString &msg);
 
+    void stitchImage();
 
     void on_actionLoad_Raw_Video_File_triggered();
 
@@ -97,9 +94,6 @@ private slots:
 
     void on_actionTrain_New_Tag_Model_triggered();
 
-    void on_contour_p1_spinBox_valueChanged(int arg1);
-
-    void on_contour_p2_spinBox_valueChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -123,6 +117,9 @@ private:
     QVector<QStringList> videoList;
 
     QDir dir;
+
+signals:
+    void sendSystemLog(const QString& msg);
 
 };
 

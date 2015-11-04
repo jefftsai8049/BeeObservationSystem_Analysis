@@ -17,13 +17,17 @@ SOURCES += main.cpp\
     trajectory_tracking.cpp \
     tag_recognition.cpp \
     qsmartgraphicsview/qsmartgraphicsview.cpp \
-    qsmartgraphicsview/qsmartlabel.cpp
+    qsmartgraphicsview/qsmartlabel.cpp \
+    object_tracking.cpp \
+    math_function.cpp
 
 HEADERS  += mainwindow.h \
     trajectory_tracking.h \
     tag_recognition.h \
     qsmartgraphicsview/qsmartgraphicsview.h \
-    qsmartgraphicsview/qsmartlabel.h
+    qsmartgraphicsview/qsmartlabel.h \
+    object_tracking.h \
+    math_function.h
 
 FORMS    += mainwindow.ui
 

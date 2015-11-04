@@ -19,7 +19,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 //    qDebug() << "convert to binary image";
     //convert to binary image
     cv::Mat srcBinary;
-    cv::adaptiveThreshold(src,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,5);
+    cv::adaptiveThreshold(src,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,10);
 
 //    qDebug() << "normalize from 0-255 to 0-1";
     //normalize from 0-255 to 0-1
@@ -362,12 +362,7 @@ void tag_recognition::setTagBinaryThreshold(const int &value)
     this->binaryThreshold = value;
 }
 
-void tag_recognition::setContourParameters(const int &para_1, const int &para_2)
-{
-    qDebug() << "contour parametrs set";
-    this->contourParam1 = para_1;
-    this->contourParam2 = para_2;
-}
+
 
 void tag_recognition::setPCAandHOG(const bool &PCAS, const bool &HOGS)
 {
@@ -693,7 +688,7 @@ void tag_recognition::cutWords(cv::Mat wordsMask, cv::Mat rawDst, cv::Mat &word1
 
     for(int i = 0; i < rotatedBlobs.size(); i++)
     {
-        topLeft[i] = cv::Point2f(tagSize,tagSize);
+        topLeft[i] = cv::Point2f(rawDst.cols,rawDst.rows);
         downRight[i] = cv::Point2f(0,0);
         for(int j=0; j < rotatedBlobs[i].size(); j++)
         {

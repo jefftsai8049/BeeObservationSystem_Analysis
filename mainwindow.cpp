@@ -23,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //send image back to mainwindow
     connect(TT,SIGNAL(sendImage(cv::Mat)),this,SLOT(receiveShowImage(cv::Mat)));
 
+    connect(TT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
+
+    connect(this,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
+
     //trajectory tracking parameters setting
     TT->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
     TT->setManualStitchingFileName("manual_stitching.xml");
@@ -30,8 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
     TT->setPCAModelFileName("model/PCA_HOG_PCA_25_.txt");
     TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     TT->setPCAandHOG(ui->actionWith_PCA->isChecked(),ui->actionWith_HOG->isChecked());
-    TT->setContourParameters(ui->contour_p1_spinBox->value(),ui->contour_p2_spinBox->value());
 
+    TT->initOCL();
+
+#ifdef DEBUG_TAG_RECOGNITION
+    emit sendSystemLog("Tag Recognition Debuging");
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -42,7 +50,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionLoad_Raw_Video_File_triggered()
 {
+
     QString dirName = QFileDialog::getExistingDirectory();
+
+    if(dirName.isEmpty())
+    {
+        return;
+    }
 
     dir.setPath(dirName);
     QStringList dirList = dir.entryList(QDir::Dirs,QDir::Name);
@@ -73,6 +87,10 @@ void MainWindow::on_actionLoad_Stitching_Image_triggered()
 {
     QStringList fileNames = QFileDialog::getOpenFileNames();
 
+    if(fileNames.isEmpty())
+    {
+        return;
+    }
 
     std::vector<std::string> fileNamesVec;
     for(int i = 0; i < fileNames.size(); i++)
@@ -106,6 +124,11 @@ void MainWindow::receiveShowImage(const cv::Mat &src)
 
 }
 
+void MainWindow::receiveSystemLog(const QString &msg)
+{
+    ui->system_log_textBrowser->append(msg);
+}
+
 void MainWindow::stitchImage()
 {
     qDebug() << "start";
@@ -133,7 +156,6 @@ std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std:
     {
         if (list[i].size()<1)
         {
-            //            qDebug() << "END";
             return fileNames;
         }
         std::string folder;
@@ -143,7 +165,6 @@ std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std:
             folder = "/Camera_M/";
         else if(i == 2)
             folder = "/Camera_R/";
-        //        qDebug() << QString::fromStdString(path+folder+list[i][0].toStdString());
         fileNames.push_back(path+folder+list[i][0].toStdString());
     }
     return fileNames;
@@ -213,9 +234,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
-    //    TR->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
     connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
-    //    TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
     stitchImage();
 }
 
@@ -446,12 +465,3 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
     }
 }
 
-void MainWindow::on_contour_p1_spinBox_valueChanged(int arg1)
-{
-    TT->setContourParameters(ui->contour_p1_spinBox->value(),ui->contour_p2_spinBox->value());
-}
-
-void MainWindow::on_contour_p2_spinBox_valueChanged(int arg1)
-{
-    TT->setContourParameters(ui->contour_p1_spinBox->value(),ui->contour_p2_spinBox->value());
-}

@@ -9,17 +9,17 @@
 #include <stdlib.h>
 #include <math.h>
 
-//#include "cudaimgproc.hpp"
+#include <omp.h>
 #include <opencv.hpp>
 #include <core/ocl.hpp>
 
 #include "tag_recognition.h"
-
-
-
+#include "math_function.h"
 
 #define imgSizeX 1200
 #define imgSizeY 1600
+
+#define VIDEOTIME (30*60)
 
 class trajectory_tracking : public QThread
 {
@@ -34,11 +34,11 @@ public:
 
     cv::Mat imageShiftLoaded(std::vector<cv::Mat> stitchFrame);
 
+    void initOCL();
+
     void setVideoName(std::vector<std::string> videoName);
 
     void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);
-
-    void setContourParameters(const int &para_1,const int &para_2);
 
     void setShowImage(const bool &status);
 
@@ -54,8 +54,6 @@ public:
 
     void stopStitch();
 
-
-
 signals:
 
     void finish();
@@ -63,6 +61,8 @@ signals:
     void sendFPS(const double &fps);
 
     void sendImage(const cv::Mat &src);
+
+    void sendSystemLog(const QString& msg);
 
 public slots:
 

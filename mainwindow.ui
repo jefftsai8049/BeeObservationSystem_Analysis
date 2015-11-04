@@ -7,12 +7,12 @@
     <x>0</x>
     <y>0</y>
     <width>1344</width>
-    <height>640</height>
+    <height>765</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <family>Noto Sans CJK TC DemiLight</family>
+    <family>Arial</family>
     <pointsize>14</pointsize>
    </font>
   </property>
@@ -26,11 +26,11 @@
       <x>1080</x>
       <y>10</y>
       <width>251</width>
-      <height>501</height>
+      <height>561</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -325,38 +325,6 @@
        </property>
       </widget>
      </widget>
-     <widget class="QSpinBox" name="contour_p2_spinBox">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>420</y>
-        <width>42</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>160</number>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="contour_p1_spinBox">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>420</y>
-        <width>42</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>80</number>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -413,9 +381,9 @@
     <property name="geometry">
      <rect>
       <x>1090</x>
-      <y>520</y>
-      <width>101</width>
-      <height>51</height>
+      <y>610</y>
+      <width>111</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -426,9 +394,9 @@
     <property name="geometry">
      <rect>
       <x>1220</x>
-      <y>520</y>
+      <y>610</y>
       <width>101</width>
-      <height>51</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -445,6 +413,22 @@
      </rect>
     </property>
    </widget>
+   <widget class="QTextBrowser" name="system_log_textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>590</y>
+      <width>1061</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -452,7 +436,7 @@
      <x>0</x>
      <y>0</y>
      <width>1344</width>
-     <height>21</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
