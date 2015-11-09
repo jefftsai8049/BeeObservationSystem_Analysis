@@ -15,6 +15,7 @@
 
 #include "tag_recognition.h"
 #include "math_function.h"
+#include "object_tracking.h"
 
 #define imgSizeX 1200
 #define imgSizeY 1600
@@ -68,6 +69,8 @@ public slots:
 
 private:
     tag_recognition *TR;
+
+    object_tracking *OT;
 
     std::vector<cv::Point> originPoint;
 

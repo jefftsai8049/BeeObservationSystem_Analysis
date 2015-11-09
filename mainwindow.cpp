@@ -328,6 +328,7 @@ void MainWindow::on_show_image_checkBox_clicked()
 void MainWindow::on_load_training_data_pushButton_clicked()
 {
 
+
 }
 
 void MainWindow::on_test_recognition_pushButton_clicked()

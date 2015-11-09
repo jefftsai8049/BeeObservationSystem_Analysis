@@ -1,8 +1,25 @@
 #include "object_tracking.h"
 
-object_tracking::object_tracking(QObject *parent) : QObject(parent)
+
+
+int track::size()
 {
-    int x;
-    int y;
+    return time.size();
 }
 
+cv::Point track::lastPosition()
+{
+    return position[time.size()];
+}
+
+
+
+object_tracking::object_tracking(QObject *parent)
+{
+
+}
+
+object_tracking::~object_tracking()
+{
+
+}

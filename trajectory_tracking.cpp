@@ -3,11 +3,7 @@
 trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
 {
     frame.resize(3);
-
     TR = new tag_recognition;
-
-
-
 }
 
 trajectory_tracking::~trajectory_tracking()
@@ -23,8 +19,6 @@ void trajectory_tracking::setImageShiftOriginPoint(std::vector<cv::Point> origin
 
 cv::Mat trajectory_tracking::imageShift(std::vector<cv::Mat> stitchFrame, std::vector<cv::Point> originPoint)
 {
-
-    //    qDebug() << this->originPoint[0].x << this->originPoint[0].y << this->originPoint[1].x << this->originPoint[1].y << this->originPoint[2].x << this->originPoint[2].y;
     cv::Mat cat(cv::Size(imgSizeX*3,imgSizeY),CV_8UC3,cv::Scalar(0));
     for (int i=0;i<3;i++)
     {
@@ -65,7 +59,15 @@ void trajectory_tracking::initOCL()
 
     if(cv::ocl::useOpenCL())
     {
-        emit sendSystemLog("OpenCL is enabled");
+
+        cv::ocl::Context context;
+        context.create(cv::ocl::Device::TYPE_GPU);
+        qDebug() << context.ndevices();
+        cv::ocl::Device device = context.device(0);
+        emit sendSystemLog("OpenCL is enabled. Version:"+QString::fromStdString(device.OpenCL_C_Version()));
+        emit sendSystemLog(QString::fromStdString(device.vendorName())+" "+QString::fromStdString(device.name()));
+//        qDebug() << device.vendorName();
+
     }
 }
 
@@ -140,14 +142,18 @@ void trajectory_tracking::run()
 {
     emit sendSystemLog("Processing start!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
 
+    OT = new object_tracking;
+
     //open video file
     std::vector<cv::VideoCapture> cap(3);
     std::vector<float> deviceFPS(3);
     std::vector<float> nowFrameCount(3);
 
+    //for save system log
     std::stringstream msgSS;
     msgSS << "Processing files :\n";
 
+    //open video file and get FPS
     for(int i = 0; i < 3; i++)
     {
         cap[i].open(this->videoName[i]);
@@ -161,9 +167,9 @@ void trajectory_tracking::run()
         msgSS << videoName[i] << " FPS :" << deviceFPS[i]/VIDEOTIME << "\n";
     }
 
-
     emit sendSystemLog(QString::fromStdString(msgSS.str()));
 
+    //calculate FPS of each video file
     float maxFPS = mf::findMax(deviceFPS[0],deviceFPS[1],deviceFPS[2]);
     for(int j = 0;j<deviceFPS.size();j++)
     {
@@ -176,6 +182,7 @@ void trajectory_tracking::run()
     {
         return;
     }
+    //load PCA model
     if(!TR->loadPCAModel(PCAModelFileName))
     {
         return;
@@ -185,20 +192,17 @@ void trajectory_tracking::run()
     this->stopped = false;
     int frameCount = 0;
 
+    //for saving video frame
     std::vector<cv::Mat> frame(3);
     std::vector<cv::Mat> frameGray(3);
-
-
 
     //main processing loop
     while(!this->stopped)
     {
 
-        //calculate fps
+        //calculate processing fps
         QTime clock;
         clock.start();
-
-
 
         //capture frame and convert to gray
         for(int i = 0; i < 3; i++)
@@ -217,12 +221,14 @@ void trajectory_tracking::run()
                     nowFrameCount[i]--;
                 }
             }
+
             //convert to gray
             if(frame[i].channels() ==3)
             {
                 cv::cvtColor(frame[i],frameGray[i],cv::COLOR_BGR2GRAY);
             }
         }
+
         //end of file?
         if(frame[0].empty()||frame[1].empty()||frame[2].empty())
         {
@@ -230,8 +236,9 @@ void trajectory_tracking::run()
             break;
         }
 
-        cv::Mat pano;
+
         //stitching image
+        cv::Mat pano;
         pano = this->imageShiftLoaded(frameGray);
         pano = this->imageCutBlack(pano);
 
@@ -263,18 +270,19 @@ void trajectory_tracking::run()
 #ifndef DEBUG_TAG_RECOGNITION
             w1[j].push_back(TR->wordRecognition(word1));
             w2[j].push_back(TR->wordRecognition(word2));
-            //            cv::imshow("w1",word1);
-            //            cv::imshow("w2",word2);
+#endif
 
-            //            cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
-            //            cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
-            //            cv::imwrite("SVM/"+w1[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
-            //            cv::imwrite("SVM/"+w2[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
-            //            qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
+#ifdef SAVE_TAG_IMAGE
+            cv::imshow("w1",word1);
+            cv::imshow("w2",word2);
+
+            cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
+            cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
+            cv::imwrite("SVM/"+w1[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
+            cv::imwrite("SVM/"+w2[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
+            qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
 #endif
         }
-
-
         if (showImage)
         {
             //draw cicle
@@ -291,34 +299,29 @@ void trajectory_tracking::run()
                 cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
 #endif
             }
-
+            //resize and show image
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
             emit sendImage(panoDrawCircle);
 
         }
 
-
+        //for calculate processing FPS
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
-
-        //        cv::waitKey(1000);
     }
-
 
     //close video file and emit finish signal
     for(int i = 0; i < 3; i++)
     {
         cap[i].release();
     }
+
     emit sendSystemLog("Processing finish!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
     emit finish();
-
-
 }
 
 cv::Mat trajectory_tracking::imageCutBlack(cv::Mat src)
 {
-
     cv::Mat dst(src, cv::Rect(0, 0, originPoint[2].x+imgSizeX, imgSizeY));
     return dst;
 }
