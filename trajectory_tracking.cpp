@@ -142,7 +142,8 @@ void trajectory_tracking::run()
 {
     emit sendSystemLog("Processing start!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
 
-    OT = new object_tracking;
+
+    OT = new object_tracking();
 
     //open video file
     std::vector<cv::VideoCapture> cap(3);
@@ -168,6 +169,13 @@ void trajectory_tracking::run()
     }
 
     emit sendSystemLog(QString::fromStdString(msgSS.str()));
+
+    //file time
+    QDateTime fileTime;
+    QString fileTimeS = QString::fromStdString(this->videoName[0]).mid(QString::fromStdString(this->videoName[0]).lastIndexOf("_")-10,19);
+    fileTimeS += "-000";
+    fileTime = QDateTime::fromString(fileTimeS,"yyyy-MM-dd_hh-mm-ss-zzz");
+
 
     //calculate FPS of each video file
     float maxFPS = mf::findMax(deviceFPS[0],deviceFPS[1],deviceFPS[2]);
@@ -229,6 +237,9 @@ void trajectory_tracking::run()
             }
         }
 
+        //update time
+        fileTime = fileTime.addMSecs(VIDEOTIME/maxFPS*1000.0);
+
         //end of file?
         if(frame[0].empty()||frame[1].empty()||frame[2].empty())
         {
@@ -241,6 +252,9 @@ void trajectory_tracking::run()
         cv::Mat pano;
         pano = this->imageShiftLoaded(frameGray);
         pano = this->imageCutBlack(pano);
+
+        if(frameCount == 0)
+            OT->setImageRange(cv::Size(pano.cols,pano.rows));
 
         //hough circle detection
         std::vector<cv::Vec3f> circles;
@@ -283,6 +297,14 @@ void trajectory_tracking::run()
             qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
 #endif
         }
+
+        //Bee tracking classify
+        //QTime fileTime
+        //std::vector<cv::Vec3f> circles;
+        //std::vector<std::string> w1;
+        //std::vector<std::string> w2;
+        OT->compute(fileTime,circles,w1,w2);
+
         if (showImage)
         {
             //draw cicle
@@ -293,12 +315,17 @@ void trajectory_tracking::run()
             {
                 cv::Point center(circles[i][0]*2, circles[i][1]*2);
                 int radius = circles[i][2]*2;
-                cv::circle( panoDrawCircle, center, radius, cv::Scalar(0,0,255), 1, 8, 0 );
+                cv::Scalar color = cv::Scalar(255,255,255);
+                cv::circle( panoDrawCircle, center, radius, color, 1, 8, 0 );
 #ifndef DEBUG_TAG_RECOGNITION
-                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
-                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,cv::Scalar(0,0,255));
+                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,color);
+                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,color);
 #endif
             }
+            std::vector< std::vector<cv::Point> > path;
+            OT->lastPath(path);
+
+//            OT->drawPath(panoDrawCircle,path);
             //resize and show image
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
             emit sendImage(panoDrawCircle);
