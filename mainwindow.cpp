@@ -228,6 +228,7 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 
         cv::imshow("Stitch",cat);
 
+
     }
 
 }

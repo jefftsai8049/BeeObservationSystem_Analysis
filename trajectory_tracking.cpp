@@ -259,8 +259,9 @@ void trajectory_tracking::run()
         //hough circle detection
         std::vector<cv::Vec3f> circles;
         cv::Mat panoSmall;
-        cv::resize(pano,panoSmall,cv::Size(pano.cols/2,pano.rows/2));
+        cv::resize(pano,panoSmall,cv::Size(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE));
         cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+        this->circleResize(circles);
 
         std::vector<cv::Mat> circleImg;
         circleImg.resize(circles.size());
@@ -272,11 +273,12 @@ void trajectory_tracking::run()
         w2.resize(circles.size());
 #endif
 
+
 #pragma omp parallel for
         for (int j=0;j<circles.size();j++)
         {
             cv::Mat tagImg;
-            cv::getRectSubPix(pano,cv::Size(circles[j][2]*2*2+11,circles[j][2]*2*2+11),cv::Point(circles[j][0]*2, circles[j][1]*2),tagImg);
+            cv::getRectSubPix(pano,cv::Size(circles[j][2]*2+11,circles[j][2]*2+11),cv::Point(circles[j][0], circles[j][1]),tagImg);
             cv::Mat word1,word2;
             TR->tagImgProc(tagImg,word1,word2);
 
@@ -313,25 +315,26 @@ void trajectory_tracking::run()
 
             for(int i = 0; i < circles.size(); i++ )
             {
-                cv::Point center(circles[i][0]*2, circles[i][1]*2);
-                int radius = circles[i][2]*2;
+                cv::Point center(circles[i][0], circles[i][1]);
+                int radius = circles[i][2];
                 cv::Scalar color = cv::Scalar(255,255,255);
                 cv::circle( panoDrawCircle, center, radius, color, 1, 8, 0 );
 #ifndef DEBUG_TAG_RECOGNITION
-                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]*2-15, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,color);
-                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]*2+5, circles[i][1]*2+40),cv::FONT_HERSHEY_DUPLEX,1,color);
+                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]-15, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
+                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]+5, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
 #endif
             }
-            std::vector< std::vector<cv::Point> > path;
-            OT->lastPath(path);
+//            std::vector<std::vector<cv::Point> > path;
+//            OT->lastPath(path);
+//            this->drawPath(panoDrawCircle,path);
 
-//            OT->drawPath(panoDrawCircle,path);
+            OT->drawPath(panoDrawCircle);
+
             //resize and show image
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
             emit sendImage(panoDrawCircle);
 
         }
-
         //for calculate processing FPS
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
@@ -352,4 +355,16 @@ cv::Mat trajectory_tracking::imageCutBlack(cv::Mat src)
     cv::Mat dst(src, cv::Rect(0, 0, originPoint[2].x+imgSizeX, imgSizeY));
     return dst;
 }
+
+void trajectory_tracking::circleResize(std::vector<cv::Vec3f> &circles)
+{
+    for(int i = 0; i < circles.size(); i++)
+    {
+        circles[i][0] = circles[i][0]*HOUGH_CIRCLE_RESIZE;
+        circles[i][1] = circles[i][1]*HOUGH_CIRCLE_RESIZE;
+        circles[i][2] = circles[i][2]*HOUGH_CIRCLE_RESIZE;
+    }
+}
+
+
 

@@ -23,7 +23,7 @@ void mf::vectorFindMax(double &maxVal, int &index, const double *val)
     maxVal = 0;
     for(int i = 0;i<sizeof(val)/sizeof(double);i++)
     {
-        if(maxVal > val[i])
+        if(maxVal < val[i])
         {
             index = i;
             maxVal = val[i];
@@ -32,12 +32,12 @@ void mf::vectorFindMax(double &maxVal, int &index, const double *val)
 }
 
 
-void mf::vectorFindMin(double &minVal, int &index, const double *val)
+void mf::vectorFindMin(double &minVal, int &index, const std::vector<double> &val)
 {
     minVal = BIG_NUMBER;
-    for(int i = 0;i<sizeof(val)/sizeof(double);i++)
+    for(int i = 0;i<val.size();i++)
     {
-        if(minVal < val[i])
+        if(minVal > val[i])
         {
             index = i;
             minVal = val[i];

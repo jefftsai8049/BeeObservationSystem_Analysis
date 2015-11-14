@@ -21,6 +21,7 @@
 #define imgSizeY 1600
 
 #define VIDEOTIME (30*60)
+#define HOUGH_CIRCLE_RESIZE 2
 
 class trajectory_tracking : public QThread
 {
@@ -111,6 +112,8 @@ private:
     void run();
 
     cv::Mat imageCutBlack(cv::Mat src);
+
+    void circleResize( std::vector<cv::Vec3f> &circles);
 
 };
 
