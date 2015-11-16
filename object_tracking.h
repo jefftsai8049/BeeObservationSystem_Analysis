@@ -49,6 +49,8 @@ public slots:
 
 private:
 
+    QDateTime nowTime;
+
     cv::Size range;
 
     std::vector<track> path;
