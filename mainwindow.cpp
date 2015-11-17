@@ -477,3 +477,8 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
     }
 }
 
+
+void MainWindow::on_actionLoad_Analysis_Data_triggered()
+{
+
+}

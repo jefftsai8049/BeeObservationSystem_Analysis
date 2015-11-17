@@ -61,7 +61,7 @@ void object_tracking::compute(const QDateTime &time, const std::vector<cv::Vec3f
 
     //threshold of distance
     int minDistanceThreshold = 2000;
-//    int minTimeGap = 5;
+    //    int minTimeGap = 5;
 
     //for saving path and circle size
     int circleSize = circles.size();
@@ -216,17 +216,20 @@ void object_tracking::savePath()
         //qDebug() << this->path[i].time[this->path[i].time.size()-1].secsTo(this->nowTime);
         if(this->path[i].time[this->path[i].time.size()-1].secsTo(this->nowTime) > FORGET_TRACKING_TIME)
         {
-            for(int j = 0; j < this->path[i].time.size(); j++)
+            if(this->path[i].time.size() > SHORTEST_SAMPLE_SIZE)
             {
-//                std::vector<std::vector<char>> name;
-//                std::vector<cv::Point> position;
-//                std::vector<QDateTime> time;
-                outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
-                        << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
-                        << this->path[i].position[j].x << ","
-                        << this->path[i].position[j].y << ",";
+                for(int j = 0; j < this->path[i].time.size(); j++)
+                {
+                    //                std::vector<std::vector<char>> name;
+                    //                std::vector<cv::Point> position;
+                    //                std::vector<QDateTime> time;
+                    outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
+                            << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
+                            << this->path[i].position[j].x << ","
+                            << this->path[i].position[j].y << ",";
+                }
+                outFile << "\n";
             }
-            outFile << "\n";
             this->path.erase(this->path.begin()+i);
             i--;
         }
@@ -255,21 +258,22 @@ void object_tracking::saveAllPath()
     for(int i = 0; i < this->path.size(); i++)
     {
         //qDebug() << this->path[i].time[this->path[i].time.size()-1].secsTo(this->nowTime);
-
+        if(this->path[i].time.size() > SHORTEST_SAMPLE_SIZE)
+        {
             for(int j = 0; j < this->path[i].time.size(); j++)
             {
-//                std::vector<std::vector<char>> name;
-//                std::vector<cv::Point> position;
-//                std::vector<QDateTime> time;
+                //                std::vector<std::vector<char>> name;
+                //                std::vector<cv::Point> position;
+                //                std::vector<QDateTime> time;
                 outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
                         << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
                         << this->path[i].position[j].x << ","
                         << this->path[i].position[j].y << ",";
             }
             outFile << "\n";
-//            this->path.erase(this->path.begin()+i);
-//            i--;
-
+            //            this->path.erase(this->path.begin()+i);
+            //            i--;
+        }
     }
     this->path.clear();
     file.write(outFile.str().c_str());

@@ -15,6 +15,7 @@
 
 #define REMAIN_SIZE 20
 #define FORGET_TRACKING_TIME 5
+#define SHORTEST_SAMPLE_SIZE 5
 
 struct track
 {
