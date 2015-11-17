@@ -375,10 +375,16 @@ debug\moc_mainwindow.cpp: C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QTimer \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtimer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasictimer.h \
 		tag_recognition.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QMap \
 		math_function.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
 		qsmartgraphicsview\qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -423,7 +429,6 @@ debug\moc_mainwindow.cpp: C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMessageBox \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmessagebox.h \
 		qsmartgraphicsview\qsmartlabel.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\QImage \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLabel \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlabel.h \
@@ -501,6 +506,9 @@ debug\moc_trajectory_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QThread 
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QTime \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QTimer \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtimer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasictimer.h \
 		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
@@ -562,6 +570,47 @@ debug\moc_trajectory_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QThread 
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QMap \
 		math_function.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmargins.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qrect.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsize.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpalette.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcolor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qrgb.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qbrush.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qmatrix.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpolygon.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qregion.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatastream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qline.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtransform.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpainterpath.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qimage.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixelformat.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfont.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcursor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qkeysequence.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qevent.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream \
 		trajectory_tracking.h
 	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore trajectory_tracking.h -o debug\moc_trajectory_tracking.cpp
 
@@ -1062,7 +1111,32 @@ debug\moc_object_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontainerfwd.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qisenum.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject_impl.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QWidget \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDebug \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdebug.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qhash.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpair.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtextstream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qiodevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlocale.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvariant.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qshareddata.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvector.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpoint.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qset.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfile.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfiledevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdir.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfileinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdialog.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qwidget.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs_win.h \
@@ -1070,18 +1144,14 @@ debug\moc_object_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpaintdevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qrect.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qsize.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qpoint.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpalette.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qcolor.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qrgb.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qbrush.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qpair.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qvector.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qmatrix.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpolygon.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qregion.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatastream.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qiodevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qline.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qtransform.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpainterpath.h \
@@ -1089,8 +1159,6 @@ debug\moc_object_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixelformat.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixmap.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qshareddata.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qhash.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qfont.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontmetrics.h \
@@ -1099,19 +1167,60 @@ debug\moc_object_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qcursor.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qkeysequence.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qevent.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qvariant.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qmap.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qdebug.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qtextstream.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qlocale.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qset.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qfile.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qfiledevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream \
+		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
+		math_function.h \
 		object_tracking.h
 	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore object_tracking.h -o debug\moc_object_tracking.cpp
 
@@ -1507,10 +1616,16 @@ debug\main.obj: main.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QTimer \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtimer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasictimer.h \
 		tag_recognition.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QMap \
 		math_function.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
 		qsmartgraphicsview/qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -1555,7 +1670,6 @@ debug\main.obj: main.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMessageBox \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmessagebox.h \
 		qsmartgraphicsview/qsmartlabel.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\QImage \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLabel \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlabel.h \
@@ -1736,10 +1850,16 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QTimer \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtimer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasictimer.h \
 		tag_recognition.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QMap \
 		math_function.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
 		qsmartgraphicsview/qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -1784,7 +1904,6 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMessageBox \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmessagebox.h \
 		qsmartgraphicsview/qsmartlabel.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\QImage \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLabel \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlabel.h \
@@ -1910,6 +2029,9 @@ debug\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QTime \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QTimer \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtimer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasictimer.h \
 		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
@@ -1970,7 +2092,48 @@ debug\trajectory_tracking.obj: trajectory_tracking.cpp trajectory_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QString \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QMap \
-		math_function.h
+		math_function.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmargins.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qrect.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsize.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpalette.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcolor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qrgb.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qbrush.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qmatrix.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpolygon.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qregion.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatastream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qline.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtransform.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpainterpath.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qimage.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixelformat.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfont.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcursor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qkeysequence.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qevent.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream
 
 debug\tag_recognition.obj: tag_recognition.cpp tag_recognition.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
@@ -2527,7 +2690,32 @@ debug\object_tracking.obj: object_tracking.cpp object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontainerfwd.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qisenum.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject_impl.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QWidget \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDebug \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdebug.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qhash.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpair.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtextstream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qiodevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlocale.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvariant.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qshareddata.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvector.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpoint.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qset.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfile.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfiledevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdir.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfileinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdialog.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qwidget.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs_win.h \
@@ -2535,18 +2723,14 @@ debug\object_tracking.obj: object_tracking.cpp object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpaintdevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qrect.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qsize.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qpoint.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpalette.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qcolor.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qrgb.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qbrush.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qpair.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qvector.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qmatrix.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpolygon.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qregion.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatastream.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qiodevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qline.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qtransform.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpainterpath.h \
@@ -2554,8 +2738,6 @@ debug\object_tracking.obj: object_tracking.cpp object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixelformat.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixmap.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qshareddata.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qhash.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qfont.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontmetrics.h \
@@ -2564,19 +2746,60 @@ debug\object_tracking.obj: object_tracking.cpp object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qcursor.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qkeysequence.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qevent.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qvariant.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qmap.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qdebug.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qtextstream.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qlocale.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qset.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qfile.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qfiledevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
-		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream \
+		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
+		math_function.h
 
 debug\math_function.obj: math_function.cpp math_function.h
 

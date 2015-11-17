@@ -9,3 +9,5 @@ SVM/
 SVM_check/
 *.jpg
 *.yaml
+*.csv
+system_log.txt

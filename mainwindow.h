@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QDataStream>
 #include <QDebug>
+#include <QFile>
 #include <QFileDialog>
 #include <QTime>
 #include <QList>
@@ -117,6 +118,8 @@ private:
     QVector<QStringList> videoList;
 
     QDir dir;
+
+    QFile systemLog;
 
 signals:
     void sendSystemLog(const QString& msg);

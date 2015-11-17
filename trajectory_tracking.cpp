@@ -4,6 +4,8 @@ trajectory_tracking::trajectory_tracking(QObject *parent) : QThread(parent)
 {
     frame.resize(3);
     TR = new tag_recognition;
+
+
 }
 
 trajectory_tracking::~trajectory_tracking()
@@ -66,7 +68,7 @@ void trajectory_tracking::initOCL()
         cv::ocl::Device device = context.device(0);
         emit sendSystemLog("OpenCL is enabled. Version:"+QString::fromStdString(device.OpenCL_C_Version()));
         emit sendSystemLog(QString::fromStdString(device.vendorName())+" "+QString::fromStdString(device.name()));
-//        qDebug() << device.vendorName();
+        //        qDebug() << device.vendorName();
 
     }
 }
@@ -143,7 +145,7 @@ void trajectory_tracking::run()
     emit sendSystemLog("Processing start!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
 
 
-    OT = new object_tracking();
+
 
     //open video file
     std::vector<cv::VideoCapture> cap(3);
@@ -176,6 +178,7 @@ void trajectory_tracking::run()
     fileTimeS += "-000";
     fileTime = QDateTime::fromString(fileTimeS,"yyyy-MM-dd_hh-mm-ss-zzz");
 
+    OT = new object_tracking(this,fileTime);
 
     //calculate FPS of each video file
     float maxFPS = mf::findMax(deviceFPS[0],deviceFPS[1],deviceFPS[2]);
@@ -307,6 +310,8 @@ void trajectory_tracking::run()
         //std::vector<std::string> w2;
         OT->compute(fileTime,circles,w1,w2);
 
+        OT->savePath();
+
         if (showImage)
         {
             //draw cicle
@@ -324,9 +329,9 @@ void trajectory_tracking::run()
                 cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]+5, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
 #endif
             }
-//            std::vector<std::vector<cv::Point> > path;
-//            OT->lastPath(path);
-//            this->drawPath(panoDrawCircle,path);
+            //            std::vector<std::vector<cv::Point> > path;
+            //            OT->lastPath(path);
+            //            this->drawPath(panoDrawCircle,path);
 
             OT->drawPath(panoDrawCircle);
 
@@ -339,6 +344,7 @@ void trajectory_tracking::run()
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
     }
+    OT->saveAllPath();
 
     //close video file and emit finish signal
     for(int i = 0; i < 3; i++)

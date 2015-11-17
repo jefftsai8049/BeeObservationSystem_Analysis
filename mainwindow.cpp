@@ -14,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     //load icon image
     this->setWindowIcon(QIcon("icon/honeybee.jpg"));
+
+    systemLog.setFileName("system_log.txt");
+    systemLog.open(QIODevice::ReadWrite);
+
     //for tracking honeybee position
     TT = new trajectory_tracking;
 
@@ -40,10 +44,13 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef DEBUG_TAG_RECOGNITION
     emit sendSystemLog("Tag Recognition Debuging");
 #endif
+
+
 }
 
 MainWindow::~MainWindow()
 {
+    systemLog.close();
     delete ui;
 }
 
@@ -127,11 +134,14 @@ void MainWindow::receiveShowImage(const cv::Mat &src)
 void MainWindow::receiveSystemLog(const QString &msg)
 {
     ui->system_log_textBrowser->append(msg);
+
+    systemLog.write((msg+"\n").toStdString().c_str());
+//    char temp[] = {13};
+//    systemLog.write(temp);
 }
 
 void MainWindow::stitchImage()
 {
-    qDebug() << "start";
     std::vector<std::string> fileNames;
     std::string path = dir.absolutePath().toStdString();
     fileNames = getVideoName(videoList,path);

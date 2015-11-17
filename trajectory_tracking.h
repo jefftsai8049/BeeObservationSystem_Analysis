@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QTime>
+#include <QTimer>
 
 #include <stdlib.h>
 #include <math.h>
@@ -84,7 +85,7 @@ private:
 
     bool showImage = true;
 
-
+    QTimer *saveClock;
 
     //Hough Circle Parameters
     int dp;
@@ -105,9 +106,11 @@ private:
 
     int contourParam2;
 
+
     std::string SVMModelFileName;
 
     std::string PCAModelFileName;
+
 
     void run();
 

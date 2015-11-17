@@ -43,9 +43,10 @@ double track::howClose(const cv::Vec3f &circle)
 }
 
 
-object_tracking::object_tracking(QObject *parent)
-{
 
+object_tracking::object_tracking(QObject *parent, const QDateTime fileTime)
+{
+    this->startTime = fileTime;
 }
 
 object_tracking::~object_tracking()
@@ -55,11 +56,12 @@ object_tracking::~object_tracking()
 
 void object_tracking::compute(const QDateTime &time, const std::vector<cv::Vec3f> &circles, const std::vector<std::string> &w1, const std::vector<std::string> &w2)
 {
+
     this->nowTime = time;
 
     //threshold of distance
     int minDistanceThreshold = 2000;
-    int minTimeGap = 5;
+//    int minTimeGap = 5;
 
     //for saving path and circle size
     int circleSize = circles.size();
@@ -88,13 +90,19 @@ void object_tracking::compute(const QDateTime &time, const std::vector<cv::Vec3f
         mf::vectorFindMin(minDiatanceSqrt,index,distanceSqrt);
 
         int timeGap = this->path[j].time[this->path[j].time.size()-1].secsTo(time);
-        //qDebug() << "time gap " << timeGap << "time threshold" << minTimeGap;
+
+
+#ifdef DEBUG_OBJECT_TRACKING
+        qDebug() <<"path:" << j << "circle:" << index << "min distance " << minDiatanceSqrt;
+#endif
         //if distance and time is close enough
         if(minDiatanceSqrt < minDistanceThreshold)
         {
-            if(timeGap < minTimeGap)
+            if(timeGap < FORGET_TRACKING_TIME)
             {
                 this->path[j].time.push_back(time);
+                this->path[j].w1.push_back(w1[index].c_str()[0]);
+                this->path[j].w2.push_back(w2[index].c_str()[0]);
                 this->path[j].position.push_back(cv::Point(circles[index][0],circles[index][1]));
                 circleMarked[index] = j;
             }
@@ -111,7 +119,10 @@ void object_tracking::compute(const QDateTime &time, const std::vector<cv::Vec3f
             //qDebug() << "new path" << count+pathSize;
             track emptyPath;
             emptyPath.time.push_back(time);
+            emptyPath.w1.push_back(w1[k].c_str()[0]);
+            emptyPath.w2.push_back(w2[k].c_str()[0]);
             emptyPath.position.push_back(cv::Point(circles[k][0],circles[k][1]));
+
             circleMarked[k] = count+pathSize;
             count++;
 
@@ -180,4 +191,87 @@ void object_tracking::drawPath(cv::Mat& src)
                 cv::line(src,path[i][j],path[i][j+1],cv::Scalar(255,255,255),4);
         }
     }
+}
+
+void object_tracking::savePath()
+{
+
+    QFileInfo fileInfo(startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
+    QFile file(fileInfo.fileName());
+
+    if(!fileInfo.exists())
+    {
+        qDebug() << this->startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv";
+
+        file.open(QIODevice::WriteOnly);
+        qDebug() <<fileInfo.exists();
+    }
+    else
+    {
+        file.open(QIODevice::Append);
+    }
+    std::stringstream outFile;
+    for(int i = 0; i < this->path.size(); i++)
+    {
+        //qDebug() << this->path[i].time[this->path[i].time.size()-1].secsTo(this->nowTime);
+        if(this->path[i].time[this->path[i].time.size()-1].secsTo(this->nowTime) > FORGET_TRACKING_TIME)
+        {
+            for(int j = 0; j < this->path[i].time.size(); j++)
+            {
+//                std::vector<std::vector<char>> name;
+//                std::vector<cv::Point> position;
+//                std::vector<QDateTime> time;
+                outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
+                        << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
+                        << this->path[i].position[j].x << ","
+                        << this->path[i].position[j].y << ",";
+            }
+            outFile << "\n";
+            this->path.erase(this->path.begin()+i);
+            i--;
+        }
+    }
+    file.write(outFile.str().c_str());
+    file.close();
+}
+
+void object_tracking::saveAllPath()
+{
+    QFileInfo fileInfo(startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
+    QFile file(fileInfo.fileName());
+
+    if(!fileInfo.exists())
+    {
+        qDebug() << this->startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv";
+
+        file.open(QIODevice::WriteOnly);
+        qDebug() <<fileInfo.exists();
+    }
+    else
+    {
+        file.open(QIODevice::Append);
+    }
+    std::stringstream outFile;
+    for(int i = 0; i < this->path.size(); i++)
+    {
+        //qDebug() << this->path[i].time[this->path[i].time.size()-1].secsTo(this->nowTime);
+
+            for(int j = 0; j < this->path[i].time.size(); j++)
+            {
+//                std::vector<std::vector<char>> name;
+//                std::vector<cv::Point> position;
+//                std::vector<QDateTime> time;
+                outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
+                        << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
+                        << this->path[i].position[j].x << ","
+                        << this->path[i].position[j].y << ",";
+            }
+            outFile << "\n";
+//            this->path.erase(this->path.begin()+i);
+//            i--;
+
+    }
+    this->path.clear();
+    file.write(outFile.str().c_str());
+    file.close();
 }

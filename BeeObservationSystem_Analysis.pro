@@ -100,6 +100,7 @@ LIBS +=  C:\\opencv300_x64_vc2013\\lib\\opencv_world300.lib \
 DEFINES += HAVE_OPENCV \
 #        += DEBUG_TAG_RECOGNITION\
 #        += SAVE_TAG_IMAGE
+#        += DEBUG_OBJECT_TRACKING
 
 RESOURCES += \
     icon.qrc
