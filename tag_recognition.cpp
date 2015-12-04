@@ -12,77 +12,91 @@ tag_recognition::~tag_recognition()
 
 void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 {
-//    qDebug() << "histogram equalize";
+#ifdef DEBUG_TAG_RECOGNITION
+    cv::imshow("before his eq",src);
+    cv::imwrite("tag/before_his_eq.bmp",src);
+#endif
+
     //histogram equalize
     cv::equalizeHist(src,src);
 
-//    qDebug() << "convert to binary image";
     //convert to binary image
     cv::Mat srcBinary;
-    cv::adaptiveThreshold(src,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,10);
+    cv::adaptiveThreshold(src,srcBinary,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY_INV,5,5);
 
-//    qDebug() << "normalize from 0-255 to 0-1";
     //normalize from 0-255 to 0-1
     cv::Mat srcBinaryZeroOne;
     cv::normalize(srcBinary,srcBinaryZeroOne,0,1,cv::NORM_MINMAX);
 
-//    qDebug() << "find white blobs";
     //find white blobs
     std::vector < std::vector<cv::Point2f> > blobs;
     this->findBlobs(srcBinaryZeroOne,blobs);
 
-//    qDebug() << "find circle ring blob";
+#ifdef DEBUG_TAG_RECOGNITION
+    //draw blob image
+    cv::Mat srcBlobFindRaw = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC3);
+    this->drawBlob(srcBlobFindRaw,blobs);
+    cv::imshow("blob find raw",srcBlobFindRaw);
+    cv::imwrite("tag/blob_find_raw.bmp",srcBlobFindRaw);
+#endif
+
     //find circle ring blob
     std::vector < std::vector<cv::Point2f> > circleRing;
     circleRing.push_back(this->findCircleBlobs(blobs));
     cv::Mat circleMask = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC1);
     this->drawBlobMask(circleMask,circleRing);
 
-//    qDebug() << "make circle ring mask";
     //make circle ring mask
     cv::Mat circleRingMask = circleMask.clone();
     cv::floodFill(circleRingMask,cv::Point(circleMask.rows/2,circleMask.cols/2),cv::Scalar(255));
     circleRingMask = circleRingMask-circleMask;
 
-//    qDebug() << "remove blobs outside ring";
     //remove blobs outside ring
     blobs = this->maskRemoveBlobs(circleRingMask,blobs);
 
 #ifdef DEBUG_TAG_RECOGNITION
     cv::imshow("after his eq",src);
+    cv::imwrite("tag/after_his_eq.bmp",src);
+
     cv::imshow("binary",srcBinary);
+    cv::imwrite("tag/binary.bmp",srcBinary);
     //draw blob image
     cv::Mat srcBlobFind = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC3);
     this->drawBlob(srcBlobFind,blobs);
     cv::imshow("blob find",srcBlobFind);
+    cv::imwrite("tag/blob_find.bmp",srcBlobFind);
 #endif
 
-//    qDebug() << "remove those impossible blobs";
-    //remove those impossible blobs
-    blobs = this->removeImpossibleBlobs(blobs);
 
-//    qDebug() << "sort the blobs again by sizes";
+    //remove those impossible blobs
+    if(blobs.size() > 3)
+    {
+        blobs = this->removeImpossibleBlobs(blobs);
+    }
+
     //sort the blobs again by sizes
     this->sortblobsSize(blobs);
 
-//    qDebug() << "remove blobs with too big COV";
+    //    qDebug() << "remove blobs with too big COV";
     //remove blobs with too big COV
-//    blobs = this->removeImpossibleBlobsCOV(blobs);
+    //    blobs = this->removeImpossibleBlobsCOV(blobs);
 
 #ifdef DEBUG_TAG_RECOGNITION
     //    draw blob image
     cv::Mat srcBlobFindKick = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC3);
     this->drawBlob(srcBlobFindKick,blobs);
     cv::imshow("blob find kick",srcBlobFindKick);
-    qDebug() <<"blob size : "<< blobs.size();
-    for(int i =0 ;i<blobs.size();i++)
-    {
-        qDebug() <<"size:"<< blobs[i].size() <<"COV:"<< this->calcualteCOV(blobs[i]);
-    }
+    cv::imwrite("tag/blob_find_kick.bmp",srcBlobFindKick);
+
+//    qDebug() <<"blob size : "<< blobs.size();
+//    for(int i =0 ;i<blobs.size();i++)
+//    {
+//        qDebug() <<"size:"<< blobs[i].size() <<"COV:"<< this->calcualteCOV(blobs[i]);
+//    }
 
 #endif
 
-//    qDebug() << "<3";
+    //    qDebug() << "<3";
     if(blobs.size()<3)
     {
         word1 = cv::Mat::zeros(1,1,CV_8UC1);
@@ -91,21 +105,21 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     }
 
 
-//    qDebug() << "sort the blobs again by sizes";
+    //    qDebug() << "sort the blobs again by sizes";
     //sort the blobs again by sizes
     this->sortblobsSize(blobs);
 
-//    qDebug() << "find blobs center";
+    //    qDebug() << "find blobs center";
     //find blobs center
     std::vector<cv::Point2f> blobCenter;
     this->findBlobCenter(blobs,blobCenter);
 
-//    qDebug() << "find angle";
+    //    qDebug() << "find angle";
     //find angle
     cv::Point2f imgCenter;
     float angle = this->findRotateAngle(blobCenter,imgCenter);
 
-//    qDebug() << "rotate image";
+    //    qDebug() << "rotate image";
     //rotate image
     cv::Mat srcNoCircle;
     src.copyTo(srcNoCircle,circleRingMask);
@@ -115,27 +129,29 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
 #ifdef DEBUG_TAG_RECOGNITION
     qDebug()  << "angle:"<< angle;
     cv::imshow("rotate",srcNoCircle);
+    cv::imwrite("tag/rotate.bmp",srcNoCircle);
 #endif
 
-//    qDebug() << "erase dot blob";
+    //    qDebug() << "erase dot blob";
     //erase dot blob
     blobs.erase(blobs.begin());
     cv::Mat wordsMask = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC1);
     this->drawBlobMask(wordsMask,blobs);
     cv::warpAffine(wordsMask,wordsMask,rotateInfo,cv::Size(src.rows,src.cols),cv::INTER_LINEAR,cv::BORDER_CONSTANT,cv::Scalar(0));
 
-//    qDebug() << "copy with mask";
+    //    qDebug() << "copy with mask";
     //copy with mask
     cv::Mat rawDst(src.rows,src.cols,CV_8UC1,cv::Scalar::all(255));
     srcNoCircle.copyTo(rawDst,wordsMask);
 
-//    qDebug() << "cut word";
+    //    qDebug() << "cut word";
     //cut word
     this->cutWords(wordsMask,rawDst,word1,word2);
 
 #ifdef DEBUG_TAG_RECOGNITION
     cv::imshow("final",srcNoCircle);
-    cv::waitKey(2000);
+    cv::imwrite("tag/final.bmp",srcNoCircle);
+
 #endif
 }
 
@@ -374,6 +390,7 @@ void tag_recognition::findBlobs(const cv::Mat &binary,std::vector<std::vector<cv
 {
     blobs.clear();
 
+
     // Fill the label_image with the blobs
     // 0  - background
     // 1  - unlabelled foreground
@@ -422,6 +439,7 @@ std::vector<cv::Point2f> tag_recognition::findCircleBlobs(std::vector<std::vecto
     std::vector<cv::Point2f> mean(blobs.size());
     std::vector<float> distanceVar(blobs.size());
     std::vector<float> distanceMean(blobs.size());
+//    std::vector<float> vecTotal(blobs.size());
 
     std::vector<cv::Point2f> dstBlob;
 
@@ -429,6 +447,7 @@ std::vector<cv::Point2f> tag_recognition::findCircleBlobs(std::vector<std::vecto
     {
         mean[i] = this->calcualteMeanPoint(blobs[i]);
         std::vector<float> distance;
+//        cv::Point2f vecSum = cv::Point2f(0,0);
         for(int k = 0; k < blobs[i].size(); k++)
         {
             float deltaX = blobs[i][k].x-mean[i].x;
@@ -436,14 +455,18 @@ std::vector<cv::Point2f> tag_recognition::findCircleBlobs(std::vector<std::vecto
 
             float r = sqrt(pow(deltaX,2)+pow(deltaY,2));
             distance.push_back(r);
-        }
 
+//            vecSum += cv::Point2f(deltaX,deltaY);
+
+        }
+//        vecTotal[i] = (pow(vecSum.x,2)+pow(vecSum.y,2))/blobs[i].size();
         distanceVar[i] = this->calculateVar(distance);
         distanceMean[i] = this->calcualteMean(distance);
 
+
         if(distanceMean[i] > 10 && distanceVar[i] <2)
         {
-//            qDebug() << "disVar" << i <<distanceVar[i] << distanceMean[i];
+//qDebug() << "circle" << i <<distanceVar[i] << distanceMean[i] << vecTotal[i];
             dstBlob = blobs[i];
         }
 

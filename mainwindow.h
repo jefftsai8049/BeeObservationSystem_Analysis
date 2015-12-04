@@ -55,6 +55,8 @@ private slots:
 
     void receiveSystemLog(const QString &msg);
 
+    void receiveProcessingProgress(const int &percentage);
+
     void stitchImage();
 
     void on_actionLoad_Raw_Video_File_triggered();
@@ -95,6 +97,10 @@ private slots:
 
     void on_actionTrain_New_Tag_Model_triggered();
 
+
+    void on_actionLoad_Analysis_Data_triggered();
+
+    void on_erase_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

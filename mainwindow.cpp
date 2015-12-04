@@ -29,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(TT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
+    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
+    connect(TT,SIGNAL(sendProcessingProgress(int)),this,SLOT(receiveProcessingProgress(int)));
+
     connect(this,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
     //trajectory tracking parameters setting
@@ -137,7 +141,12 @@ void MainWindow::receiveSystemLog(const QString &msg)
 
     systemLog.write((msg+"\n").toStdString().c_str());
 //    char temp[] = {13};
-//    systemLog.write(temp);
+    //    systemLog.write(temp);
+}
+
+void MainWindow::receiveProcessingProgress(const int &percentage)
+{
+    ui->processing_progressBar->setValue(percentage);
 }
 
 void MainWindow::stitchImage()
@@ -245,13 +254,20 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
-    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+    ui->videoName_textBrowser->clear();
+    for (int k = 0;k<videoList[0].size();k++)
+    {
+        QString fileName = videoList[0][k]+"\n";
+        fileName = fileName.mid(2,fileName.length()-2);
+        ui->videoName_textBrowser->insertPlainText(fileName);
+    }
+
     stitchImage();
 }
 
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
-    disconnect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
 
     TT->stopStitch();
 
@@ -480,5 +496,21 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
 
 void MainWindow::on_actionLoad_Analysis_Data_triggered()
 {
+
+}
+
+void MainWindow::on_erase_pushButton_clicked()
+{
+    for(int i = 0;i<videoList.size();i++)
+    {
+        videoList[i].erase(videoList[i].begin());
+    }
+    ui->videoName_textBrowser->clear();
+    for (int k = 0;k<videoList[0].size();k++)
+    {
+        QString fileName = videoList[0][k]+"\n";
+        fileName = fileName.mid(2,fileName.length()-2);
+        ui->videoName_textBrowser->insertPlainText(fileName);
+    }
 
 }

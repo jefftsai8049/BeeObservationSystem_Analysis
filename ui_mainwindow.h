@@ -21,6 +21,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStatusBar>
@@ -43,6 +44,7 @@ public:
     QAction *actionWith_PCA;
     QAction *actionWith_HOG;
     QAction *actionTrain_New_Tag_Model;
+    QAction *actionLoad_Analysis_Data;
     QWidget *centralWidget;
     QTabWidget *tabWidget;
     QWidget *tab;
@@ -51,6 +53,8 @@ public:
     QTextBrowser *videoName_textBrowser;
     QLCDNumber *processing_lcdNumber;
     QCheckBox *show_image_checkBox;
+    QProgressBar *processing_progressBar;
+    QPushButton *erase_pushButton;
     QWidget *tab_2;
     QGroupBox *groupBox;
     QSpinBox *maxRadius_hough_circle_spinBox;
@@ -80,6 +84,7 @@ public:
     QMenu *menuFile;
     QMenu *menuSet;
     QMenu *menuModel;
+    QMenu *menuAnalysis;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -113,6 +118,8 @@ public:
         actionWith_HOG->setChecked(true);
         actionTrain_New_Tag_Model = new QAction(MainWindow);
         actionTrain_New_Tag_Model->setObjectName(QStringLiteral("actionTrain_New_Tag_Model"));
+        actionLoad_Analysis_Data = new QAction(MainWindow);
+        actionLoad_Analysis_Data->setObjectName(QStringLiteral("actionLoad_Analysis_Data"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -137,8 +144,15 @@ public:
         processing_lcdNumber->setGeometry(QRect(120, 9, 101, 51));
         show_image_checkBox = new QCheckBox(tab);
         show_image_checkBox->setObjectName(QStringLiteral("show_image_checkBox"));
-        show_image_checkBox->setGeometry(QRect(120, 69, 111, 51));
+        show_image_checkBox->setGeometry(QRect(10, 70, 131, 51));
         show_image_checkBox->setChecked(true);
+        processing_progressBar = new QProgressBar(tab);
+        processing_progressBar->setObjectName(QStringLiteral("processing_progressBar"));
+        processing_progressBar->setGeometry(QRect(10, 480, 221, 31));
+        processing_progressBar->setValue(0);
+        erase_pushButton = new QPushButton(tab);
+        erase_pushButton->setObjectName(QStringLiteral("erase_pushButton"));
+        erase_pushButton->setGeometry(QRect(150, 80, 75, 51));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -235,13 +249,15 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1344, 28));
+        menuBar->setGeometry(QRect(0, 0, 1344, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuSet = new QMenu(menuBar);
         menuSet->setObjectName(QStringLiteral("menuSet"));
         menuModel = new QMenu(menuBar);
         menuModel->setObjectName(QStringLiteral("menuModel"));
+        menuAnalysis = new QMenu(menuBar);
+        menuAnalysis->setObjectName(QStringLiteral("menuAnalysis"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -253,9 +269,12 @@ public:
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuSet->menuAction());
         menuBar->addAction(menuModel->menuAction());
+        menuBar->addAction(menuAnalysis->menuAction());
         menuFile->addAction(actionLoad_Stitching_Image);
         menuFile->addSeparator();
         menuFile->addAction(actionLoad_Raw_Video_File);
+        menuFile->addSeparator();
+        menuFile->addAction(actionLoad_Analysis_Data);
         menuSet->addAction(actionChange_SVM_Model);
         menuSet->addAction(actionChange_PCA_Model);
         menuSet->addAction(actionChange_Stitching_Model);
@@ -283,9 +302,11 @@ public:
         actionWith_PCA->setText(QApplication::translate("MainWindow", "With PCA", 0));
         actionWith_HOG->setText(QApplication::translate("MainWindow", "With HOG", 0));
         actionTrain_New_Tag_Model->setText(QApplication::translate("MainWindow", "Train New Tag Model", 0));
+        actionLoad_Analysis_Data->setText(QApplication::translate("MainWindow", "Load Analysis Data", 0));
         stitching_pushButton->setText(QApplication::translate("MainWindow", "Stitch", 0));
         label->setText(QApplication::translate("MainWindow", "File Sequence", 0));
         show_image_checkBox->setText(QApplication::translate("MainWindow", "Show Image", 0));
+        erase_pushButton->setText(QApplication::translate("MainWindow", "Erase", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Main", 0));
         groupBox->setTitle(QApplication::translate("MainWindow", "Hough Circle", 0));
         label_2->setText(QApplication::translate("MainWindow", "dp", 0));
@@ -305,6 +326,7 @@ public:
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuSet->setTitle(QApplication::translate("MainWindow", "Setting", 0));
         menuModel->setTitle(QApplication::translate("MainWindow", "Model", 0));
+        menuAnalysis->setTitle(QApplication::translate("MainWindow", "Analysis", 0));
     } // retranslateUi
 
 };

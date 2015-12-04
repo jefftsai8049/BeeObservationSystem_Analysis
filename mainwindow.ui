@@ -90,9 +90,9 @@
      <widget class="QCheckBox" name="show_image_checkBox">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>69</y>
-        <width>111</width>
+        <x>10</x>
+        <y>70</y>
+        <width>131</width>
         <height>51</height>
        </rect>
       </property>
@@ -101,6 +101,32 @@
       </property>
       <property name="checked">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="processing_progressBar">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>480</y>
+        <width>221</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="erase_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>80</y>
+        <width>75</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Erase</string>
       </property>
      </widget>
     </widget>
@@ -436,7 +462,7 @@
      <x>0</x>
      <y>0</y>
      <width>1344</width>
-     <height>28</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -446,6 +472,8 @@
     <addaction name="actionLoad_Stitching_Image"/>
     <addaction name="separator"/>
     <addaction name="actionLoad_Raw_Video_File"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_Analysis_Data"/>
    </widget>
    <widget class="QMenu" name="menuSet">
     <property name="title">
@@ -464,9 +492,15 @@
     </property>
     <addaction name="actionTrain_New_Tag_Model"/>
    </widget>
+   <widget class="QMenu" name="menuAnalysis">
+    <property name="title">
+     <string>Analysis</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSet"/>
    <addaction name="menuModel"/>
+   <addaction name="menuAnalysis"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -530,6 +564,11 @@
   <action name="actionTrain_New_Tag_Model">
    <property name="text">
     <string>Train New Tag Model</string>
+   </property>
+  </action>
+  <action name="actionLoad_Analysis_Data">
+   <property name="text">
+    <string>Load Analysis Data</string>
    </property>
   </action>
  </widget>

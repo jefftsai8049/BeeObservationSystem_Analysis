@@ -67,6 +67,8 @@ signals:
 
     void sendSystemLog(const QString& msg);
 
+    void sendProcessingProgress(const int &percentage);
+
 public slots:
 
 private:

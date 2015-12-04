@@ -144,7 +144,7 @@ void trajectory_tracking::run()
 {
     emit sendSystemLog("Processing start!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
 
-
+    emit sendProcessingProgress(0);
 
 
     //open video file
@@ -210,6 +210,8 @@ void trajectory_tracking::run()
     //main processing loop
     while(!this->stopped)
     {
+        emit sendProcessingProgress(frameCount/maxFPS*100.0);
+
 
         //calculate processing fps
         QTime clock;
@@ -276,8 +278,9 @@ void trajectory_tracking::run()
         w2.resize(circles.size());
 #endif
 
-
-#pragma omp parallel for
+#ifndef DEBUG_TAG_RECOGNITION
+//#pragma omp parallel for
+#endif
         for (int j=0;j<circles.size();j++)
         {
             cv::Mat tagImg;
@@ -291,12 +294,20 @@ void trajectory_tracking::run()
             w2[j].push_back(TR->wordRecognition(word2));
 #endif
 
-#ifdef SAVE_TAG_IMAGE
-            cv::imshow("w1",word1);
-            cv::imshow("w2",word2);
-
+#ifdef DEBUG_TAG_RECOGNITION
             cv::normalize(word1,word1,0,255,cv::NORM_MINMAX);
             cv::normalize(word2,word2,0,255,cv::NORM_MINMAX);
+            cv::imshow("w1",word1);
+            cv::imshow("w2",word2);
+            cv::imwrite("tag/w1.bmp",word1);
+            cv::imwrite("tag/w2.bmp",word2);
+            cv::waitKey(2000);
+#endif
+
+#ifdef SAVE_TAG_IMAGE
+
+
+
             cv::imwrite("SVM/"+w1[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
             cv::imwrite("SVM/"+w2[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
             qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
@@ -308,10 +319,11 @@ void trajectory_tracking::run()
         //std::vector<cv::Vec3f> circles;
         //std::vector<std::string> w1;
         //std::vector<std::string> w2;
+#ifndef DEBUG_TAG_RECOGNITION
         OT->compute(fileTime,circles,w1,w2);
 
         OT->savePath();
-
+#endif
         if (showImage)
         {
             //draw cicle
@@ -332,9 +344,9 @@ void trajectory_tracking::run()
             //            std::vector<std::vector<cv::Point> > path;
             //            OT->lastPath(path);
             //            this->drawPath(panoDrawCircle,path);
-
+#ifndef DEBUG_TAG_RECOGNITION
             OT->drawPath(panoDrawCircle);
-
+#endif
             //resize and show image
             cv::resize(panoDrawCircle,panoDrawCircle,cv::Size(panoDrawCircle.cols/2,panoDrawCircle.rows/2));
             emit sendImage(panoDrawCircle);
@@ -344,8 +356,9 @@ void trajectory_tracking::run()
         frameCount++;
         emit sendFPS(1000.0/clock.elapsed());
     }
+#ifndef DEBUG_TAG_RECOGNITION
     OT->saveAllPath();
-
+#endif
     //close video file and emit finish signal
     for(int i = 0; i < 3; i++)
     {
