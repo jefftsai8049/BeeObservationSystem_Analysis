@@ -17,21 +17,35 @@
 #define FORGET_TRACKING_TIME 5
 #define SHORTEST_SAMPLE_SIZE 5
 
+//before preprocessing
 struct track
 {
+    //raw data format
     std::vector<char> w1;
     std::vector<char> w2;
     std::vector<cv::Point> position;
-
     std::vector<QDateTime> time;
 
+    //functions (raw data)
     int size();
     cv::Point lastPosition();
     cv::Point futurePosition();
-
     double howClose(const cv::Vec3f& circle);
 
 };
+
+//after preprocessing
+struct trackPro
+{
+    QString ID;
+    QDateTime startTime;
+    QDateTime endTime;
+    int size;
+    std::vector<cv::Point> position;
+
+    //QDateTime timeStep(){return (endTime-startTime)/size;}
+};
+
 
 class object_tracking : public QObject
 {
@@ -51,6 +65,8 @@ public:
     void savePath();
 
     void saveAllPath();
+
+
 
 signals:
 

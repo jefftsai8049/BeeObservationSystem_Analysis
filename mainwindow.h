@@ -14,14 +14,18 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QTime>
+#include <QTimer>
 #include <QList>
 #include <QString>
 #include <QStringList>
 #include <QDir>
 #include <QVector>
+#include <QtSerialPort/QSerialPortInfo>
+#include <QtSerialPort/QSerialPort>
 
 #include "trajectory_tracking.h"
 #include "tag_recognition.h"
+#include "dataprocesswindow.h"
 
 #include "qsmartgraphicsview/qsmartgraphicsview.h"
 #include "qsmartgraphicsview/qsmartlabel.h"
@@ -29,6 +33,8 @@
 
 #define imgSizeX 1200
 #define imgSizeY 1600
+
+#define SERIAL_TIME 500
 
 
 
@@ -58,6 +64,9 @@ private slots:
     void receiveProcessingProgress(const int &percentage);
 
     void stitchImage();
+
+    void receiveSerialData();
+
 
     void on_actionLoad_Raw_Video_File_triggered();
 
@@ -102,6 +111,8 @@ private slots:
 
     void on_erase_pushButton_clicked();
 
+    void on_port_name_comboBox_activated(int index);
+
 private:
     Ui::MainWindow *ui;
 
@@ -113,6 +124,7 @@ private:
 
     std::vector<std::string> getVideoName(QVector<QStringList> list, std::string path);
 
+    DataProcessWindow *DPW;
 
 
     int stitchMode = 0;//Manual
@@ -126,6 +138,12 @@ private:
     QDir dir;
 
     QFile systemLog;
+
+    QList<QSerialPortInfo> portList;
+
+    QTimer *serialClock;
+
+    QSerialPort *port;
 
 signals:
     void sendSystemLog(const QString& msg);

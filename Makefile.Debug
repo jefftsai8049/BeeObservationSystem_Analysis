@@ -11,13 +11,13 @@ MAKEFILE      = Makefile.Debug
 
 CC            = cl
 CXX           = cl
-DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
 CFLAGS        = -nologo -Zc:wchar_t -FS -Zi -MDd -W3 /Fddebug\BeeObservationSystem_Analysis.pdb $(DEFINES)
 CXXFLAGS      = -nologo -Zc:wchar_t -FS -openmp -arch:AVX -D _CRT_SECURE_NO_WARNINGS -Zi -MDd -GR -W3 -w34100 -w34189 -w44996 -EHsc /Fddebug\BeeObservationSystem_Analysis.pdb $(DEFINES)
-INCPATH       = -I. -IC:\opencv300_x64_vc2013\include -IC:\opencv300_x64_vc2013\include\opencv -IC:\opencv300_x64_vc2013\include\opencv2 -IC:\Qt\5.5\msvc2013_64\include -IC:\Qt\5.5\msvc2013_64\include\QtOpenGL -IC:\Qt\5.5\msvc2013_64\include\QtWidgets -IC:\Qt\5.5\msvc2013_64\include\QtGui -IC:\Qt\5.5\msvc2013_64\include\QtANGLE -IC:\Qt\5.5\msvc2013_64\include\QtCore -Idebug -I. -IC:\Qt\5.5\msvc2013_64\mkspecs\win32-msvc2013 
+INCPATH       = -I. -IC:\opencv300_x64_vc2013\include -IC:\opencv300_x64_vc2013\include\opencv -IC:\opencv300_x64_vc2013\include\opencv2 -IC:\Qt\5.5\msvc2013_64\include -IC:\Qt\5.5\msvc2013_64\include\QtOpenGL -IC:\Qt\5.5\msvc2013_64\include\QtWidgets -IC:\Qt\5.5\msvc2013_64\include\QtGui -IC:\Qt\5.5\msvc2013_64\include\QtANGLE -IC:\Qt\5.5\msvc2013_64\include\QtSerialPort -IC:\Qt\5.5\msvc2013_64\include\QtCore -Idebug -I. -IC:\Qt\5.5\msvc2013_64\mkspecs\win32-msvc2013 
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /DEBUG /SUBSYSTEM:WINDOWS "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = /LIBPATH:C:\Qt\5.5\msvc2013_64\lib C:\Qt\5.5\msvc2013_64\lib\qtmaind.lib shell32.lib /LIBPATH:C:\Qt\5.5\msvc2013_64\lib C:\Qt\5.5\msvc2013_64\lib\Qt5Cored.lib C:\opencv300_x64_vc2013\lib\opencv_world300.lib C:\opencv300_x64_vc2013\lib\opencv_ts300.lib C:\opencv300_x64_vc2013\lib\opencv_world300d.lib C:\opencv300_x64_vc2013\lib\opencv_ts300d.lib C:\Qt\5.5\msvc2013_64\lib\Qt5OpenGLd.lib C:\Qt\5.5\msvc2013_64\lib\Qt5Widgetsd.lib C:\Qt\5.5\msvc2013_64\lib\Qt5Guid.lib C:\Qt\5.5\msvc2013_64\lib\Qt5Cored.lib 
+LIBS          = /LIBPATH:C:\Qt\5.5\msvc2013_64\lib C:\Qt\5.5\msvc2013_64\lib\qtmaind.lib shell32.lib /LIBPATH:C:\Qt\5.5\msvc2013_64\lib C:\Qt\5.5\msvc2013_64\lib\Qt5Cored.lib C:\opencv300_x64_vc2013\lib\opencv_world300.lib C:\opencv300_x64_vc2013\lib\opencv_ts300.lib C:\opencv300_x64_vc2013\lib\opencv_world300d.lib C:\opencv300_x64_vc2013\lib\opencv_ts300d.lib C:\Qt\5.5\msvc2013_64\lib\Qt5OpenGLd.lib C:\Qt\5.5\msvc2013_64\lib\Qt5Widgetsd.lib C:\Qt\5.5\msvc2013_64\lib\Qt5Guid.lib C:\Qt\5.5\msvc2013_64\lib\Qt5SerialPortd.lib C:\Qt\5.5\msvc2013_64\lib\Qt5Cored.lib 
 QMAKE         = C:\Qt\5.5\msvc2013_64\bin\qmake.exe
 IDC           = idc
 IDL           = midl
@@ -50,13 +50,15 @@ SOURCES       = main.cpp \
 		qsmartgraphicsview\qsmartgraphicsview.cpp \
 		qsmartgraphicsview\qsmartlabel.cpp \
 		object_tracking.cpp \
-		math_function.cpp debug\qrc_icon.cpp \
+		math_function.cpp \
+		dataprocesswindow.cpp debug\qrc_icon.cpp \
 		debug\moc_mainwindow.cpp \
 		debug\moc_trajectory_tracking.cpp \
 		debug\moc_tag_recognition.cpp \
 		debug\moc_qsmartgraphicsview.cpp \
 		debug\moc_qsmartlabel.cpp \
-		debug\moc_object_tracking.cpp
+		debug\moc_object_tracking.cpp \
+		debug\moc_dataprocesswindow.cpp
 OBJECTS       = debug\main.obj \
 		debug\mainwindow.obj \
 		debug\trajectory_tracking.obj \
@@ -65,13 +67,15 @@ OBJECTS       = debug\main.obj \
 		debug\qsmartlabel.obj \
 		debug\object_tracking.obj \
 		debug\math_function.obj \
+		debug\dataprocesswindow.obj \
 		debug\qrc_icon.obj \
 		debug\moc_mainwindow.obj \
 		debug\moc_trajectory_tracking.obj \
 		debug\moc_tag_recognition.obj \
 		debug\moc_qsmartgraphicsview.obj \
 		debug\moc_qsmartlabel.obj \
-		debug\moc_object_tracking.obj
+		debug\moc_object_tracking.obj \
+		debug\moc_dataprocesswindow.obj
 
 DIST          =  mainwindow.h \
 		trajectory_tracking.h \
@@ -79,14 +83,16 @@ DIST          =  mainwindow.h \
 		qsmartgraphicsview\qsmartgraphicsview.h \
 		qsmartgraphicsview\qsmartlabel.h \
 		object_tracking.h \
-		math_function.h main.cpp \
+		math_function.h \
+		dataprocesswindow.h main.cpp \
 		mainwindow.cpp \
 		trajectory_tracking.cpp \
 		tag_recognition.cpp \
 		qsmartgraphicsview\qsmartgraphicsview.cpp \
 		qsmartgraphicsview\qsmartlabel.cpp \
 		object_tracking.cpp \
-		math_function.cpp
+		math_function.cpp \
+		dataprocesswindow.cpp
 QMAKE_TARGET  = BeeObservationSystem_Analysis
 DESTDIR        = debug\ #avoid trailing-slash linebreak
 TARGET         = BeeObservationSystem_Analysis.exe
@@ -161,7 +167,7 @@ DESTDIR_TARGET = debug\BeeObservationSystem_Analysis.exe
 first: all
 all: Makefile.Debug  $(DESTDIR_TARGET)
 
-$(DESTDIR_TARGET): ui_mainwindow.h $(OBJECTS) 
+$(DESTDIR_TARGET): ui_mainwindow.h ui_dataprocesswindow.h $(OBJECTS) 
 	$(LINKER) $(LFLAGS) /MANIFEST:embed /OUT:$(DESTDIR_TARGET) @<<
 $(OBJECTS) $(LIBS)
 <<
@@ -172,10 +178,10 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist:
-	$(ZIP) BeeObservationSystem_Analysis.zip $(SOURCES) $(DIST) BeeObservationSystem_Analysis.pro C:\Qt\5.5\msvc2013_64\mkspecs\features\spec_pre.prf C:\Qt\5.5\msvc2013_64\mkspecs\common\msvc-desktop.conf C:\Qt\5.5\msvc2013_64\mkspecs\qconfig.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dcore.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dcore_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dinput.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dinput_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquick.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquick_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquickrenderer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquickrenderer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3drenderer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3drenderer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axbase.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axserver.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_clucene_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_core.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_core_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_dbus.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_declarative.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_declarative_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_designer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_enginio.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_enginio_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_gui.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_help.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_help_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_location.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_location_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_network.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_network_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_nfc.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_opengl.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_platformsupport_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_positioning.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qml.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quick.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_script.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_script_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sensors.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_serialport.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sql.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_svg.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_testlib.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_uitools.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webengine.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webengine_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginecore.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginecore_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginewidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginewidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkit.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkit_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkitwidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkitwidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_websockets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_widgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_winextras.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xml.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\features\qt_functions.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\qt_config.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\qt_config.prf C:\Qt\5.5\msvc2013_64\mkspecs\win32-msvc2013\qmake.conf C:\Qt\5.5\msvc2013_64\mkspecs\features\spec_post.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\exclusive_builds.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\default_pre.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\default_pre.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\resolve_config.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\exclusive_builds_post.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\default_post.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\build_pass.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\rtti.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\c++11.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\precompile_header.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\warn_on.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\qt.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\resources.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\moc.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\opengl.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\uic.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\windows.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\testcase_targets.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\exceptions.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\yacc.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\lex.prf BeeObservationSystem_Analysis.pro icon.qrc C:/Qt/5.5/msvc2013_64/lib/qtmaind.prl C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGLd.prl C:/Qt/5.5/msvc2013_64/lib/Qt5Widgetsd.prl C:/Qt/5.5/msvc2013_64/lib/Qt5Guid.prl C:/Qt/5.5/msvc2013_64/lib/Qt5Cored.prl  NO_PCH_SOURCES RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
+	$(ZIP) BeeObservationSystem_Analysis.zip $(SOURCES) $(DIST) BeeObservationSystem_Analysis.pro C:\Qt\5.5\msvc2013_64\mkspecs\features\spec_pre.prf C:\Qt\5.5\msvc2013_64\mkspecs\common\msvc-desktop.conf C:\Qt\5.5\msvc2013_64\mkspecs\qconfig.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dcore.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dcore_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dinput.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dinput_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquick.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquick_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquickrenderer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3dquickrenderer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3drenderer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_3drenderer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axbase.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axserver.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_clucene_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_core.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_core_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_dbus.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_dbus_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_declarative.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_declarative_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_designer.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_enginio.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_enginio_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_gui.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_help.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_help_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_location.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_location_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_network.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_network_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_nfc.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_opengl.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_platformsupport_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_positioning.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qml.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quick.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_script.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_script_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sensors.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_serialport.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sql.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_svg.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_testlib.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_uiplugin.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_uitools.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webengine.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webengine_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginecore.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginecore_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginewidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webenginewidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkit.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkit_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkitwidgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_webkitwidgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_websockets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_widgets.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_winextras.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xml.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\5.5\msvc2013_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\5.5\msvc2013_64\mkspecs\features\qt_functions.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\qt_config.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\qt_config.prf C:\Qt\5.5\msvc2013_64\mkspecs\win32-msvc2013\qmake.conf C:\Qt\5.5\msvc2013_64\mkspecs\features\spec_post.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\exclusive_builds.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\default_pre.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\default_pre.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\resolve_config.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\exclusive_builds_post.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\default_post.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\build_pass.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\rtti.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\c++11.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\precompile_header.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\warn_on.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\qt.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\resources.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\moc.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\opengl.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\uic.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\win32\windows.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\testcase_targets.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\exceptions.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\yacc.prf C:\Qt\5.5\msvc2013_64\mkspecs\features\lex.prf BeeObservationSystem_Analysis.pro icon.qrc C:/Qt/5.5/msvc2013_64/lib/qtmaind.prl C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGLd.prl C:/Qt/5.5/msvc2013_64/lib/Qt5Widgetsd.prl C:/Qt/5.5/msvc2013_64/lib/Qt5Guid.prl C:/Qt/5.5/msvc2013_64/lib/Qt5SerialPortd.prl C:/Qt/5.5/msvc2013_64/lib/Qt5Cored.prl  NO_PCH_SOURCES RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) debug\main.obj debug\mainwindow.obj debug\trajectory_tracking.obj debug\tag_recognition.obj debug\qsmartgraphicsview.obj debug\qsmartlabel.obj debug\object_tracking.obj debug\math_function.obj debug\qrc_icon.obj debug\moc_mainwindow.obj debug\moc_trajectory_tracking.obj debug\moc_tag_recognition.obj debug\moc_qsmartgraphicsview.obj debug\moc_qsmartlabel.obj debug\moc_object_tracking.obj
+	-$(DEL_FILE) debug\main.obj debug\mainwindow.obj debug\trajectory_tracking.obj debug\tag_recognition.obj debug\qsmartgraphicsview.obj debug\qsmartlabel.obj debug\object_tracking.obj debug\math_function.obj debug\dataprocesswindow.obj debug\qrc_icon.obj debug\moc_mainwindow.obj debug\moc_trajectory_tracking.obj debug\moc_tag_recognition.obj debug\moc_qsmartgraphicsview.obj debug\moc_qsmartlabel.obj debug\moc_object_tracking.obj debug\moc_dataprocesswindow.obj
 	-$(DEL_FILE) debug\BeeObservationSystem_Analysis.exp debug\BeeObservationSystem_Analysis.ilk debug\BeeObservationSystem_Analysis.idb
 
 distclean: clean 
@@ -199,9 +205,9 @@ debug\qrc_icon.cpp: icon.qrc \
 		icon\save.png
 	C:\Qt\5.5\msvc2013_64\bin\rcc.exe -name icon icon.qrc -o debug\qrc_icon.cpp
 
-compiler_moc_header_make_all: debug\moc_mainwindow.cpp debug\moc_trajectory_tracking.cpp debug\moc_tag_recognition.cpp debug\moc_qsmartgraphicsview.cpp debug\moc_qsmartlabel.cpp debug\moc_object_tracking.cpp
+compiler_moc_header_make_all: debug\moc_mainwindow.cpp debug\moc_trajectory_tracking.cpp debug\moc_tag_recognition.cpp debug\moc_qsmartgraphicsview.cpp debug\moc_qsmartlabel.cpp debug\moc_object_tracking.cpp debug\moc_dataprocesswindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) debug\moc_mainwindow.cpp debug\moc_trajectory_tracking.cpp debug\moc_tag_recognition.cpp debug\moc_qsmartgraphicsview.cpp debug\moc_qsmartlabel.cpp debug\moc_object_tracking.cpp
+	-$(DEL_FILE) debug\moc_mainwindow.cpp debug\moc_trajectory_tracking.cpp debug\moc_tag_recognition.cpp debug\moc_qsmartgraphicsview.cpp debug\moc_qsmartlabel.cpp debug\moc_object_tracking.cpp debug\moc_dataprocesswindow.cpp
 debug\moc_mainwindow.cpp: C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
@@ -372,6 +378,11 @@ debug\moc_mainwindow.cpp: C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDir \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QVector \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\QSerialPortInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialportinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\QSerialPort \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialport.h \
 		trajectory_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
@@ -385,6 +396,7 @@ debug\moc_mainwindow.cpp: C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		math_function.h \
 		object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		dataprocesswindow.h \
 		qsmartgraphicsview\qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -433,7 +445,7 @@ debug\moc_mainwindow.cpp: C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLabel \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlabel.h \
 		mainwindow.h
-	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore mainwindow.h -o debug\moc_mainwindow.cpp
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore mainwindow.h -o debug\moc_mainwindow.cpp
 
 debug\moc_trajectory_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
@@ -612,7 +624,7 @@ debug\moc_trajectory_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QThread 
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream \
 		trajectory_tracking.h
-	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore trajectory_tracking.h -o debug\moc_trajectory_tracking.cpp
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore trajectory_tracking.h -o debug\moc_trajectory_tracking.cpp
 
 debug\moc_tag_recognition.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject.h \
@@ -743,7 +755,7 @@ debug\moc_tag_recognition.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
 		C:\opencv300_x64_vc2013\include\opencv2\core\ocl.hpp \
 		tag_recognition.h
-	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore tag_recognition.h -o debug\moc_tag_recognition.cpp
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore tag_recognition.h -o debug\moc_tag_recognition.cpp
 
 debug\moc_qsmartgraphicsview.cpp: C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -943,7 +955,7 @@ debug\moc_qsmartgraphicsview.cpp: C:\Qt\5.5\msvc2013_64\include\QtWidgets\QAppli
 		C:\opencv300_x64_vc2013\include\opencv2\videoio\videoio_c.h \
 		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
 		qsmartgraphicsview\qsmartgraphicsview.h
-	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore qsmartgraphicsview\qsmartgraphicsview.h -o debug\moc_qsmartgraphicsview.cpp
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore qsmartgraphicsview\qsmartgraphicsview.h -o debug\moc_qsmartgraphicsview.cpp
 
 debug\moc_qsmartlabel.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
@@ -1056,7 +1068,7 @@ debug\moc_qsmartlabel.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
 		qsmartgraphicsview\qsmartlabel.h
-	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore qsmartgraphicsview\qsmartlabel.h -o debug\moc_qsmartlabel.cpp
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore qsmartgraphicsview\qsmartlabel.h -o debug\moc_qsmartlabel.cpp
 
 debug\moc_object_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject.h \
@@ -1222,13 +1234,186 @@ debug\moc_object_tracking.cpp: C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
 		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
 		math_function.h \
 		object_tracking.h
-	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtCore object_tracking.h -o debug\moc_object_tracking.cpp
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore object_tracking.h -o debug\moc_object_tracking.cpp
+
+debug\moc_dataprocesswindow.cpp: C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMainWindow \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmainwindow.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qglobal.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qconfig.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfeatures.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtypetraits.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsysinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlogging.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qflags.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_bootstrap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_gcc.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_msvc.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_armv7.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_armv6.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_armv5.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_ia64.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_mips.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_x86.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_unix.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmutex.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qnumeric.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qnamespace.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstring.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qchar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbytearray.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qrefcount.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qarraydata.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlist.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qalgorithms.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qiterator.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstringlist.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qregexp.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcoreevent.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmetatype.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvarlengtharray.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qisenum.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmargins.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qrect.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsize.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpoint.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpalette.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcolor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qrgb.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qbrush.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpair.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvector.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qmatrix.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpolygon.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qregion.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatastream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qiodevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qline.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtransform.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpainterpath.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qimage.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixelformat.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qshareddata.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qhash.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfont.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcursor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qkeysequence.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qevent.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvariant.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdebug.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtextstream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlocale.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qset.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfile.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfiledevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtabwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qicon.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QString \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDebug \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdir.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfileinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream \
+		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
+		math_function.h \
+		dataprocesswindow.h
+	C:\Qt\5.5\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.5/msvc2013_64/mkspecs/win32-msvc2013 -IF:/jefftsai-lab405/code/BeeObservationSystem_Analysis -IC:/opencv300_x64_vc2013/include -IC:/opencv300_x64_vc2013/include/opencv -IC:/opencv300_x64_vc2013/include/opencv2 -IC:/Qt/5.5/msvc2013_64/include -IC:/Qt/5.5/msvc2013_64/include/QtOpenGL -IC:/Qt/5.5/msvc2013_64/include/QtWidgets -IC:/Qt/5.5/msvc2013_64/include/QtGui -IC:/Qt/5.5/msvc2013_64/include/QtANGLE -IC:/Qt/5.5/msvc2013_64/include/QtSerialPort -IC:/Qt/5.5/msvc2013_64/include/QtCore dataprocesswindow.h -o debug\moc_dataprocesswindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_make_all: ui_mainwindow.h ui_dataprocesswindow.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
+	-$(DEL_FILE) ui_mainwindow.h ui_dataprocesswindow.h
 ui_mainwindow.h: mainwindow.ui \
 		qsmartgraphicsview\qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
@@ -1430,6 +1615,9 @@ ui_mainwindow.h: mainwindow.ui \
 		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp
 	C:\Qt\5.5\msvc2013_64\bin\uic.exe mainwindow.ui -o ui_mainwindow.h
 
+ui_dataprocesswindow.h: dataprocesswindow.ui
+	C:\Qt\5.5\msvc2013_64\bin\uic.exe dataprocesswindow.ui -o ui_dataprocesswindow.h
+
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
@@ -1613,6 +1801,11 @@ debug\main.obj: main.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDir \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QVector \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\QSerialPortInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialportinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\QSerialPort \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialport.h \
 		trajectory_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
@@ -1626,6 +1819,7 @@ debug\main.obj: main.cpp mainwindow.h \
 		math_function.h \
 		object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		dataprocesswindow.h \
 		qsmartgraphicsview/qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -1847,6 +2041,11 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDir \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QVector \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\QSerialPortInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialportinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialportglobal.h \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\QSerialPort \
+		C:\Qt\5.5\msvc2013_64\include\QtSerialPort\qserialport.h \
 		trajectory_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\qthread.h \
@@ -1860,6 +2059,7 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		math_function.h \
 		object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		dataprocesswindow.h \
 		qsmartgraphicsview/qsmartgraphicsview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
@@ -1917,13 +2117,8 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QCheckBox \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qcheckbox.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractbutton.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QGroupBox \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qgroupbox.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QHeaderView \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qheaderview.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemview.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qabstractitemmodel.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QComboBox \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qcombobox.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyleoption.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
@@ -1934,6 +2129,13 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyle.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtabbar.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QGroupBox \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qgroupbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QHeaderView \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qheaderview.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qitemselectionmodel.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLCDNumber \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlcdnumber.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMenu \
@@ -2805,6 +3007,218 @@ debug\object_tracking.obj: object_tracking.cpp object_tracking.h \
 
 debug\math_function.obj: math_function.cpp math_function.h
 
+debug\dataprocesswindow.obj: dataprocesswindow.cpp dataprocesswindow.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMainWindow \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmainwindow.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qglobal.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qconfig.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfeatures.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsystemdetection.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qprocessordetection.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcompilerdetection.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtypeinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtypetraits.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsysinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlogging.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qflags.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbasicatomic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_bootstrap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qgenericatomic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_cxx11.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_gcc.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_msvc.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_armv7.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_armv6.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_armv5.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_ia64.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_mips.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_x86.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qatomic_unix.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qglobalstatic.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmutex.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qnumeric.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobjectdefs.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qnamespace.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qwindowdefs_win.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstring.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qchar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbytearray.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qrefcount.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qarraydata.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstringbuilder.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlist.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qalgorithms.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qiterator.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qbytearraylist.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstringlist.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qregexp.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qstringmatcher.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcoreevent.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qscopedpointer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmetatype.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvarlengtharray.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontainerfwd.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qisenum.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qobject_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmargins.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpaintdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qrect.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsize.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpoint.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpalette.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcolor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qrgb.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qbrush.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qpair.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvector.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qmatrix.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpolygon.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qregion.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatastream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qiodevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qline.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtransform.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpainterpath.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qimage.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixelformat.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qpixmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qshareddata.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qhash.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfont.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontmetrics.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qfontinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qsizepolicy.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qcursor.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qkeysequence.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qevent.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qvariant.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qmap.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdebug.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qtextstream.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qlocale.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qset.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurl.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qurlquery.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfile.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfiledevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qvector2d.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qtouchdevice.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtabwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qicon.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QStringList \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QString \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFile \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDebug \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDateTime \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdatetime.h \
+		object_tracking.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QObject \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qdir.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qfileinfo.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdialog.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QFileInfo \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QDataStream \
+		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
+		math_function.h \
+		ui_dataprocesswindow.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\QVariant \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QAction \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qaction.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qactiongroup.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QApplication \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qapplication.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qcoreapplication.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qeventloop.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qdesktopwidget.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qguiapplication.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qinputmethod.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QButtonGroup \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qbuttongroup.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QHeaderView \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qheaderview.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemview.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractscrollarea.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qframe.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyleoption.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtGui\qvalidator.h \
+		C:\Qt\5.5\msvc2013_64\include\QtCore\qregularexpression.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qslider.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractslider.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyle.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtabbar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMenuBar \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenubar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenu.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QPushButton \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qpushbutton.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractbutton.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QStatusBar \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstatusbar.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QWidget
+
 debug\qrc_icon.obj: debug\qrc_icon.cpp 
 
 debug\moc_mainwindow.obj: debug\moc_mainwindow.cpp 
@@ -2818,6 +3232,8 @@ debug\moc_qsmartgraphicsview.obj: debug\moc_qsmartgraphicsview.cpp
 debug\moc_qsmartlabel.obj: debug\moc_qsmartlabel.cpp 
 
 debug\moc_object_tracking.obj: debug\moc_object_tracking.cpp 
+
+debug\moc_dataprocesswindow.obj: debug\moc_dataprocesswindow.cpp 
 
 ####### Install
 

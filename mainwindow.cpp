@@ -50,6 +50,14 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
 
+    this->portList = QSerialPortInfo::availablePorts();
+    for(int i = 0; i < this->portList.size(); i++)
+    {
+        ui->port_name_comboBox->insertItem(i,this->portList.at(i).portName()+" "+this->portList.at(i).description());
+    }
+    serialClock = new QTimer;
+    connect(serialClock,SIGNAL(timeout()),this,SLOT(receiveSerialData()));
+
 }
 
 MainWindow::~MainWindow()
@@ -140,7 +148,7 @@ void MainWindow::receiveSystemLog(const QString &msg)
     ui->system_log_textBrowser->append(msg);
 
     systemLog.write((msg+"\n").toStdString().c_str());
-//    char temp[] = {13};
+    //    char temp[] = {13};
     //    systemLog.write(temp);
 }
 
@@ -164,6 +172,46 @@ void MainWindow::stitchImage()
     TT->start();
 
     ui->statusBar->showMessage(QString::fromStdString(fileNames[1])+" is processing...");
+
+}
+
+void MainWindow::receiveSerialData()
+{
+    QString msg;
+    if(port->bytesAvailable() > 10)
+    {
+        msg = port->readAll();
+        QString data;
+        for(int i = 0; i < msg.size(); i++)
+        {
+            if(msg[i] == 35 && msg[i+10] == 64)
+            {
+                for(int j = 0;j < 11; j++)
+                {
+                    data.append(msg[j+i]);
+                }
+                std::vector<float> T(2);
+                std::vector<float> RH(2);
+
+                T[0] = data[1].toLatin1()+data[2].toLatin1()/100.0;
+                T[1] = data[6].toLatin1()+data[7].toLatin1()/100.0;
+                RH[0] = data[3].toLatin1()+data[4].toLatin1()/100.0;
+                RH[1] = data[8].toLatin1()+data[6].toLatin1()/100.0;
+                ui->inhive_t_lcdNumber->display(T[0]);
+                ui->inhive_rh_lcdNumber->display(RH[0]);
+                ui->outhive_t_lcdNumber->display(T[1]);
+                ui->outhive_rh_lcdNumber->display(RH[1]);
+
+                break;
+
+
+            }
+        }
+
+//        qDebug() << data << data.size();
+
+
+    }
 
 }
 
@@ -267,8 +315,6 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
 
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
-
-
     TT->stopStitch();
 
 }
@@ -496,7 +542,13 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
 
 void MainWindow::on_actionLoad_Analysis_Data_triggered()
 {
-
+    QStringList fileNames;
+    fileNames = QFileDialog::getOpenFileNames(this,"Open Data File","","Data Files (*.csv)");
+    DPW = new DataProcessWindow;
+    if(DPW->loadData(fileNames))
+    {
+        DPW->show();
+    }
 }
 
 void MainWindow::on_erase_pushButton_clicked()
@@ -513,4 +565,32 @@ void MainWindow::on_erase_pushButton_clicked()
         ui->videoName_textBrowser->insertPlainText(fileName);
     }
 
+}
+
+void MainWindow::on_port_name_comboBox_activated(int index)
+{
+    if(serialClock->isActive())
+    {
+        serialClock->setInterval(SERIAL_TIME);
+        serialClock->start();
+
+        port->close();
+        port->setBaudRate(QSerialPort::Baud9600);
+        port->setPort(this->portList[index]);
+        port->open(QIODevice::ReadOnly);
+
+    }
+    else
+    {
+        serialClock->setInterval(SERIAL_TIME);
+        serialClock->start();
+
+        port = new QSerialPort;
+        port->setBaudRate(QSerialPort::Baud9600);
+        port->setPort(this->portList[index]);
+        port->open(QIODevice::ReadOnly);
+    }
+
+
+    emit sendSystemLog("Sensor Connect Successful.");
 }

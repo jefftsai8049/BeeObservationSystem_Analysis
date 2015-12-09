@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLCDNumber>
@@ -47,6 +48,19 @@ public:
     QAction *actionLoad_Analysis_Data;
     QWidget *centralWidget;
     QTabWidget *tabWidget;
+    QWidget *tab_4;
+    QGroupBox *groupBox_3;
+    QLabel *label_9;
+    QLabel *label_10;
+    QLabel *label_11;
+    QLCDNumber *inhive_t_lcdNumber;
+    QLCDNumber *outhive_t_lcdNumber;
+    QLCDNumber *outhive_rh_lcdNumber;
+    QLCDNumber *inhive_rh_lcdNumber;
+    QLabel *label_12;
+    QLabel *label_13;
+    QLabel *label_14;
+    QComboBox *port_name_comboBox;
     QWidget *tab;
     QPushButton *stitching_pushButton;
     QLabel *label;
@@ -125,6 +139,45 @@ public:
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
         tabWidget->setGeometry(QRect(1080, 10, 251, 561));
+        tab_4 = new QWidget();
+        tab_4->setObjectName(QStringLiteral("tab_4"));
+        groupBox_3 = new QGroupBox(tab_4);
+        groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
+        groupBox_3->setGeometry(QRect(10, 100, 221, 401));
+        label_9 = new QLabel(groupBox_3);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setGeometry(QRect(20, 140, 99, 33));
+        label_10 = new QLabel(groupBox_3);
+        label_10->setObjectName(QStringLiteral("label_10"));
+        label_10->setGeometry(QRect(20, 280, 99, 32));
+        label_11 = new QLabel(groupBox_3);
+        label_11->setObjectName(QStringLiteral("label_11"));
+        label_11->setGeometry(QRect(20, 180, 101, 32));
+        inhive_t_lcdNumber = new QLCDNumber(groupBox_3);
+        inhive_t_lcdNumber->setObjectName(QStringLiteral("inhive_t_lcdNumber"));
+        inhive_t_lcdNumber->setGeometry(QRect(20, 210, 91, 51));
+        outhive_t_lcdNumber = new QLCDNumber(groupBox_3);
+        outhive_t_lcdNumber->setObjectName(QStringLiteral("outhive_t_lcdNumber"));
+        outhive_t_lcdNumber->setGeometry(QRect(20, 340, 91, 51));
+        outhive_rh_lcdNumber = new QLCDNumber(groupBox_3);
+        outhive_rh_lcdNumber->setObjectName(QStringLiteral("outhive_rh_lcdNumber"));
+        outhive_rh_lcdNumber->setGeometry(QRect(120, 340, 91, 51));
+        inhive_rh_lcdNumber = new QLCDNumber(groupBox_3);
+        inhive_rh_lcdNumber->setObjectName(QStringLiteral("inhive_rh_lcdNumber"));
+        inhive_rh_lcdNumber->setGeometry(QRect(120, 210, 91, 51));
+        label_12 = new QLabel(groupBox_3);
+        label_12->setObjectName(QStringLiteral("label_12"));
+        label_12->setGeometry(QRect(130, 179, 81, 31));
+        label_13 = new QLabel(groupBox_3);
+        label_13->setObjectName(QStringLiteral("label_13"));
+        label_13->setGeometry(QRect(20, 311, 101, 32));
+        label_14 = new QLabel(groupBox_3);
+        label_14->setObjectName(QStringLiteral("label_14"));
+        label_14->setGeometry(QRect(130, 310, 81, 31));
+        port_name_comboBox = new QComboBox(groupBox_3);
+        port_name_comboBox->setObjectName(QStringLiteral("port_name_comboBox"));
+        port_name_comboBox->setGeometry(QRect(20, 30, 191, 51));
+        tabWidget->addTab(tab_4, QString());
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         stitching_pushButton = new QPushButton(tab);
@@ -235,7 +288,7 @@ public:
         stitchingStart_pushButton->setGeometry(QRect(1090, 610, 111, 61));
         stitchingStop_pushButton = new QPushButton(centralWidget);
         stitchingStop_pushButton->setObjectName(QStringLiteral("stitchingStop_pushButton"));
-        stitchingStop_pushButton->setGeometry(QRect(1220, 610, 101, 61));
+        stitchingStop_pushButton->setGeometry(QRect(1210, 610, 101, 61));
         imageShow_widget = new QSmartGraphicsView(centralWidget);
         imageShow_widget->setObjectName(QStringLiteral("imageShow_widget"));
         imageShow_widget->setGeometry(QRect(10, 10, 1061, 561));
@@ -303,6 +356,14 @@ public:
         actionWith_HOG->setText(QApplication::translate("MainWindow", "With HOG", 0));
         actionTrain_New_Tag_Model->setText(QApplication::translate("MainWindow", "Train New Tag Model", 0));
         actionLoad_Analysis_Data->setText(QApplication::translate("MainWindow", "Load Analysis Data", 0));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "Enviroment Info", 0));
+        label_9->setText(QApplication::translate("MainWindow", "In Hive", 0));
+        label_10->setText(QApplication::translate("MainWindow", "Out Hive", 0));
+        label_11->setText(QApplication::translate("MainWindow", "Temperture", 0));
+        label_12->setText(QApplication::translate("MainWindow", "Humidity", 0));
+        label_13->setText(QApplication::translate("MainWindow", "Temperture", 0));
+        label_14->setText(QApplication::translate("MainWindow", "Humidity", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("MainWindow", "Record", 0));
         stitching_pushButton->setText(QApplication::translate("MainWindow", "Stitch", 0));
         label->setText(QApplication::translate("MainWindow", "File Sequence", 0));
         show_image_checkBox->setText(QApplication::translate("MainWindow", "Show Image", 0));

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT       += core gui opengl serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     qsmartgraphicsview/qsmartgraphicsview.cpp \
     qsmartgraphicsview/qsmartlabel.cpp \
     object_tracking.cpp \
-    math_function.cpp
+    math_function.cpp \
+    dataprocesswindow.cpp
 
 HEADERS  += mainwindow.h \
     trajectory_tracking.h \
@@ -27,9 +28,11 @@ HEADERS  += mainwindow.h \
     qsmartgraphicsview/qsmartgraphicsview.h \
     qsmartgraphicsview/qsmartlabel.h \
     object_tracking.h \
-    math_function.h
+    math_function.h \
+    dataprocesswindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dataprocesswindow.ui
 
 msvc {
   QMAKE_CXXFLAGS += -openmp -arch:AVX -D "_CRT_SECURE_NO_WARNINGS"
