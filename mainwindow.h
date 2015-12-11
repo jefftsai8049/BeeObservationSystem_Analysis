@@ -34,7 +34,8 @@
 #define imgSizeX 1200
 #define imgSizeY 1600
 
-#define SERIAL_TIME 500
+#define SERIAL_TIME 2000
+#define RECORD_TIME 4*1*1000
 
 
 
@@ -66,6 +67,8 @@ private slots:
     void stitchImage();
 
     void receiveSerialData();
+
+    void recordSensorData();
 
 
     void on_actionLoad_Raw_Video_File_triggered();
@@ -142,6 +145,8 @@ private:
     QList<QSerialPortInfo> portList;
 
     QTimer *serialClock;
+
+    QTimer *recordClock;
 
     QSerialPort *port;
 

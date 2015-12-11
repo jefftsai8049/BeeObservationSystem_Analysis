@@ -12,9 +12,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     //load icon image
     this->setWindowIcon(QIcon("icon/honeybee.jpg"));
 
+    //open file for saving system log
     systemLog.setFileName("system_log.txt");
     systemLog.open(QIODevice::ReadWrite);
 
@@ -22,41 +24,64 @@ MainWindow::MainWindow(QWidget *parent) :
     TT = new trajectory_tracking;
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
+
     //send execute speed back to mainwindow
     connect(TT,SIGNAL(sendFPS(double)),this,SLOT(receiveFPS(double)));
+
     //send image back to mainwindow
     connect(TT,SIGNAL(sendImage(cv::Mat)),this,SLOT(receiveShowImage(cv::Mat)));
 
+    //send system log back to mainwindow
     connect(TT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
+    //send finish signal to mainwindow
     connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
 
+    //send processing progress to mainwindows to show on progess bar
     connect(TT,SIGNAL(sendProcessingProgress(int)),this,SLOT(receiveProcessingProgress(int)));
 
+    //send system log to mainwindow
     connect(this,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
     //trajectory tracking parameters setting
     TT->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
+
+    //load stitching model file
     TT->setManualStitchingFileName("manual_stitching.xml");
+
+    //load SVM tag recognition model
     TT->setSVMModelFileName("model/model_HOG_PCA_25_1_0.984706.yaml");
+
+    //load PCA model for tag image reduce dimensions
     TT->setPCAModelFileName("model/PCA_HOG_PCA_25_.txt");
+
+    //set initial hough circle parameters
     TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
+
+    //set inital PCA and HOG parameters
     TT->setPCAandHOG(ui->actionWith_PCA->isChecked(),ui->actionWith_HOG->isChecked());
 
+    //start up OpenCL for GPU speed up
     TT->initOCL();
 
 #ifdef DEBUG_TAG_RECOGNITION
     emit sendSystemLog("Tag Recognition Debuging");
 #endif
 
-
+    //detect how many COM port avaliable
     this->portList = QSerialPortInfo::availablePorts();
     for(int i = 0; i < this->portList.size(); i++)
     {
         ui->port_name_comboBox->insertItem(i,this->portList.at(i).portName()+" "+this->portList.at(i).description());
     }
+
+    //timer for receive COM port data
     serialClock = new QTimer;
     connect(serialClock,SIGNAL(timeout()),this,SLOT(receiveSerialData()));
+
+    //timer for record sensor data
+    recordClock = new QTimer;
+    connect(recordClock,SIGNAL(timeout()),this,SLOT(recordSensorData()));
 
 }
 
@@ -69,7 +94,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionLoad_Raw_Video_File_triggered()
 {
+    //load raw video file to process
 
+    //check dir is exist or not
     QString dirName = QFileDialog::getExistingDirectory();
 
     if(dirName.isEmpty())
@@ -77,13 +104,15 @@ void MainWindow::on_actionLoad_Raw_Video_File_triggered()
         return;
     }
 
+    //set dir path
     dir.setPath(dirName);
     QStringList dirList = dir.entryList(QDir::Dirs,QDir::Name);
 
+    //set file type
     QStringList nameFilter;
     nameFilter.append("*.avi");
 
-
+    //get file names in dir
     for (int j = 0;j<dirList.size()-2;j++)
     {
         dir.cd(dirList[j+2]);
@@ -91,6 +120,7 @@ void MainWindow::on_actionLoad_Raw_Video_File_triggered()
         dir.cdUp();
     }
 
+    //show on ui
     for (int k = 0;k<videoList[0].size();k++)
     {
         QString fileName = videoList[0][k]+"\n";
@@ -104,6 +134,8 @@ void MainWindow::on_actionLoad_Raw_Video_File_triggered()
 
 void MainWindow::on_actionLoad_Stitching_Image_triggered()
 {
+    //load video file and take first to manul stitch
+
     QStringList fileNames = QFileDialog::getOpenFileNames();
 
     if(fileNames.isEmpty())
@@ -120,6 +152,7 @@ void MainWindow::on_actionLoad_Stitching_Image_triggered()
 
 void MainWindow::receivePano(cv::Mat pano)
 {
+    //receive manul stitch result and show
     cv::Mat show;
     cv::resize(pano,show,cv::Size(pano.cols/2,pano.rows/2));
     cv::imshow("Panorama",show);
@@ -127,11 +160,13 @@ void MainWindow::receivePano(cv::Mat pano)
 
 void MainWindow::receiveFPS(const double &fpsRun)
 {
+    //receive processing FPS from TT and show
     ui->processing_lcdNumber->display(fpsRun);
 }
 
 void MainWindow::receiveShowImage(const cv::Mat &src)
 {
+    //receive processing image form TT and show
 
     static bool status = 0;
     if(status == 0)
@@ -145,20 +180,22 @@ void MainWindow::receiveShowImage(const cv::Mat &src)
 
 void MainWindow::receiveSystemLog(const QString &msg)
 {
-    ui->system_log_textBrowser->append(msg);
+    //receive system log from everywhere and show
 
+    ui->system_log_textBrowser->append(msg);
     systemLog.write((msg+"\n").toStdString().c_str());
-    //    char temp[] = {13};
-    //    systemLog.write(temp);
 }
 
 void MainWindow::receiveProcessingProgress(const int &percentage)
 {
+    //receive video processing precentage and show
     ui->processing_progressBar->setValue(percentage);
 }
 
 void MainWindow::stitchImage()
 {
+    //processing video
+
     std::vector<std::string> fileNames;
     std::string path = dir.absolutePath().toStdString();
     fileNames = getVideoName(videoList,path);
@@ -177,47 +214,102 @@ void MainWindow::stitchImage()
 
 void MainWindow::receiveSerialData()
 {
-    QString msg;
-    if(port->bytesAvailable() > 10)
+    //receive sensor data from COM port
+
+    QByteArray msg;
+
+    //check available data size
+    if(port->bytesAvailable() > 12)
     {
+        //read data from COM port
         msg = port->readAll();
         QString data;
+
+        //cut usful substring
         for(int i = 0; i < msg.size(); i++)
         {
-            if(msg[i] == 35 && msg[i+10] == 64)
+            //check first and last word
+            if(msg.at(i) == 35 && msg.at(i+12) == 65)
             {
-                for(int j = 0;j < 11; j++)
+                for(int j = 0;j < 13; j++)
                 {
-                    data.append(msg[j+i]);
+                    data.append(msg.at(j+i));
                 }
+
+                //convert to temperture, RH and pressure
                 std::vector<float> T(2);
                 std::vector<float> RH(2);
+                float P;
 
-                T[0] = data[1].toLatin1()+data[2].toLatin1()/100.0;
-                T[1] = data[6].toLatin1()+data[7].toLatin1()/100.0;
-                RH[0] = data[3].toLatin1()+data[4].toLatin1()/100.0;
-                RH[1] = data[8].toLatin1()+data[6].toLatin1()/100.0;
+                T[0] = data.at(1).toLatin1()+data.at(2).toLatin1()/100.0;
+                T[1] = data.at(5).toLatin1()+data.at(5).toLatin1()/100.0;
+                RH[0] = data.at(3).toLatin1()+data.at(4).toLatin1()/100.0;
+                RH[1] = data.at(7).toLatin1()+data.at(8).toLatin1()/100.0;
+                P = data.at(9).toLatin1() * 128*128+data.at(10).toLatin1()*128+data.at(11).toLatin1();
+                P = P / 100.0;
+
+                //show on UI
                 ui->inhive_t_lcdNumber->display(T[0]);
                 ui->inhive_rh_lcdNumber->display(RH[0]);
                 ui->outhive_t_lcdNumber->display(T[1]);
                 ui->outhive_rh_lcdNumber->display(RH[1]);
-
+                ui->pressure_lcdNumber->display(P);
                 break;
-
-
             }
         }
-
-//        qDebug() << data << data.size();
-
-
     }
+}
+
+void MainWindow::recordSensorData()
+{
+    //check dir is exist or not
+    QDir dir("sensor_data");
+    if(!dir.exists())
+    {
+        dir.cdUp();
+        if(dir.mkdir("sensor_data"))
+        {
+            dir.cd("sensor_data");
+        }
+        else
+        {
+            emit sendSystemLog("Create dir failed!");
+            return;
+        }
+    }
+
+    //open file for save sensor data
+    QString fileName = QDateTime::currentDateTime().toString("yyyy-MM-dd")+".csv";
+    QFile file(dir.absolutePath()+"/"+fileName);
+    QTextStream out(&file);
+    if(!file.exists())
+    {
+        file.open(QIODevice::ReadWrite);
+        out << ""
+            << "," << "In-hive Temperture" << "," << "In-hive RH"
+            << "," << "Out-hive Temperture" << "," << "Out-hive RH"
+            << "," << "Air Pressure" << "\n";
+    }
+    else
+    {
+        file.open(QIODevice::Append);
+    }
+
+    //get sensor information from UI and save
+    out << QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss-zzz")
+        << "," << ui->inhive_t_lcdNumber->value() << "," << ui->inhive_rh_lcdNumber->value()
+        << "," << ui->outhive_t_lcdNumber->value() << "," << ui->outhive_rh_lcdNumber->value()
+        << "," << ui->pressure_lcdNumber->value() << "\n";
+
+    //close file
+    file.close();
 
 }
 
 
 std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std::string path)
 {
+    //get video file name from fir
     std::vector<std::string> fileNames;
     for(int i = 0;i<videoList.size();i++)
     {
@@ -239,17 +331,18 @@ std::vector<std::string> MainWindow::getVideoName(QVector<QStringList> list,std:
 
 void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 {
-    cv::Size imageSize = cv::Size(imgSizeX,imgSizeY);
+    //manul stitch mouse callback function
+
     static cv::Point lastPoint;
     cv::Point shiftDelta = cv::Point(0,0);
     int imgIndex;
 
-    if (event == 1)
+    if (event == CV_EVENT_LBUTTONDOWN)
     {
         lastPoint = cv::Point(x,y);
         return;
     }
-    else if (event == 3)
+    else if (event == CV_EVENT_MBUTTONDOWN)
     {
         qDebug() << "fileSaved";
         cv::FileStorage f("manual_stitching.xml",cv::FileStorage::WRITE);
@@ -259,7 +352,6 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
     }
     if (flag == 1)
     {
-        //        qDebug() << "Last" << lastPoint.x << lastPoint.y;
         qDebug() << event << x << y << flag;
         shiftDelta = cv::Point(x,y)-lastPoint;
         if (x > originPoint[0].x && x <= originPoint[0].x+imgSizeX)
@@ -277,8 +369,6 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
 
         originPoint[imgIndex].x = originPoint[imgIndex].x+shiftDelta.x;
         originPoint[imgIndex].y = originPoint[imgIndex].y+shiftDelta.y;
-        //        qDebug() << imgIndex << shiftDelta.x << shiftDelta.y;
-        //        qDebug() << originPoint[imgIndex].x <<originPoint[imgIndex].y;
 
         lastPoint = cv::Point(x,y);
 
@@ -294,14 +384,13 @@ void mouseCallBack(int event, int x, int y, int flag,void* userdata)
         }
 
         cv::imshow("Stitch",cat);
-
-
     }
 
 }
 
 void MainWindow::on_stitchingStart_pushButton_clicked()
 {
+    //start processing video
     ui->videoName_textBrowser->clear();
     for (int k = 0;k<videoList[0].size();k++)
     {
@@ -315,12 +404,13 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
 
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
+    //stop processing video
     TT->stopStitch();
-
 }
 
 void MainWindow::on_stitching_pushButton_clicked()
 {
+    //manul stitch image
     if (stitchMode == 0)
     {
         std::vector<std::string> fileNames;
@@ -553,6 +643,7 @@ void MainWindow::on_actionLoad_Analysis_Data_triggered()
 
 void MainWindow::on_erase_pushButton_clicked()
 {
+    //erase file from wating processing list
     for(int i = 0;i<videoList.size();i++)
     {
         videoList[i].erase(videoList[i].begin());
@@ -569,10 +660,16 @@ void MainWindow::on_erase_pushButton_clicked()
 
 void MainWindow::on_port_name_comboBox_activated(int index)
 {
+    //connect to COM port and
     if(serialClock->isActive())
     {
+        serialClock->stop();
         serialClock->setInterval(SERIAL_TIME);
         serialClock->start();
+
+        recordClock->stop();
+        recordClock->setInterval(RECORD_TIME);
+        recordClock->start();
 
         port->close();
         port->setBaudRate(QSerialPort::Baud9600);
@@ -584,6 +681,9 @@ void MainWindow::on_port_name_comboBox_activated(int index)
     {
         serialClock->setInterval(SERIAL_TIME);
         serialClock->start();
+
+        recordClock->setInterval(RECORD_TIME);
+        recordClock->start();
 
         port = new QSerialPort;
         port->setBaudRate(QSerialPort::Baud9600);
