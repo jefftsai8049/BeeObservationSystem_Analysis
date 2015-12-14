@@ -15,16 +15,35 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="data_preprocessing_pushButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>90</y>
+      <x>30</x>
+      <y>20</y>
       <width>151</width>
       <height>61</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
     <property name="text">
      <string>Preprocessing</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="system_log_textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>440</y>
+      <width>761</width>
+      <height>111</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -37,8 +56,20 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Raw_Data"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen_Raw_Data">
+   <property name="text">
+    <string>Open Raw Data</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

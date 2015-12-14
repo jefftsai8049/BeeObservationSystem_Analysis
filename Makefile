@@ -213,6 +213,7 @@ Makefile: BeeObservationSystem_Analysis.pro C:\Qt\5.5\msvc2013_64\mkspecs\win32-
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Widgets.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Gui.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5SerialPort.prl \
+		C:/Qt/5.5/msvc2013_64/lib/Qt5Concurrent.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Core.prl
 	$(QMAKE) -spec win32-msvc2013 -o Makefile BeeObservationSystem_Analysis.pro
 C:\Qt\5.5\msvc2013_64\mkspecs\features\spec_pre.prf:
@@ -355,6 +356,7 @@ C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGL.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Widgets.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Gui.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5SerialPort.prl:
+C:/Qt/5.5/msvc2013_64/lib/Qt5Concurrent.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec win32-msvc2013 -o Makefile BeeObservationSystem_Analysis.pro

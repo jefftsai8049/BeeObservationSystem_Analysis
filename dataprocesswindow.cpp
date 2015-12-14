@@ -6,6 +6,14 @@ DataProcessWindow::DataProcessWindow(QWidget *parent) :
     ui(new Ui::DataProcessWindow)
 {
     ui->setupUi(this);
+    OT = new object_tracking;
+
+    connect(this,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
+
+
+    connect(OT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
+    connect(OT,SIGNAL(sendLoadRawDataFinish()),this,SLOT(receiveLoadDataFinish()));
+
 }
 
 DataProcessWindow::~DataProcessWindow()
@@ -13,13 +21,14 @@ DataProcessWindow::~DataProcessWindow()
     delete ui;
 }
 
-bool DataProcessWindow::loadData(const QStringList &fileNames)
+void DataProcessWindow::loadData(const QStringList &fileNames)
 {
 
     for(int i = 0; i < fileNames.size(); i++)
     {
         QFile f;
         f.setFileName(fileNames[i]);
+        emit sendSystemLog(fileNames[i]);
         f.open(QIODevice::ReadOnly);
         while(!f.atEnd())
         {
@@ -41,114 +50,62 @@ bool DataProcessWindow::loadData(const QStringList &fileNames)
 
         }
     }
-    return true;
 }
 
 void DataProcessWindow::on_data_preprocessing_pushButton_clicked()
 {
+    QVector<trackPro> TPVector;
+    OT->rawDataPreprocessing(&this->path,&TPVector);
+    qDebug() << TPVector.size();
+//    QVector<trackPro> TPVector;
+//    for(int i = 0; i < path.size(); i++)
+//    {
+//        trackPro TP;
+////        qDebug() << "preprocessing" << i;
+//        TP.ID = OT->voting(this->path[i]);
+//        TP.startTime = this->path[i].time[0];
+//        TP.endTime = this->path[i].time[this->path[i].size()-1];
+//        TP.position = OT->interpolation(this->path[i].position,this->path[i].time);
+//        TP.size = TP.position.size();
+////        qDebug() << TP.ID << TP.startTime << TP.endTime << TP.size();
 
-    for(int i = 0; i < path.size(); i++)
-    {
-        trackPro TP;
-        qDebug() << "preprocessing" << i;
-        TP.ID = this->voting(this->path[i]);
-        TP.startTime = this->path[i].time[0];
-        TP.endTime = this->path[i].time[this->path[i].size()-1];
-        qDebug() << TP.ID << TP.startTime << TP.endTime;
-    }
+//        TPVector.append(TP);
+//    }
 
+//    //check dir is exist or not
+//    QDir dir("processed_data");
+//    if(!dir.exists())
+//    {
+//        dir.cdUp();
+//        if(dir.mkdir("processed_data"))
+//        {
+//            dir.cd("processed_data");
+//        }
+//        else
+//        {
+//            emit sendSystemLog("Create dir failed!");
+//            return;
+//        }
+//    }
+
+//    //open file for save sensor data
+//    QString fileName = dir.absolutePath()+"/"+TPVector.at(0).startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+"_processed"+".csv";
+//    OT->saveTrackPro(TPVector,fileName);
 }
 
-QString DataProcessWindow::voting(track &path)
+void DataProcessWindow::receiveSystemLog(const QString &log)
 {
+    ui->system_log_textBrowser->append(log);
+}
 
-    std::vector<char> w1_word;
-    std::vector<int> w1_count;
-    std::vector<char> w2_word;
-    std::vector<int> w2_count;
+void DataProcessWindow::receiveLoadDataFinish()
+{
+    ui->data_preprocessing_pushButton->setEnabled(true);
+}
 
-    for(int i = 0; i < path.w1.size(); i++)
-    {
-        bool fined = false;
-        for(int j = 0; j < w1_word.size(); j++)
-        {
-            if(w1_word[j] == path.w1[i])
-            {
-                fined = true;
-                w1_count[j]++;
-                break;
-            }
-        }
-        if(!fined)
-        {
-            w1_word.push_back(path.w1[i]);
-            w1_count.push_back(1);
-        }
-
-        fined = false;
-        for(int j = 0; j < w2_word.size(); j++)
-        {
-            if(w2_word[j] == path.w2[i])
-            {
-                fined = true;
-                w2_count[j]++;
-                break;
-            }
-        }
-        if(!fined)
-        {
-            w2_word.push_back(path.w2[i]);
-            w2_count.push_back(1);
-        }
-    }
-
-    for(int i = 0; i < w1_word.size()-1; i++)
-    {
-        for(int j = i+1; j < w1_word.size(); j++)
-        {
-            if(w1_count[i]<w1_count[j])
-            {
-                std::swap(w1_count[i],w1_count[j]);
-                std::swap(w1_word[i],w1_word[j]);
-            }
-        }
-    }
-
-    for(int i = 0; i < w2_word.size()-1; i++)
-    {
-        for(int j = i+1; j < w2_word.size(); j++)
-        {
-            if(w2_count[i]<w2_count[j])
-            {
-                std::swap(w2_count[i],w2_count[j]);
-                std::swap(w2_word[i],w2_word[j]);
-            }
-        }
-    }
-
-    char word1_final,word2_final;;
-
-    for(int m = 0; m < w1_word.size(); m++)
-    {
-        if(w1_word[m] != '!')
-        {
-            word1_final = w1_word[m];
-            break;
-        }
-
-    }
-
-    for(int m = 0; m < w2_word.size(); m++)
-    {
-        if(w2_word[m] != '!')
-        {
-            word2_final = w2_word[m];
-            break;
-        }
-
-    }
-    QString result;
-    result.push_back(word1_final);
-    result.push_back(word2_final);
-    return result;
+void DataProcessWindow::on_actionOpen_Raw_Data_triggered()
+{
+    QStringList fileNames;
+    fileNames = QFileDialog::getOpenFileNames(this,"Open Data File","","Data Files (*.csv)");
+    QFuture<void> loadDataFunction = QtConcurrent::run(OT,&object_tracking::loadDataTrackPro,fileNames,&this->path);
 }

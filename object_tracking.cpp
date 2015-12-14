@@ -280,4 +280,233 @@ void object_tracking::saveAllPath()
     file.close();
 }
 
+QString object_tracking::voting(track path)
+{
+    std::vector<char> w1_word;
+    std::vector<int> w1_count;
+    std::vector<char> w2_word;
+    std::vector<int> w2_count;
+
+    for(int i = 0; i < path.w1.size(); i++)
+    {
+        bool fined = false;
+        for(int j = 0; j < w1_word.size(); j++)
+        {
+            if(w1_word[j] == path.w1[i])
+            {
+                fined = true;
+                w1_count[j]++;
+                break;
+            }
+        }
+        if(!fined)
+        {
+            w1_word.push_back(path.w1[i]);
+            w1_count.push_back(1);
+        }
+
+        fined = false;
+        for(int j = 0; j < w2_word.size(); j++)
+        {
+            if(w2_word[j] == path.w2[i])
+            {
+                fined = true;
+                w2_count[j]++;
+                break;
+            }
+        }
+        if(!fined)
+        {
+            w2_word.push_back(path.w2[i]);
+            w2_count.push_back(1);
+        }
+    }
+
+    for(int i = 0; i < w1_word.size()-1; i++)
+    {
+        for(int j = i+1; j < w1_word.size(); j++)
+        {
+            if(w1_count[i]<w1_count[j])
+            {
+                std::swap(w1_count[i],w1_count[j]);
+                std::swap(w1_word[i],w1_word[j]);
+            }
+        }
+    }
+
+    for(int i = 0; i < w2_word.size()-1; i++)
+    {
+        for(int j = i+1; j < w2_word.size(); j++)
+        {
+            if(w2_count[i]<w2_count[j])
+            {
+                std::swap(w2_count[i],w2_count[j]);
+                std::swap(w2_word[i],w2_word[j]);
+            }
+        }
+    }
+
+    char word1_final,word2_final;;
+
+    for(int m = 0; m < w1_word.size(); m++)
+    {
+        if(w1_word[m] != '!')
+        {
+            word1_final = w1_word[m];
+            break;
+        }
+
+    }
+
+    for(int m = 0; m < w2_word.size(); m++)
+    {
+        if(w2_word[m] != '!')
+        {
+            word2_final = w2_word[m];
+            break;
+        }
+
+    }
+    QString result;
+    result.push_back(word1_final);
+    result.push_back(word2_final);
+    return result;
+}
+
+QVector<cv::Point> object_tracking::interpolation(const std::vector<cv::Point> &position, const std::vector<QDateTime> &time)
+{
+    int minTimeStep;
+    minTimeStep = this->minTimeStep(time);
+    //qDebug() << minTimeStep;
+
+    QVector<cv::Point> positionNew;
+
+    for(int i = 0; i < time.size()-1; i++)
+    {
+        positionNew.append(position[i]);
+        int timeGap = time[i].msecsTo(time[i+1]);
+        if(timeGap > minTimeStep)
+        {
+            int cSize = timeGap/minTimeStep-1;
+            for(int j = 0; j < cSize; j++)
+            {
+                cv::Point cPoint(position[i]+(j+1/cSize+1)*(position[i+1]-position[i]));
+                positionNew.append(cPoint);
+            }
+        }
+    }
+    positionNew.append(position[position.size()-1]);
+    return positionNew;
+}
+
+void object_tracking::saveTrackPro(const QVector<trackPro> &path, const QString &fileName)
+{
+    QFile file;
+    file.setFileName(fileName);
+    file.open(QIODevice::ReadWrite);
+
+    QTextStream out(&file);
+    out << "ID,StartTime,EndTime,Size,Position\n";
+    for(int i = 0; i < path.size(); i++)
+    {
+        out << path.at(i).ID << ","
+            << path.at(i).startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz") << ","
+            << path.at(i).endTime.toString("yyyy-MM-dd_hh-mm-ss-zzz") << ","
+            << path.at(i).size << ",";
+        for(int j = 0; j < path.at(i).size; j++)
+        {
+            out << path.at(i).position.at(j).x << "-" << path.at(i).position.at(j).y;
+            if(j != path.at(i).size-1)
+                out << ",";
+        }
+        out << "\n";
+    }
+    file.close();
+}
+
+void object_tracking::loadDataTrackPro(const QStringList &fileNames, std::vector<track> *path)
+{
+    path->clear();
+    for(int i = 0; i < fileNames.size(); i++)
+    {
+        QFile f;
+        f.setFileName(fileNames[i]);
+        f.open(QIODevice::ReadOnly);
+        while(!f.atEnd())
+        {
+            track t;
+            QString msg = f.readLine();
+            msg = msg.trimmed();
+            while(msg.at(msg.size()-1) == ",")
+                msg = msg.left(msg.size()-1);
+
+            QStringList data = msg.split(",");
+            for(int m = 0; m < data.size(); m=m+5)
+            {
+                t.w1.push_back(data[m].toStdString()[0]);
+                t.w2.push_back(data[m+1].toStdString()[0]);
+                t.time.push_back(QDateTime::fromString(data[m+2],"yyyy-MM-dd_hh-mm-ss-zzz"));
+                t.position.push_back(cv::Point(data[m+3].toInt(),data[m+4].toInt()));
+            }
+            path->push_back(t);
+
+        }
+        emit sendSystemLog(fileNames[i]);
+    }
+    emit sendLoadRawDataFinish();
+}
+
+int object_tracking::minTimeStep(const std::vector<QDateTime> &time)
+{
+    int min = 1000;
+    for(int i = 0; i < time.size()-1; i++)
+    {
+        int timeGap = time[i].msecsTo(time[i+1]);
+        if(timeGap < min)
+            min = timeGap;
+
+        if(min < 1000.0/MIN_FPS)
+            break;
+    }
+    return min;
+}
+
+void object_tracking::rawDataPreprocessing(const std::vector<track> *path, QVector<trackPro> *TPVector)
+{
+    TPVector->clear();
+    for(int i = 0; i < path->size(); i++)
+    {
+        trackPro TP;
+//        qDebug() << "preprocessing" << i;
+        TP.ID = this->voting(path->at(i));
+        TP.startTime = path->at(i).time[0];
+        TP.endTime = path->at(i).time[path->at(i).time.size()-1];
+        TP.position = this->interpolation(path->at(i).position,path->at(i).time);
+        TP.size = TP.position.size();
+//        qDebug() << TP.ID << TP.startTime << TP.endTime << TP.size();
+
+        TPVector->append(TP);
+    }
+
+    //check dir is exist or not
+    QDir dir("processed_data");
+    if(!dir.exists())
+    {
+        dir.cdUp();
+        if(dir.mkdir("processed_data"))
+        {
+            dir.cd("processed_data");
+        }
+        else
+        {
+            emit sendSystemLog("Create dir failed!");
+            return;
+        }
+    }
+
+    //open file for save sensor data
+    QString fileName = dir.absolutePath()+"/"+TPVector->at(0).startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+"_processed"+".csv";
+    this->saveTrackPro(*TPVector,fileName);
+}
+
 

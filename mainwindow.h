@@ -35,7 +35,7 @@
 #define imgSizeY 1600
 
 #define SERIAL_TIME 2000
-#define RECORD_TIME 4*1*1000
+#define RECORD_TIME 60*10*1000
 
 
 
@@ -110,11 +110,12 @@ private slots:
     void on_actionTrain_New_Tag_Model_triggered();
 
 
-    void on_actionLoad_Analysis_Data_triggered();
 
     void on_erase_pushButton_clicked();
 
     void on_port_name_comboBox_activated(int index);
+
+    void on_actionStart_Analysis_Data_triggered();
 
 private:
     Ui::MainWindow *ui;

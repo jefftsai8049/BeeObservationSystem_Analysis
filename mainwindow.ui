@@ -641,8 +641,6 @@
     <addaction name="actionLoad_Stitching_Image"/>
     <addaction name="separator"/>
     <addaction name="actionLoad_Raw_Video_File"/>
-    <addaction name="separator"/>
-    <addaction name="actionLoad_Analysis_Data"/>
    </widget>
    <widget class="QMenu" name="menuSet">
     <property name="title">
@@ -665,6 +663,7 @@
     <property name="title">
      <string>Analysis</string>
     </property>
+    <addaction name="actionStart_Analysis_Data"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSet"/>
@@ -735,9 +734,9 @@
     <string>Train New Tag Model</string>
    </property>
   </action>
-  <action name="actionLoad_Analysis_Data">
+  <action name="actionStart_Analysis_Data">
    <property name="text">
-    <string>Load Analysis Data</string>
+    <string>Start Analysis Data</string>
    </property>
   </action>
  </widget>

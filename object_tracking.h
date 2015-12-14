@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QFileDialog>
+#include <QVector>
 #include <QFileInfo>
 #include <QDataStream>
 #include <opencv.hpp>
@@ -16,6 +17,7 @@
 #define REMAIN_SIZE 20
 #define FORGET_TRACKING_TIME 5
 #define SHORTEST_SAMPLE_SIZE 5
+#define MIN_FPS 8.0
 
 //before preprocessing
 struct track
@@ -41,7 +43,7 @@ struct trackPro
     QDateTime startTime;
     QDateTime endTime;
     int size;
-    std::vector<cv::Point> position;
+    QVector<cv::Point> position;
 
     //QDateTime timeStep(){return (endTime-startTime)/size;}
 };
@@ -53,6 +55,7 @@ class object_tracking : public QObject
 public:
     explicit object_tracking(QObject *parent = 0,const QDateTime fileTime = QDateTime());
     ~object_tracking();
+
 
     void compute(const QDateTime &time, const std::vector<cv::Vec3f>& circles, const std::vector<std::string>& w1, const std::vector<std::string>& w2);
 
@@ -67,8 +70,23 @@ public:
     void saveAllPath();
 
 
+    //for trackPro
+
+    QString voting(track path);
+
+    QVector<cv::Point> interpolation(const std::vector<cv::Point> &position, const std::vector<QDateTime> &time);
+
+    void saveTrackPro(const QVector<trackPro> &path,const QString &fileName);
+
+    void loadDataTrackPro(const QStringList &fileNames, std::vector<track> *path);
+
+    void rawDataPreprocessing(const std::vector<track> *path, QVector<trackPro> *TPVector);
 
 signals:
+
+    void sendSystemLog(const QString &log);
+
+    void sendLoadRawDataFinish();
 
 public slots:
 
@@ -83,6 +101,9 @@ private:
     cv::Size range;
 
     std::vector<track> path;
+
+    int minTimeStep(const std::vector<QDateTime> &time);
+
 
 
 

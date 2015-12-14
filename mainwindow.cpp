@@ -629,18 +629,6 @@ void MainWindow::on_actionTrain_New_Tag_Model_triggered()
     }
 }
 
-
-void MainWindow::on_actionLoad_Analysis_Data_triggered()
-{
-    QStringList fileNames;
-    fileNames = QFileDialog::getOpenFileNames(this,"Open Data File","","Data Files (*.csv)");
-    DPW = new DataProcessWindow;
-    if(DPW->loadData(fileNames))
-    {
-        DPW->show();
-    }
-}
-
 void MainWindow::on_erase_pushButton_clicked()
 {
     //erase file from wating processing list
@@ -693,4 +681,10 @@ void MainWindow::on_port_name_comboBox_activated(int index)
 
 
     emit sendSystemLog("Sensor Connect Successful.");
+}
+
+void MainWindow::on_actionStart_Analysis_Data_triggered()
+{
+    DPW = new DataProcessWindow;
+    DPW->show();
 }

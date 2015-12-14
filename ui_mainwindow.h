@@ -45,7 +45,7 @@ public:
     QAction *actionWith_PCA;
     QAction *actionWith_HOG;
     QAction *actionTrain_New_Tag_Model;
-    QAction *actionLoad_Analysis_Data;
+    QAction *actionStart_Analysis_Data;
     QWidget *centralWidget;
     QTabWidget *tabWidget;
     QWidget *tab_4;
@@ -134,8 +134,8 @@ public:
         actionWith_HOG->setChecked(true);
         actionTrain_New_Tag_Model = new QAction(MainWindow);
         actionTrain_New_Tag_Model->setObjectName(QStringLiteral("actionTrain_New_Tag_Model"));
-        actionLoad_Analysis_Data = new QAction(MainWindow);
-        actionLoad_Analysis_Data->setObjectName(QStringLiteral("actionLoad_Analysis_Data"));
+        actionStart_Analysis_Data = new QAction(MainWindow);
+        actionStart_Analysis_Data->setObjectName(QStringLiteral("actionStart_Analysis_Data"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
@@ -334,8 +334,6 @@ public:
         menuFile->addAction(actionLoad_Stitching_Image);
         menuFile->addSeparator();
         menuFile->addAction(actionLoad_Raw_Video_File);
-        menuFile->addSeparator();
-        menuFile->addAction(actionLoad_Analysis_Data);
         menuSet->addAction(actionChange_SVM_Model);
         menuSet->addAction(actionChange_PCA_Model);
         menuSet->addAction(actionChange_Stitching_Model);
@@ -343,6 +341,7 @@ public:
         menuSet->addAction(actionWith_PCA);
         menuSet->addAction(actionWith_HOG);
         menuModel->addAction(actionTrain_New_Tag_Model);
+        menuAnalysis->addAction(actionStart_Analysis_Data);
 
         retranslateUi(MainWindow);
 
@@ -363,7 +362,7 @@ public:
         actionWith_PCA->setText(QApplication::translate("MainWindow", "With PCA", 0));
         actionWith_HOG->setText(QApplication::translate("MainWindow", "With HOG", 0));
         actionTrain_New_Tag_Model->setText(QApplication::translate("MainWindow", "Train New Tag Model", 0));
-        actionLoad_Analysis_Data->setText(QApplication::translate("MainWindow", "Load Analysis Data", 0));
+        actionStart_Analysis_Data->setText(QApplication::translate("MainWindow", "Start Analysis Data", 0));
         groupBox_3->setTitle(QApplication::translate("MainWindow", "Enviroment Info", 0));
         label_9->setText(QApplication::translate("MainWindow", "In Hive", 0));
         label_10->setText(QApplication::translate("MainWindow", "Out Hive", 0));
