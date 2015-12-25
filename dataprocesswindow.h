@@ -29,7 +29,6 @@ public:
     explicit DataProcessWindow(QWidget *parent = 0);
     ~DataProcessWindow();
 
-    void loadData(const QStringList &fileNames);
 
 private slots:
     void on_data_preprocessing_pushButton_clicked();
@@ -40,6 +39,12 @@ private slots:
 
     void receiveLoadDataFinish();
 
+    void receiveProgress(const int &val);
+
+    void on_actionOpen_Processed_Data_triggered();
+
+    void on_trajectory_classify_pushButton_clicked();
+
 private:
     Ui::DataProcessWindow *ui;
 
@@ -47,13 +52,15 @@ private:
 
     std::vector<track> path;
 
-    std::vector<trackPro> data;
+    QVector<trackPro> data;
 
-    void rawDataPreprocessing();
+//    void rawDataPreprocessing();
 
 
 signals:
     void sendSystemLog(const QString &log);
+
+
 };
 
 

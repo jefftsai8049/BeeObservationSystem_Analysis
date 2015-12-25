@@ -12,8 +12,9 @@
 
 #include <omp.h>
 #include <opencv.hpp>
+#ifndef NO_OCL
 #include <core/ocl.hpp>
-
+#endif
 #include "tag_recognition.h"
 #include "math_function.h"
 #include "object_tracking.h"
@@ -37,8 +38,9 @@ public:
 
     cv::Mat imageShiftLoaded(std::vector<cv::Mat> stitchFrame);
 
+#ifndef NO_OCL
     void initOCL();
-
+#endif
     void setVideoName(std::vector<std::string> videoName);
 
     void setHoughCircleParameters(const int &dp,const int &minDist,const int &para_1,const int &para_2,const int &minRadius,const int &maxRadius);

@@ -62,7 +62,9 @@ MainWindow::MainWindow(QWidget *parent) :
     TT->setPCAandHOG(ui->actionWith_PCA->isChecked(),ui->actionWith_HOG->isChecked());
 
     //start up OpenCL for GPU speed up
+#ifndef NO_OCL
     TT->initOCL();
+#endif
 
 #ifdef DEBUG_TAG_RECOGNITION
     emit sendSystemLog("Tag Recognition Debuging");

@@ -19,6 +19,20 @@
 #define SHORTEST_SAMPLE_SIZE 5
 #define MIN_FPS 8.0
 
+#define DIRECTION_THRESHOLD 30.0
+
+enum trajectory{
+    NO_MOVE,
+    LOITERING,
+    FORWARD_MOVE,
+    RIGHT_MOVE,
+    LEFT_MOVE,
+    WAGGLE,
+    INTERACTION,
+    FORAGING,
+    OTHER
+};
+
 //before preprocessing
 struct track
 {
@@ -44,6 +58,7 @@ struct trackPro
     QDateTime endTime;
     int size;
     QVector<cv::Point> position;
+    QVector<char> behavior;
 
     //QDateTime timeStep(){return (endTime-startTime)/size;}
 };
@@ -78,15 +93,27 @@ public:
 
     void saveTrackPro(const QVector<trackPro> &path,const QString &fileName);
 
-    void loadDataTrackPro(const QStringList &fileNames, std::vector<track> *path);
+    void loadDataTrack(const QStringList &fileNames, std::vector<track> *path);
 
     void rawDataPreprocessing(const std::vector<track> *path, QVector<trackPro> *TPVector);
+
+    void loadDataTrackPro(const QString &fileName, QVector<trackPro> *path);
+
+    //for tracjectory classify
+
+    void tracjectoryClassify(QVector<trackPro> *path);
+
+    //for debug
+
+    void drawPathPattern(const QVector<cv::Point> &path);
 
 signals:
 
     void sendSystemLog(const QString &log);
 
     void sendLoadRawDataFinish();
+
+    void sendProgress(const int &progress);
 
 public slots:
 
@@ -103,6 +130,12 @@ private:
     std::vector<track> path;
 
     int minTimeStep(const std::vector<QDateTime> &time);
+
+    cv::Point mean(const QVector<cv::Point> &motion);
+
+    QVector<float> variance(const QVector<cv::Point> &motion);
+
+    int direction(const QVector<cv::Point> &motion);
 
 
 

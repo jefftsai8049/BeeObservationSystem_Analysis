@@ -11,7 +11,7 @@ MAKEFILE      = Makefile.Debug
 
 CC            = cl
 CXX           = cl
-DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CONCURRENT_LIB -DQT_CORE_LIB
+DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DHAVE_OPENCV -D+= -DNO_OCL -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CONCURRENT_LIB -DQT_CORE_LIB
 CFLAGS        = -nologo -Zc:wchar_t -FS -Zi -MDd -W3 /Fddebug\BeeObservationSystem_Analysis.pdb $(DEFINES)
 CXXFLAGS      = -nologo -Zc:wchar_t -FS -openmp -arch:AVX -D _CRT_SECURE_NO_WARNINGS -Zi -MDd -GR -W3 -w34100 -w34189 -w44996 -EHsc /Fddebug\BeeObservationSystem_Analysis.pdb $(DEFINES)
 INCPATH       = -I. -IC:\opencv300_x64_vc2013\include -IC:\opencv300_x64_vc2013\include\opencv -IC:\opencv300_x64_vc2013\include\opencv2 -IC:\Qt\5.5\msvc2013_64\include -IC:\Qt\5.5\msvc2013_64\include\QtOpenGL -IC:\Qt\5.5\msvc2013_64\include\QtWidgets -IC:\Qt\5.5\msvc2013_64\include\QtGui -IC:\Qt\5.5\msvc2013_64\include\QtANGLE -IC:\Qt\5.5\msvc2013_64\include\QtSerialPort -IC:\Qt\5.5\msvc2013_64\include\QtConcurrent -IC:\Qt\5.5\msvc2013_64\include\QtCore -Idebug -I. -IC:\Qt\5.5\msvc2013_64\mkspecs\win32-msvc2013 
@@ -1590,7 +1590,6 @@ debug\moc_dataprocesswindow.cpp: C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMainWi
 		C:\Qt\5.5\msvc2013_64\include\QtConcurrent\qtconcurrentrunbase.h \
 		C:\Qt\5.5\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
 		C:\Qt\5.5\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
@@ -3477,7 +3476,56 @@ debug\object_tracking.obj: object_tracking.cpp object_tracking.h \
 		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp \
 		math_function.h
 
-debug\math_function.obj: math_function.cpp math_function.h
+debug\math_function.obj: math_function.cpp math_function.h \
+		C:\opencv300_x64_vc2013\include\opencv2\opencv.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvdef.h \
+		C:\opencv300_x64_vc2013\include\opencv2\hal\defs.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\version.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\base.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\ptr.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\hal.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\sse_utils.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\traits.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\matx.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\bufferpool.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\mat.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\persistence.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\operations.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\cvstd.inl.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\utility.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\core_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\core\optim.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\imgproc_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgproc\types_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\photo.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\photo\photo_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\video.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\background_segm.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\video\tracking_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\features2d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\miniflann.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\defines.h \
+		C:\opencv300_x64_vc2013\include\opencv2\flann\config.h \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\detection_based_tracker.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\objdetect\objdetect_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\core\affine.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\calib3d\calib3d_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui.hpp \
+		C:\opencv300_x64_vc2013\include\opencv2\highgui\highgui_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\imgcodecs\imgcodecs_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\videoio\videoio_c.h \
+		C:\opencv300_x64_vc2013\include\opencv2\ml.hpp
 
 debug\dataprocesswindow.obj: dataprocesswindow.cpp dataprocesswindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMainWindow \
@@ -3716,7 +3764,6 @@ debug\dataprocesswindow.obj: dataprocesswindow.cpp dataprocesswindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtConcurrent\qtconcurrentrunbase.h \
 		C:\Qt\5.5\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
 		C:\Qt\5.5\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
-		C:\Qt\5.5\msvc2013_64\include\QtCore\QThread \
 		object_tracking.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QFileDialog \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qfiledialog.h \
@@ -3786,11 +3833,13 @@ debug\dataprocesswindow.obj: dataprocesswindow.cpp dataprocesswindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtGui\qinputmethod.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QButtonGroup \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qbuttongroup.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QGroupBox \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qgroupbox.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qframe.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QHeaderView \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qheaderview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemview.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractscrollarea.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qframe.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyleoption.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
@@ -3800,9 +3849,14 @@ debug\dataprocesswindow.obj: dataprocesswindow.cpp dataprocesswindow.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qstyle.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qtabbar.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qrubberband.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QLabel \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qlabel.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMenu \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenu.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QMenuBar \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenubar.h \
-		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qmenu.h \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QProgressBar \
+		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qprogressbar.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\QPushButton \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qpushbutton.h \
 		C:\Qt\5.5\msvc2013_64\include\QtWidgets\qabstractbutton.h \

@@ -54,7 +54,7 @@ cv::Mat trajectory_tracking::imageShiftLoaded(std::vector<cv::Mat> stitchFrame)
     }
     return cat;
 }
-
+#ifndef NO_OCL
 void trajectory_tracking::initOCL()
 {
     cv::ocl::setUseOpenCL(true);
@@ -73,6 +73,7 @@ void trajectory_tracking::initOCL()
     }
 }
 
+#endif
 void trajectory_tracking::setVideoName(std::vector<std::string> videoName)
 {
     this->videoName = videoName;

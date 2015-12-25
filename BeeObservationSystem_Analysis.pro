@@ -104,6 +104,7 @@ DEFINES += HAVE_OPENCV \
 #        += DEBUG_TAG_RECOGNITION\
 #        += SAVE_TAG_IMAGE
 #        += DEBUG_OBJECT_TRACKING
+        += NO_OCL
 
 RESOURCES += \
     icon.qrc

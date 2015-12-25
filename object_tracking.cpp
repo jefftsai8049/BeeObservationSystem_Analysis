@@ -220,9 +220,7 @@ void object_tracking::savePath()
             {
                 for(int j = 0; j < this->path[i].time.size(); j++)
                 {
-                    //                std::vector<std::vector<char>> name;
-                    //                std::vector<cv::Point> position;
-                    //                std::vector<QDateTime> time;
+
                     outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
                             << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
                             << this->path[i].position[j].x << ","
@@ -262,17 +260,14 @@ void object_tracking::saveAllPath()
         {
             for(int j = 0; j < this->path[i].time.size(); j++)
             {
-                //                std::vector<std::vector<char>> name;
-                //                std::vector<cv::Point> position;
-                //                std::vector<QDateTime> time;
+
                 outFile << this->path[i].w1[j] << "," << this->path[i].w2[j] << ","
                         << this->path[i].time[j].toString("yyyy-MM-dd_hh-mm-ss-zzz").toStdString() << ","
                         << this->path[i].position[j].x << ","
                         << this->path[i].position[j].y << ",";
             }
             outFile << "\n";
-            //            this->path.erase(this->path.begin()+i);
-            //            i--;
+
         }
     }
     this->path.clear();
@@ -424,34 +419,42 @@ void object_tracking::saveTrackPro(const QVector<trackPro> &path, const QString 
     file.close();
 }
 
-void object_tracking::loadDataTrackPro(const QStringList &fileNames, std::vector<track> *path)
+void object_tracking::loadDataTrack(const QStringList &fileNames, std::vector<track> *path)
 {
     path->clear();
     for(int i = 0; i < fileNames.size(); i++)
     {
         QFile f;
         f.setFileName(fileNames[i]);
-        f.open(QIODevice::ReadOnly);
-        while(!f.atEnd())
+        if(f.exists())
         {
-            track t;
-            QString msg = f.readLine();
-            msg = msg.trimmed();
-            while(msg.at(msg.size()-1) == ",")
-                msg = msg.left(msg.size()-1);
-
-            QStringList data = msg.split(",");
-            for(int m = 0; m < data.size(); m=m+5)
+            f.open(QIODevice::ReadOnly);
+            while(!f.atEnd())
             {
-                t.w1.push_back(data[m].toStdString()[0]);
-                t.w2.push_back(data[m+1].toStdString()[0]);
-                t.time.push_back(QDateTime::fromString(data[m+2],"yyyy-MM-dd_hh-mm-ss-zzz"));
-                t.position.push_back(cv::Point(data[m+3].toInt(),data[m+4].toInt()));
-            }
-            path->push_back(t);
+                track t;
+                QString msg = f.readLine();
+                msg = msg.trimmed();
+                while(msg.at(msg.size()-1) == ",")
+                    msg = msg.left(msg.size()-1);
 
+                QStringList data = msg.split(",");
+                for(int m = 0; m < data.size(); m=m+5)
+                {
+                    t.w1.push_back(data[m].toStdString()[0]);
+                    t.w2.push_back(data[m+1].toStdString()[0]);
+                    t.time.push_back(QDateTime::fromString(data[m+2],"yyyy-MM-dd_hh-mm-ss-zzz"));
+                    t.position.push_back(cv::Point(data[m+3].toInt(),data[m+4].toInt()));
+                }
+                path->push_back(t);
+
+            }
+            emit sendSystemLog(fileNames[i]);
+            emit sendProgress((i+1)*100/fileNames.size());
         }
-        emit sendSystemLog(fileNames[i]);
+        else
+        {
+            emit sendSystemLog("File not exist!");
+        }
     }
     emit sendLoadRawDataFinish();
 }
@@ -471,21 +474,100 @@ int object_tracking::minTimeStep(const std::vector<QDateTime> &time)
     return min;
 }
 
+cv::Point object_tracking::mean(const QVector<cv::Point> &motion)
+{
+    float x,y;
+    for(int i = 0; i < motion.size(); i++)
+    {
+        x+=(float)motion.at(i).x/(float)motion.size();
+        y+=(float)motion.at(i).y/(float)motion.size();
+    }
+    return cv::Point(x,y);
+}
+
+QVector<float> object_tracking::variance(const QVector<cv::Point> &motion)
+{
+    float xVar = 0,yVar = 0,xyCoVar = 0;
+
+    cv::Point meanPoint = this->mean(motion);
+
+    for(int i = 0; i < motion.size(); i++)
+    {
+        xVar += pow(motion.at(i).x-meanPoint.x,2);
+        yVar += pow(motion.at(i).y-meanPoint.y,2);
+        xyCoVar += (motion.at(i).x-meanPoint.x)*(motion.at(i).y-meanPoint.y);
+        //qDebug() << xVar << yVar << xyCoVar;
+    }
+    qDebug() << xVar << yVar << xyCoVar;
+    QVector<float> var(3);
+    var[0] = (float)xVar/(float)(motion.size()-1);
+    var[1] = (float)yVar/(float)(motion.size()-1);
+    var[2] = (float)xyCoVar/(float)(motion.size()-1);
+    qDebug() << var[0] << var[1] << var[2];
+    return var;
+}
+
+int object_tracking::direction(const QVector<cv::Point> &motion)
+{
+    QVector<cv::Point> motionVector;
+    double angleSum = 0;
+    for(int i = 0 ; i < motion.size()-1; i++)
+    {
+        motionVector.append(motion.at(i+1)-motion.at(i));
+    }
+    for(int i = 0 ; i < motionVector.size()-1; i++)
+    {
+        float angle[2];
+        float r[2],x[2],y[2];
+        for(int k = 0; k < 2; k++)
+        {
+            r[k] = sqrt(pow(motionVector.at(i+k).x,2)+pow(motionVector.at(i+k).y,2));
+            x[k] = motionVector.at(i+k).x;
+            y[k] = motionVector.at(i+k).y;
+
+            if(r[k] == 0)
+            {
+                angle[k] = 0;
+            }
+            else
+            {
+                angle[k] = asin(y[k]/r[k])/2.0/3.1415926*360.0;
+                if(x[k] >= 0)
+                {
+                    angle[k] = angle[k];
+                }
+                else
+                {
+                    angle[k] = 180.0-(angle[k]);
+                }
+            }
+
+        }
+        angleSum += angle[0]-angle[1];
+        qDebug() <<"angle : "<< angleSum <<angle[0] <<angle[1]<< x[0] << y[0]<< x[1]  << y[1];
+    }
+
+    if(angleSum > DIRECTION_THRESHOLD)
+        return RIGHT_MOVE;
+    else if(angleSum < -DIRECTION_THRESHOLD)
+        return LEFT_MOVE;
+    else
+        return FORWARD_MOVE;
+}
+
 void object_tracking::rawDataPreprocessing(const std::vector<track> *path, QVector<trackPro> *TPVector)
 {
     TPVector->clear();
     for(int i = 0; i < path->size(); i++)
     {
         trackPro TP;
-//        qDebug() << "preprocessing" << i;
         TP.ID = this->voting(path->at(i));
         TP.startTime = path->at(i).time[0];
         TP.endTime = path->at(i).time[path->at(i).time.size()-1];
         TP.position = this->interpolation(path->at(i).position,path->at(i).time);
         TP.size = TP.position.size();
-//        qDebug() << TP.ID << TP.startTime << TP.endTime << TP.size();
-
         TPVector->append(TP);
+        emit sendProgress((i+1)*100/path->size());
     }
 
     //check dir is exist or not
@@ -509,4 +591,128 @@ void object_tracking::rawDataPreprocessing(const std::vector<track> *path, QVect
     this->saveTrackPro(*TPVector,fileName);
 }
 
+void object_tracking::loadDataTrackPro(const QString &fileName, QVector<trackPro> *path)
+{
+    path->clear();
+    QFile file(fileName);
+    if(file.exists())
+    {
+        file.open(QIODevice::ReadOnly);
+        file.readLine();
+        while(!file.atEnd())
+        {
+            QString msg = file.readLine();
+            msg = msg.trimmed();
+            QStringList data = msg.split(",");
+            trackPro t;
+            t.ID = data.at(0);
+            t.startTime = QDateTime::fromString(data.at(1),"yyyy-MM-dd_hh-mm-ss-zzz");
+            t.endTime = QDateTime::fromString(data.at(2),"yyyy-MM-dd_hh-mm-ss-zzz");
+            t.size = data.at(3).toInt();
+            for(int i = 4; i < data.size(); i++)
+            {
+                QStringList position = data.at(i).split("-");
+                cv::Point p = cv::Point(position[0].toInt(),position[1].toInt());
+                t.position.append(p);
+            }
+            path->append(t);
+        }
+
+        sendSystemLog(fileName);
+
+    }
+}
+
+void object_tracking::tracjectoryClassify(QVector<trackPro> *path)
+{
+
+    //check all path
+    for(int i = 0; i < path->size(); i++)
+    {
+        //check path position size is bigger than  SHORTEST_SAMPLE_SIZE or not
+        if(path->at(i).size > SHORTEST_SAMPLE_SIZE-1)
+        {
+
+            for(int j = 0; j < path->at(i).size-SHORTEST_SAMPLE_SIZE+1; j++)
+            {
+                //grab path segment
+                QVector<cv::Point> motion(SHORTEST_SAMPLE_SIZE);
+                for(int m = 0; m < SHORTEST_SAMPLE_SIZE; m++)
+                {
+                    motion[m] = path->at(i).position.at(j+m);
+                }
+
+                char pattern;
+                QVector<float> var = this->variance(motion);
+                qDebug() << var[0] << var[1] << var[2];
+
+                //NO_MOVE
+                if(var[0] < 20 && var[1] < 20 && abs(var[2]) < 20)
+                {
+                    pattern = NO_MOVE;
+                    //drawPathPattern(motion);
+                }
+                //LOITERING
+                else if(var[0] < 50 && var[1] < 50 && abs(var[2]) < 50)
+                {
+                    pattern = LOITERING;
+                    //drawPathPattern(motion);
+                }
+                else
+                {
+                    //FORWARD_MOVE
+                    qDebug() << this->direction(motion);
+                    drawPathPattern(motion);
+                    //RIGHT_MOVE
+                    //LEFT_MOVE
+                    //WAGGLE
+                    //INTERACTION
+                    //FORAGING
+                    //OTHER
+                }
+            }
+
+        }
+
+    }
+}
+
+void object_tracking::drawPathPattern(const QVector<cv::Point> &path)
+{
+    int edgeWidth = 20;
+
+    int maxX,maxY,minX,minY;
+    if(path.size() < 1)
+        return;
+
+    maxX = path[0].x;
+    minX = path[0].x;
+    maxY = path[0].y;
+    minY = path[0].y;
+
+    for(int i = 1; i < path.size(); i++)
+    {
+        if(path[i].x > maxX)
+            maxX = path[i].x;
+        if(path[i].x < minX)
+            minX = path[i].x;
+        if(path[i].y > maxY)
+            maxY = path[i].y;
+        if(path[i].y < minY)
+            minY = path[i].y;
+    }
+
+    if(maxY-minY == 0 || maxX-minX == 0)
+        return;
+    cv::Mat src;
+    src = cv::Mat::zeros(maxY-minY+edgeWidth,maxX-minX+edgeWidth,CV_8UC3);
+    for(int i = 0; i < path.size()-1; i++)
+    {
+        cv::line(src,path[i]-cv::Point(minX,minY)+cv::Point(edgeWidth/2,edgeWidth/2),path[i+1]-cv::Point(minX,minY)+cv::Point(edgeWidth/2,edgeWidth/2),cv::Scalar(rand()%255,rand()%255,rand()%255),1);
+    }
+
+    cv::resize(src,src,cv::Size(src.rows*1,src.cols*1));
+    cv::imshow("Path",src);
+    cv::waitKey(1000);
+}
 
