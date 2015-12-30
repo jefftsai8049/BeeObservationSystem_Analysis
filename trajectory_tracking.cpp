@@ -267,8 +267,8 @@ void trajectory_tracking::run()
         cv::Mat panoSmall(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE,CV_8UC1);
         cv::resize(pano,panoSmall,cv::Size(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE));
 
-        //std::vector<cv::Vec3f> circles;
-        cv::Mat circles(1, 1, CV_32FC3);
+        std::vector<cv::Vec3f> circles;
+        //cv::Mat circles(1, 1, CV_32FC3);
         qDebug() << 1;
 //        cv::Mat WTF = panoSmall.clone();
 
