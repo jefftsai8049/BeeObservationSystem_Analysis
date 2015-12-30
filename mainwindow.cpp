@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     TT->setManualStitchingFileName("manual_stitching.xml");
 
     //load SVM tag recognition model
-    TT->setSVMModelFileName("model/model_PCA_25_-2_0.921176.yaml");
+    TT->setSVMModelFileName("model/model_HOG_PCA_25_-1_0.984706.yaml");
 
     //load PCA model for tag image reduce dimensions
     TT->setPCAModelFileName("model/PCA_PCA_25_.txt");

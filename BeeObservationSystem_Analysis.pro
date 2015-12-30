@@ -18,9 +18,6 @@ DEFINES += HAVE_OPENCV \
         += NO_OCL \
 #        += SHOW_PATTERN_NAME
 
-CONFIG += HAVE_OPENCV \
-#        += HAVE_TESSERACT \
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     trajectory_tracking.cpp \
@@ -51,20 +48,15 @@ msvc {
   QMAKE_CXXFLAGS_RELEASE *= -O2
 }
 
-
-HAVE_OPENCV{
-    INCLUDEPATH += C:\\opencv300_vc2013\\include \
-                    C:\\opencv300_vc2013\\include\\opencv \
-                    C:\\opencv300_vc2013\\include\\opencv2 \
-
-    LIBS += -LC:\\opencv300_vc2013\\x64\\lib -lopencv_world300d -lopencv_world300 -lopencv_ts300d -lopencv_ts300
-
-}
+INCLUDEPATH += C:\\opencv300_vc2013\\include \
+               C:\\opencv300_vc2013\\include\\opencv \
+               C:\\opencv300_vc2013\\include\\opencv2 \
 
 
-#HAVE_TESSERACT{
-#    LIBS += -LC:\\tesseract\\lib -llibtesseract302 -llibtesseract302d -llibtesseract302-static -llibtesseract302-static-debug -lliblept168 -lliblept168d
-#}
+LIBS +=  C:\\opencv300_vc2013\\x64\\lib\\opencv_world300.lib \
+         C:\\opencv300_vc2013\\x64\\lib\\opencv_ts300.lib \
+         C:\\opencv300_vc2013\\x64\\lib\\opencv_world300d.lib \
+         C:\\opencv300_vc2013\\x64\\lib\\opencv_ts300d.lib
 
 RESOURCES += \
     icon.qrc

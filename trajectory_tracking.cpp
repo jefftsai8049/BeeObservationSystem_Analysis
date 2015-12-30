@@ -268,17 +268,8 @@ void trajectory_tracking::run()
         cv::resize(pano,panoSmall,cv::Size(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE));
 
         std::vector<cv::Vec3f> circles;
-        //cv::Mat circles(1, 1, CV_32FC3);
-        qDebug() << 1;
-//        cv::Mat WTF = panoSmall.clone();
-
         cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
-        qDebug() << 2;
-        //this->circleResize(circles);
-
-
-        //std::vector<cv::Mat> circleImg(circles.size());
-        //circleImg.resize(circles.size());
+        this->circleResize(circles);
 
 #ifndef DEBUG_TAG_RECOGNITION
         std::vector<std::string> w1(circles.size());
