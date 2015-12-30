@@ -268,30 +268,37 @@ void trajectory_tracking::run()
         cv::resize(pano,panoSmall,cv::Size(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE));
 
         //std::vector<cv::Vec3f> circles;
-        cv::Mat circles(1, 1, CV_32FC3);
+//        cv::Mat circles;
+//        circles = cv::Mat::zeros(1, 1, CV_32FC3);
+
+        cv::Vec3f* circles;
+        circles = new cv::Vec3f[1];
+        cv::_OutputArray arr = cv::_OutputArray(circles,1);
+
         qDebug() << 1;
 //        cv::Mat WTF = panoSmall.clone();
 
-        cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+        cv::HoughCircles(panoSmall,arr,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
         qDebug() << 2;
-        //this->circleResize(circles);
-
+        qDebug() << circles.rows << circles.cols << circles.at<cv::Vec3f>(1,1)[0]<< circles.at<cv::Vec3f>(1,1)[1]<< circles.at<cv::Vec3f>(1,1)[2];
+        this->circleResize(circles);
+qDebug() << 3;
 
         //std::vector<cv::Mat> circleImg(circles.size());
         //circleImg.resize(circles.size());
 
 #ifndef DEBUG_TAG_RECOGNITION
-        std::vector<std::string> w1(circles.size());
-        std::vector<std::string> w2(circles.size());
+        std::vector<std::string> w1(circles.cols);
+        std::vector<std::string> w2(circles.cols);
 #endif
-
+qDebug() << 4;
 #ifndef DEBUG_TAG_RECOGNITION
 //#pragma omp parallel for
 #endif
-        for (int j=0;j<circles.size();j++)
+        for (int j=0;j<circles.cols;j++)
         {
             cv::Mat tagImg;
-            cv::getRectSubPix(pano,cv::Size(circles[j][2]*2+11,circles[j][2]*2+11),cv::Point(circles[j][0], circles[j][1]),tagImg);
+            cv::getRectSubPix(pano,cv::Size(circles.at<cv::Vec3f>(1,j)[2]*2+11,circles.at<cv::Vec3f>(1,j)[2]*2+11),cv::Point(circles.at<cv::Vec3f>(1,j)[0], circles.at<cv::Vec3f>(1,j)[1]),tagImg);
             cv::Mat word1,word2;
             TR->tagImgProc(tagImg,word1,word2);
 
@@ -316,7 +323,7 @@ void trajectory_tracking::run()
             qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
 #endif
         }
-
+qDebug() << 5;
         //Bee tracking classify
         //QTime fileTime
         //std::vector<cv::Vec3f> circles;
@@ -326,22 +333,22 @@ void trajectory_tracking::run()
         OT->compute(fileTime,circles,w1,w2);
         OT->savePath();
 #endif
-
+qDebug() << 5;
         if (showImage)
         {
             //draw cicle
             cv::Mat panoDrawCircle;
             cv::cvtColor(pano,panoDrawCircle,cv::COLOR_GRAY2BGR);
 
-            for(int i = 0; i < circles.size(); i++ )
+            for(int i = 0; i < circles.cols; i++ )
             {
-                cv::Point center(circles[i][0], circles[i][1]);
-                int radius = circles[i][2];
+                cv::Point center(circles.at<cv::Vec3f>(1,i)[0], circles.at<cv::Vec3f>(1,i)[1]);
+                int radius = circles.at<cv::Vec3f>(1,i)[2];
                 cv::Scalar color = cv::Scalar(255,255,255);
                 cv::circle( panoDrawCircle, center, radius, color, 1, 8, 0 );
 #ifndef DEBUG_TAG_RECOGNITION
-                cv::putText(panoDrawCircle,w1[i],cv::Point(circles[i][0]-15, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
-                cv::putText(panoDrawCircle,w2[i],cv::Point(circles[i][0]+5, circles[i][1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
+                cv::putText(panoDrawCircle,w1[i],cv::Point(circles.at<cv::Vec3f>(1,i)[0]-15, circles.at<cv::Vec3f>(1,i)[1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
+                cv::putText(panoDrawCircle,w2[i],cv::Point(circles.at<cv::Vec3f>(1,i)[0]+5, circles.at<cv::Vec3f>(1,i)[1]+40),cv::FONT_HERSHEY_DUPLEX,1,color);
 #endif
             }
             //            std::vector<std::vector<cv::Point> > path;
@@ -378,13 +385,13 @@ cv::Mat trajectory_tracking::imageCutBlack(cv::Mat src)
     return dst;
 }
 
-void trajectory_tracking::circleResize(std::vector<cv::Vec3f> &circles)
+void trajectory_tracking::circleResize(cv::Mat &circles)
 {
-    for(int i = 0; i < circles.size(); i++)
+    for(int i = 0; i < circles.cols; i++)
     {
-        circles[i][0] = circles[i][0]*HOUGH_CIRCLE_RESIZE;
-        circles[i][1] = circles[i][1]*HOUGH_CIRCLE_RESIZE;
-        circles[i][2] = circles[i][2]*HOUGH_CIRCLE_RESIZE;
+        circles.at<cv::Vec3f>(1,i)[0] = circles.at<cv::Vec3f>(1,i)[0]*HOUGH_CIRCLE_RESIZE;
+        circles.at<cv::Vec3f>(1,i)[1] = circles.at<cv::Vec3f>(1,i)[1]*HOUGH_CIRCLE_RESIZE;
+        circles.at<cv::Vec3f>(1,i)[2] = circles.at<cv::Vec3f>(1,i)[2]*HOUGH_CIRCLE_RESIZE;
     }
 }
 
