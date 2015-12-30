@@ -498,16 +498,16 @@ QVector<float> object_tracking::variance(const QVector<cv::Point> &motion)
         xyCoVar += (motion.at(i).x-meanPoint.x)*(motion.at(i).y-meanPoint.y);
         //qDebug() << xVar << yVar << xyCoVar;
     }
-    qDebug() << xVar << yVar << xyCoVar;
+    //qDebug() << xVar << yVar << xyCoVar;
     QVector<float> var(3);
     var[0] = (float)xVar/(float)(motion.size()-1);
     var[1] = (float)yVar/(float)(motion.size()-1);
     var[2] = (float)xyCoVar/(float)(motion.size()-1);
-    qDebug() << var[0] << var[1] << var[2];
+    //qDebug() << var[0] << var[1] << var[2];
     return var;
 }
 
-int object_tracking::direction(const QVector<cv::Point> &motion)
+int object_tracking::direction(const QVector<cv::Point> &motion,const objectTrackingParameters params)
 {
     QVector<cv::Point> motionVector;
     double angleSum = 0;
@@ -515,6 +515,8 @@ int object_tracking::direction(const QVector<cv::Point> &motion)
     {
         motionVector.append(motion.at(i+1)-motion.at(i));
     }
+    float *angleEach;
+    angleEach = new float[motionVector.size()-1];
     for(int i = 0 ; i < motionVector.size()-1; i++)
     {
         float angle[2];
@@ -543,16 +545,30 @@ int object_tracking::direction(const QVector<cv::Point> &motion)
             }
 
         }
-        angleSum += angle[0]-angle[1];
-        qDebug() <<"angle : "<< angleSum <<angle[0] <<angle[1]<< x[0] << y[0]<< x[1]  << y[1];
+        angleEach[i] = angle[0]-angle[1];
+        angleSum += angleEach[i];
     }
 
-    if(angleSum > DIRECTION_THRESHOLD)
+
+
+    if(angleSum > params.thresholdDirection)
         return RIGHT_MOVE;
-    else if(angleSum < -DIRECTION_THRESHOLD)
+    else if(angleSum < -params.thresholdDirection)
         return LEFT_MOVE;
     else
-        return FORWARD_MOVE;
+    {
+        bool isWaggle = true;
+        for(int m = 0;m < motionVector.size()-1;m++)
+        {
+            if(abs(angleEach[m]) == 0)
+            {
+                isWaggle = false;
+                return FORWARD_MOVE;
+            }
+        }
+        return WAGGLE;
+
+    }
 }
 
 void object_tracking::rawDataPreprocessing(const std::vector<track> *path, QVector<trackPro> *TPVector)
@@ -623,58 +639,80 @@ void object_tracking::loadDataTrackPro(const QString &fileName, QVector<trackPro
     }
 }
 
-void object_tracking::tracjectoryClassify(QVector<trackPro> *path)
+void object_tracking::tracjectoryClassify(QVector<trackPro> &path, const objectTrackingParameters params)
 {
-
     //check all path
-    for(int i = 0; i < path->size(); i++)
+    for(int i = 0; i < path.size(); i++)
     {
+        QVector<char> patternSequence;
         //check path position size is bigger than  SHORTEST_SAMPLE_SIZE or not
-        if(path->at(i).size > SHORTEST_SAMPLE_SIZE-1)
+        if(path.at(i).size > SHORTEST_SAMPLE_SIZE-1)
         {
-
-            for(int j = 0; j < path->at(i).size-SHORTEST_SAMPLE_SIZE+1; j++)
+            for(int j = 0; j < path.at(i).size-SHORTEST_SAMPLE_SIZE+1; j++)
             {
                 //grab path segment
                 QVector<cv::Point> motion(SHORTEST_SAMPLE_SIZE);
                 for(int m = 0; m < SHORTEST_SAMPLE_SIZE; m++)
                 {
-                    motion[m] = path->at(i).position.at(j+m);
+                    motion[m] = path.at(i).position.at(j+m);
                 }
-
-                char pattern;
                 QVector<float> var = this->variance(motion);
-                qDebug() << var[0] << var[1] << var[2];
+                //qDebug() << var[0] << var[1] << var[2];
 
                 //NO_MOVE
-                if(var[0] < 20 && var[1] < 20 && abs(var[2]) < 20)
+                if(var[0] < params.thresholdNoMove && var[1] < params.thresholdNoMove && abs(var[2]) < params.thresholdNoMove)
                 {
-                    pattern = NO_MOVE;
+                    patternSequence.append(NO_MOVE);
                     //drawPathPattern(motion);
                 }
                 //LOITERING
-                else if(var[0] < 50 && var[1] < 50 && abs(var[2]) < 50)
+                else if(var[0] < params.thresholdLoitering && var[1] < params.thresholdLoitering && abs(var[2]) < params.thresholdLoitering)
                 {
-                    pattern = LOITERING;
+                    patternSequence.append(LOITERING);
                     //drawPathPattern(motion);
                 }
                 else
                 {
                     //FORWARD_MOVE
-                    qDebug() << this->direction(motion);
-                    drawPathPattern(motion);
                     //RIGHT_MOVE
                     //LEFT_MOVE
                     //WAGGLE
+                    patternSequence.append(this->direction(motion,params));
+
                     //INTERACTION
                     //FORAGING
                     //OTHER
                 }
+#ifdef SHOW_PATTERN_NAME
+                qDebug() << tracjectoryName(patternSequence.at(patternSequence.size()-1));
+#endif
             }
-
         }
-
+        path[i].pattern = patternSequence;
+        emit sendProgress((i+1)*100.0/path.size());
     }
+}
+
+QString object_tracking::tracjectoryName(const char &pattern)
+{
+    if(pattern == NO_MOVE)
+        return "NO_MOVE";
+    else if(pattern == LOITERING)
+        return "LOITERING";
+    else if(pattern == FORWARD_MOVE)
+        return "FORWARD_MOVE";
+    else if(pattern == RIGHT_MOVE)
+        return "RIGHT_MOVE";
+    else if(pattern == LEFT_MOVE)
+        return "LEFT_MOVE";
+    else if(pattern == WAGGLE)
+        return "WAGGLE";
+    else if(pattern == INTERACTION)
+        return "INTERACTION";
+    else if(pattern == FORAGING)
+        return "FORAGING";
+    else
+        return "OTHER";
 }
 
 void object_tracking::drawPathPattern(const QVector<cv::Point> &path)

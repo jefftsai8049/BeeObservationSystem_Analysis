@@ -150,7 +150,14 @@
     <addaction name="actionOpen_Raw_Data"/>
     <addaction name="actionOpen_Processed_Data"/>
    </widget>
+   <widget class="QMenu" name="menuSetting">
+    <property name="title">
+     <string>Setting</string>
+    </property>
+    <addaction name="actionObject_Tracking"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuSetting"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen_Raw_Data">
@@ -161,6 +168,11 @@
   <action name="actionOpen_Processed_Data">
    <property name="text">
     <string>Open Processed Data</string>
+   </property>
+  </action>
+  <action name="actionObject_Tracking">
+   <property name="text">
+    <string>Object Tracking</string>
    </property>
   </action>
  </widget>

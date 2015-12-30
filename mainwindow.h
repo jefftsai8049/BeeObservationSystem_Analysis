@@ -117,6 +117,10 @@ private slots:
 
     void on_actionStart_Analysis_Data_triggered();
 
+    void on_actionWith_HOG_triggered();
+
+    void on_actionWith_PCA_triggered();
+
 private:
     Ui::MainWindow *ui;
 

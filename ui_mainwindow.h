@@ -131,7 +131,7 @@ public:
         actionWith_HOG = new QAction(MainWindow);
         actionWith_HOG->setObjectName(QStringLiteral("actionWith_HOG"));
         actionWith_HOG->setCheckable(true);
-        actionWith_HOG->setChecked(true);
+        actionWith_HOG->setChecked(false);
         actionTrain_New_Tag_Model = new QAction(MainWindow);
         actionTrain_New_Tag_Model->setObjectName(QStringLiteral("actionTrain_New_Tag_Model"));
         actionStart_Analysis_Data = new QAction(MainWindow);
@@ -227,12 +227,12 @@ public:
         dp_hough_circle_spinBox = new QSpinBox(groupBox);
         dp_hough_circle_spinBox->setObjectName(QStringLiteral("dp_hough_circle_spinBox"));
         dp_hough_circle_spinBox->setGeometry(QRect(10, 60, 61, 31));
-        dp_hough_circle_spinBox->setValue(2);
+        dp_hough_circle_spinBox->setValue(1);
         para_2_hough_circle_spinBox = new QSpinBox(groupBox);
         para_2_hough_circle_spinBox->setObjectName(QStringLiteral("para_2_hough_circle_spinBox"));
         para_2_hough_circle_spinBox->setGeometry(QRect(100, 200, 61, 31));
         para_2_hough_circle_spinBox->setMaximum(200);
-        para_2_hough_circle_spinBox->setValue(25);
+        para_2_hough_circle_spinBox->setValue(15);
         minRadius_hough_circle_spinBox = new QSpinBox(groupBox);
         minRadius_hough_circle_spinBox->setObjectName(QStringLiteral("minRadius_hough_circle_spinBox"));
         minRadius_hough_circle_spinBox->setGeometry(QRect(100, 60, 61, 31));
@@ -345,7 +345,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

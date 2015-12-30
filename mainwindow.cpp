@@ -50,10 +50,10 @@ MainWindow::MainWindow(QWidget *parent) :
     TT->setManualStitchingFileName("manual_stitching.xml");
 
     //load SVM tag recognition model
-    TT->setSVMModelFileName("model/model_HOG_PCA_25_1_0.984706.yaml");
+    TT->setSVMModelFileName("model/model_PCA_25_-2_0.921176.yaml");
 
     //load PCA model for tag image reduce dimensions
-    TT->setPCAModelFileName("model/PCA_HOG_PCA_25_.txt");
+    TT->setPCAModelFileName("model/PCA_PCA_25_.txt");
 
     //set initial hough circle parameters
     TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
@@ -498,6 +498,21 @@ void MainWindow::on_load_training_data_pushButton_clicked()
 
 void MainWindow::on_test_recognition_pushButton_clicked()
 {
+//    QString fileName = QFileDialog::getOpenFileName();
+//    tesseract::TessBaseAPI tess;
+//    tess.Init("","eng");
+//    cv::Mat sub = cv::imread(fileName.toStdString());
+//    cv::cvtColor(sub,sub,CV_BGR2GRAY);
+//    tess.SetImage((uchar*)sub.data, sub.size().width, sub.size().height, sub.channels(), sub.step1());
+//    tess.SetVariable("tessedit_char_whitelist","ABCEFGHKLMNOPRSTUYZ");
+//    tess.SetPageSegMode(static_cast<tesseract::PageSegMode>(tesseract::PSM_SINGLE_WORD));
+//    tess.Recognize(0);
+
+//    qDebug() << tess.GetUTF8Text();
+
+
+
+
 
 }
 
@@ -689,4 +704,16 @@ void MainWindow::on_actionStart_Analysis_Data_triggered()
 {
     DPW = new DataProcessWindow;
     DPW->show();
+}
+
+void MainWindow::on_actionWith_PCA_triggered()
+{
+    //set inital PCA and HOG parameters
+    TT->setPCAandHOG(ui->actionWith_PCA->isChecked(),ui->actionWith_HOG->isChecked());
+}
+
+void MainWindow::on_actionWith_HOG_triggered()
+{
+    //set inital PCA and HOG parameters
+    TT->setPCAandHOG(ui->actionWith_PCA->isChecked(),ui->actionWith_HOG->isChecked());
 }

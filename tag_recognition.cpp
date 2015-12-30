@@ -33,7 +33,7 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     this->findBlobs(srcBinaryZeroOne,blobs);
 
 #ifdef DEBUG_TAG_RECOGNITION
-    //draw blob image
+//draw blob image
     cv::Mat srcBlobFindRaw = cv::Mat::zeros(srcBinaryZeroOne.rows,srcBinaryZeroOne.cols,CV_8UC3);
     this->drawBlob(srcBlobFindRaw,blobs);
     cv::imshow("blob find raw",srcBlobFindRaw);
@@ -88,11 +88,11 @@ void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
     cv::imshow("blob find kick",srcBlobFindKick);
     cv::imwrite("tag/blob_find_kick.bmp",srcBlobFindKick);
 
-//    qDebug() <<"blob size : "<< blobs.size();
-//    for(int i =0 ;i<blobs.size();i++)
-//    {
-//        qDebug() <<"size:"<< blobs[i].size() <<"COV:"<< this->calcualteCOV(blobs[i]);
-//    }
+    qDebug() <<"blob size : "<< blobs.size();
+    for(int i =0 ;i<blobs.size();i++)
+    {
+        qDebug() <<"size:"<< blobs[i].size() <<"COV:"<< this->calcualteCOV(blobs[i]);
+    }
 
 #endif
 
@@ -207,7 +207,10 @@ int tag_recognition::wordRecognition(cv::Mat &src)
         {
             wordImage2DataHOG(src);
         }
-
+        else
+        {
+            wordImage2Data(src);
+        }
         if(PCAStatus)
         {
             pca.project(src,src);

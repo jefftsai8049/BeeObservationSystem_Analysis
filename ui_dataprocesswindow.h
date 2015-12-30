@@ -32,6 +32,7 @@ class Ui_DataProcessWindow
 public:
     QAction *actionOpen_Raw_Data;
     QAction *actionOpen_Processed_Data;
+    QAction *actionObject_Tracking;
     QWidget *centralwidget;
     QTextBrowser *system_log_textBrowser;
     QProgressBar *progressBar;
@@ -43,6 +44,7 @@ public:
     QPushButton *trajectory_classify_pushButton;
     QMenuBar *menubar;
     QMenu *menuFile;
+    QMenu *menuSetting;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *DataProcessWindow)
@@ -58,6 +60,8 @@ public:
         actionOpen_Raw_Data->setObjectName(QStringLiteral("actionOpen_Raw_Data"));
         actionOpen_Processed_Data = new QAction(DataProcessWindow);
         actionOpen_Processed_Data->setObjectName(QStringLiteral("actionOpen_Processed_Data"));
+        actionObject_Tracking = new QAction(DataProcessWindow);
+        actionObject_Tracking->setObjectName(QStringLiteral("actionObject_Tracking"));
         centralwidget = new QWidget(DataProcessWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         system_log_textBrowser = new QTextBrowser(centralwidget);
@@ -94,14 +98,18 @@ public:
         menubar->setGeometry(QRect(0, 0, 800, 28));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuSetting = new QMenu(menubar);
+        menuSetting->setObjectName(QStringLiteral("menuSetting"));
         DataProcessWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(DataProcessWindow);
         statusbar->setObjectName(QStringLiteral("statusbar"));
         DataProcessWindow->setStatusBar(statusbar);
 
         menubar->addAction(menuFile->menuAction());
+        menubar->addAction(menuSetting->menuAction());
         menuFile->addAction(actionOpen_Raw_Data);
         menuFile->addAction(actionOpen_Processed_Data);
+        menuSetting->addAction(actionObject_Tracking);
 
         retranslateUi(DataProcessWindow);
 
@@ -113,6 +121,7 @@ public:
         DataProcessWindow->setWindowTitle(QApplication::translate("DataProcessWindow", "Data Process", 0));
         actionOpen_Raw_Data->setText(QApplication::translate("DataProcessWindow", "Open Raw Data", 0));
         actionOpen_Processed_Data->setText(QApplication::translate("DataProcessWindow", "Open Processed Data", 0));
+        actionObject_Tracking->setText(QApplication::translate("DataProcessWindow", "Object Tracking", 0));
         groupBox->setTitle(QApplication::translate("DataProcessWindow", "Step 2.", 0));
         data_preprocessing_pushButton->setText(QApplication::translate("DataProcessWindow", "Preprocessing", 0));
         label->setText(QApplication::translate("DataProcessWindow", "Step 1. Open Raw Data", 0));
@@ -120,6 +129,7 @@ public:
         groupBox_2->setTitle(QApplication::translate("DataProcessWindow", "Step 4.", 0));
         trajectory_classify_pushButton->setText(QApplication::translate("DataProcessWindow", "Trajectory Classify", 0));
         menuFile->setTitle(QApplication::translate("DataProcessWindow", "File", 0));
+        menuSetting->setTitle(QApplication::translate("DataProcessWindow", "Setting", 0));
     } // retranslateUi
 
 };

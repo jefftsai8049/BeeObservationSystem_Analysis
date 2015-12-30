@@ -9,9 +9,8 @@
 #include <QDateTime>
 #include <QtConcurrent>
 
-
-
 #include "object_tracking.h"
+#include "objecttrackingform.h"
 
 #include <opencv.hpp>
 
@@ -41,18 +40,26 @@ private slots:
 
     void receiveProgress(const int &val);
 
+    void setObjectTrackingParameters(const objectTrackingParameters &params);
+
     void on_actionOpen_Processed_Data_triggered();
 
     void on_trajectory_classify_pushButton_clicked();
 
+    void on_actionObject_Tracking_triggered();
+
 private:
     Ui::DataProcessWindow *ui;
+
+    ObjectTrackingForm *OTS;
 
     object_tracking *OT;
 
     std::vector<track> path;
 
     QVector<trackPro> data;
+
+    objectTrackingParameters OTParams;
 
 //    void rawDataPreprocessing();
 

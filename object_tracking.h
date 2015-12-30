@@ -14,6 +14,7 @@
 
 #include "math_function.h"
 
+
 #define REMAIN_SIZE 20
 #define FORGET_TRACKING_TIME 5
 #define SHORTEST_SAMPLE_SIZE 5
@@ -31,6 +32,13 @@ enum trajectory{
     INTERACTION,
     FORAGING,
     OTHER
+};
+
+struct objectTrackingParameters
+{
+    int thresholdNoMove;
+    int thresholdLoitering;
+    int thresholdDirection;
 };
 
 //before preprocessing
@@ -58,7 +66,7 @@ struct trackPro
     QDateTime endTime;
     int size;
     QVector<cv::Point> position;
-    QVector<char> behavior;
+    QVector<char> pattern;
 
     //QDateTime timeStep(){return (endTime-startTime)/size;}
 };
@@ -101,7 +109,9 @@ public:
 
     //for tracjectory classify
 
-    void tracjectoryClassify(QVector<trackPro> *path);
+    void tracjectoryClassify(QVector<trackPro> &path,const objectTrackingParameters params);
+
+    QString tracjectoryName(const char &pattern);
 
     //for debug
 
@@ -135,10 +145,7 @@ private:
 
     QVector<float> variance(const QVector<cv::Point> &motion);
 
-    int direction(const QVector<cv::Point> &motion);
-
-
-
+    int direction(const QVector<cv::Point> &motion,const objectTrackingParameters params);
 
 };
 #endif // OBJECT_TRACKING_H

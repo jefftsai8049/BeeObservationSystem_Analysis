@@ -7,13 +7,15 @@ DataProcessWindow::DataProcessWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     OT = new object_tracking;
-
+    OTS = new ObjectTrackingForm;
     connect(this,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
     connect(OT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
     connect(OT,SIGNAL(sendLoadRawDataFinish()),this,SLOT(receiveLoadDataFinish()));
     connect(OT,SIGNAL(sendProgress(int)),this,SLOT(receiveProgress(int)));
 
+    connect(OTS,SIGNAL(setObjectTrackingParameters(objectTrackingParameters)),this,SLOT(setObjectTrackingParameters(objectTrackingParameters)));
+    OTS->requestObjectTrackingParameters();
 }
 
 DataProcessWindow::~DataProcessWindow()
@@ -45,6 +47,12 @@ void DataProcessWindow::receiveProgress(const int &val)
     ui->progressBar->setValue(val);
 }
 
+void DataProcessWindow::setObjectTrackingParameters(const objectTrackingParameters &params)
+{
+    qDebug() << params.thresholdDirection;
+    OTParams = params;
+}
+
 void DataProcessWindow::on_actionOpen_Raw_Data_triggered()
 {
     ui->data_preprocessing_pushButton->setEnabled(false);
@@ -73,16 +81,11 @@ void DataProcessWindow::on_actionOpen_Processed_Data_triggered()
 
 void DataProcessWindow::on_trajectory_classify_pushButton_clicked()
 {
-//    qDebug() << this->data.size();
-//    for(int i = 0; i < this->data.size(); i++)
-//    {
-//        //qDebug() << this->data.at(i).size;
+    OT->tracjectoryClassify(this->data,this->OTParams);
+}
 
-//        for(int j = 0; j < this->data.at(i).position.size(); j++)
-//        {
-//            qDebug() << "start " << this->data.at(i).position.at(j).x << this->data.at(i).position.at(j).x << " end";
-//        }
-//    }
+void DataProcessWindow::on_actionObject_Tracking_triggered()
+{
 
-    OT->tracjectoryClassify(&this->data);
+    OTS->show();
 }
