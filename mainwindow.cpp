@@ -5,8 +5,6 @@ std::vector<cv::Mat> stitchFrame;
 
 std::vector<cv::Point> originPoint;
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -492,7 +490,7 @@ void MainWindow::on_show_image_checkBox_clicked()
 
 void MainWindow::on_load_training_data_pushButton_clicked()
 {
-
+//    cv::Ptr<cv::>
 
 }
 

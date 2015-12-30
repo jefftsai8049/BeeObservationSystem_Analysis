@@ -120,7 +120,7 @@ private:
 
     cv::Mat imageCutBlack(cv::Mat src);
 
-    void circleResize( std::vector<cv::Vec3f> &circles);
+    void circleResize(std::vector<cv::Vec3f> &circles);
 
 };
 

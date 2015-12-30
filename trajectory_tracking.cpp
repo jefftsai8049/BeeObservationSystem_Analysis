@@ -263,20 +263,26 @@ void trajectory_tracking::run()
             OT->setImageRange(cv::Size(pano.cols,pano.rows));
 
         //hough circle detection
-        std::vector<cv::Vec3f> circles;
-        cv::Mat panoSmall;
-        cv::resize(pano,panoSmall,cv::Size(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE));
-        cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
-        this->circleResize(circles);
 
-        std::vector<cv::Mat> circleImg;
-        circleImg.resize(circles.size());
+        cv::Mat panoSmall(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE,CV_8UC1);
+        cv::resize(pano,panoSmall,cv::Size(pano.cols/HOUGH_CIRCLE_RESIZE,pano.rows/HOUGH_CIRCLE_RESIZE));
+
+        //std::vector<cv::Vec3f> circles;
+        cv::Mat circles(1, 1, CV_32FC3);
+        qDebug() << 1;
+//        cv::Mat WTF = panoSmall.clone();
+
+        cv::HoughCircles(panoSmall,circles,CV_HOUGH_GRADIENT,dp,minDist,para_1,para_2,minRadius,maxRadius);
+        qDebug() << 2;
+        //this->circleResize(circles);
+
+
+        //std::vector<cv::Mat> circleImg(circles.size());
+        //circleImg.resize(circles.size());
 
 #ifndef DEBUG_TAG_RECOGNITION
-        std::vector<std::string> w1;
-        std::vector<std::string> w2;
-        w1.resize(circles.size());
-        w2.resize(circles.size());
+        std::vector<std::string> w1(circles.size());
+        std::vector<std::string> w2(circles.size());
 #endif
 
 #ifndef DEBUG_TAG_RECOGNITION
@@ -288,7 +294,6 @@ void trajectory_tracking::run()
             cv::getRectSubPix(pano,cv::Size(circles[j][2]*2+11,circles[j][2]*2+11),cv::Point(circles[j][0], circles[j][1]),tagImg);
             cv::Mat word1,word2;
             TR->tagImgProc(tagImg,word1,word2);
-
 
 #ifndef DEBUG_TAG_RECOGNITION
             w1[j].push_back(TR->wordRecognition(word1));
@@ -306,9 +311,6 @@ void trajectory_tracking::run()
 #endif
 
 #ifdef SAVE_TAG_IMAGE
-
-
-
             cv::imwrite("SVM/"+w1[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"1.jpg",word1);
             cv::imwrite("SVM/"+w2[j]+"/"+std::to_string(frameCount)+"_"+std::to_string(i)+"2.jpg",word2);
             qDebug() << QString::fromStdString(w1[j]) << QString::fromStdString(w2[j]);
@@ -322,9 +324,9 @@ void trajectory_tracking::run()
         //std::vector<std::string> w2;
 #ifndef DEBUG_TAG_RECOGNITION
         OT->compute(fileTime,circles,w1,w2);
-
         OT->savePath();
 #endif
+
         if (showImage)
         {
             //draw cicle

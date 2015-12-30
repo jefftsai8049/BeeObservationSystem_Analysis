@@ -10,7 +10,7 @@ tag_recognition::~tag_recognition()
 
 }
 
-void tag_recognition::tagImgProc(cv::Mat src,cv::Mat &word1,cv::Mat &word2)
+void tag_recognition::tagImgProc(cv::Mat src, cv::Mat &word1, cv::Mat &word2)
 {
 #ifdef DEBUG_TAG_RECOGNITION
     cv::imshow("before his eq",src);

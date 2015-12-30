@@ -53,11 +53,11 @@ msvc {
 
 
 HAVE_OPENCV{
-    INCLUDEPATH += C:\\opencv310_vc2013\\include \
-                    C:\\opencv310_vc2013\\include\\opencv \
-                    C:\\opencv310_vc2013\\include\\opencv2 \
+    INCLUDEPATH += C:\\opencv300_vc2013\\include \
+                    C:\\opencv300_vc2013\\include\\opencv \
+                    C:\\opencv300_vc2013\\include\\opencv2 \
 
-    LIBS += -LC:\\opencv310_vc2013\\x64\\lib -lopencv_world310d -lopencv_world310
+    LIBS += -LC:\\opencv300_vc2013\\x64\\lib -lopencv_world300d -lopencv_world300 -lopencv_ts300d -lopencv_ts300
 
 }
 
