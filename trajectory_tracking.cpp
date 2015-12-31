@@ -119,11 +119,11 @@ void trajectory_tracking::setManualStitchingFileName(const std::string &fileName
     std::vector<cv::Point> p;
     if (f.isOpened())
     {
-
         f["point"] >> p;
         f.release();
     }
     this->setImageShiftOriginPoint(p);
+    emit sendSystemLog("model/manual_stitching.xml loaded");
 }
 
 void trajectory_tracking::setTagBinaryThreshold(const double &value)
@@ -139,6 +139,11 @@ void trajectory_tracking::setPCAandHOG(const bool &PCAS, const bool &HOGS)
 void trajectory_tracking::stopStitch()
 {
     this->stopped = true;
+}
+
+void trajectory_tracking::receiveSystemLog(const QString &log)
+{
+    emit sendSystemLog(log);
 }
 
 void trajectory_tracking::run()
@@ -180,6 +185,7 @@ void trajectory_tracking::run()
     fileTime = QDateTime::fromString(fileTimeS,"yyyy-MM-dd_hh-mm-ss-zzz");
 
     OT = new object_tracking(this,fileTime);
+    connect(OT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
     //calculate FPS of each video file
     float maxFPS = mf::findMax(deviceFPS[0],deviceFPS[1],deviceFPS[2]);
@@ -358,6 +364,8 @@ void trajectory_tracking::run()
     {
         cap[i].release();
     }
+
+    delete OT;
 
     emit sendSystemLog("Processing finish!\n"+QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm")+"\n");
     emit finish();

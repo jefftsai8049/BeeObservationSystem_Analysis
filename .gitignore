@@ -11,3 +11,6 @@ SVM_check/
 *.yaml
 *.csv
 system_log.txt
+tag_data/
+old_thing/
+*.autosave

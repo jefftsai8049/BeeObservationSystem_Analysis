@@ -32,23 +32,25 @@ public:
     QSpinBox *loitering_move_spinBox;
     QLabel *label_3;
     QSpinBox *direction_spinBox;
+    QLabel *label_4;
+    QSpinBox *segment_size_direction_spinBox;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QWidget *ObjectTrackingForm)
     {
         if (ObjectTrackingForm->objectName().isEmpty())
             ObjectTrackingForm->setObjectName(QStringLiteral("ObjectTrackingForm"));
-        ObjectTrackingForm->resize(243, 272);
+        ObjectTrackingForm->resize(243, 348);
         QFont font;
         font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(14);
         ObjectTrackingForm->setFont(font);
         groupBox = new QGroupBox(ObjectTrackingForm);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(10, 10, 221, 181));
+        groupBox->setGeometry(QRect(10, 10, 221, 261));
         no_move_spinBox = new QSpinBox(groupBox);
         no_move_spinBox->setObjectName(QStringLiteral("no_move_spinBox"));
-        no_move_spinBox->setGeometry(QRect(100, 40, 61, 31));
+        no_move_spinBox->setGeometry(QRect(140, 40, 61, 31));
         no_move_spinBox->setMaximum(100);
         no_move_spinBox->setValue(10);
         label = new QLabel(groupBox);
@@ -59,7 +61,7 @@ public:
         label_2->setGeometry(QRect(10, 70, 81, 41));
         loitering_move_spinBox = new QSpinBox(groupBox);
         loitering_move_spinBox->setObjectName(QStringLiteral("loitering_move_spinBox"));
-        loitering_move_spinBox->setGeometry(QRect(100, 80, 61, 31));
+        loitering_move_spinBox->setGeometry(QRect(140, 80, 61, 31));
         loitering_move_spinBox->setMaximum(500);
         loitering_move_spinBox->setValue(100);
         label_3 = new QLabel(groupBox);
@@ -67,12 +69,20 @@ public:
         label_3->setGeometry(QRect(10, 110, 81, 41));
         direction_spinBox = new QSpinBox(groupBox);
         direction_spinBox->setObjectName(QStringLiteral("direction_spinBox"));
-        direction_spinBox->setGeometry(QRect(100, 120, 61, 31));
+        direction_spinBox->setGeometry(QRect(140, 120, 61, 31));
         direction_spinBox->setMaximum(360);
         direction_spinBox->setValue(30);
+        label_4 = new QLabel(groupBox);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(10, 150, 121, 41));
+        segment_size_direction_spinBox = new QSpinBox(groupBox);
+        segment_size_direction_spinBox->setObjectName(QStringLiteral("segment_size_direction_spinBox"));
+        segment_size_direction_spinBox->setGeometry(QRect(140, 160, 61, 31));
+        segment_size_direction_spinBox->setMaximum(100);
+        segment_size_direction_spinBox->setValue(5);
         buttonBox = new QDialogButtonBox(ObjectTrackingForm);
         buttonBox->setObjectName(QStringLiteral("buttonBox"));
-        buttonBox->setGeometry(QRect(40, 200, 161, 41));
+        buttonBox->setGeometry(QRect(40, 290, 161, 41));
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
 
         retranslateUi(ObjectTrackingForm);
@@ -87,6 +97,7 @@ public:
         label->setText(QApplication::translate("ObjectTrackingForm", "No Move", 0));
         label_2->setText(QApplication::translate("ObjectTrackingForm", "Loitering", 0));
         label_3->setText(QApplication::translate("ObjectTrackingForm", "Direction", 0));
+        label_4->setText(QApplication::translate("ObjectTrackingForm", "Segment Size", 0));
     } // retranslateUi
 
 };

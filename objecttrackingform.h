@@ -18,6 +18,8 @@ public:
 
     void requestObjectTrackingParameters();
 
+    void updateUI(const objectTrackingParameters &params);
+
 private slots:
     void on_buttonBox_accepted();
 

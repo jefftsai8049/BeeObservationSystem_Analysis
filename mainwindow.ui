@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -586,11 +586,14 @@
     </property>
    </widget>
    <widget class="QPushButton" name="stitchingStop_pushButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1210</x>
       <y>610</y>
-      <width>101</width>
+      <width>111</width>
       <height>61</height>
      </rect>
     </property>

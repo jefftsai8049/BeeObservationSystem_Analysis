@@ -15,7 +15,16 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(QIcon("icon/honeybee.jpg"));
 
     //open file for saving system log
-    systemLog.setFileName("system_log.txt");
+    QDir outDir;
+    outDir.setPath("out");
+    if(!outDir.exists())
+    {
+        outDir.cdUp();
+        outDir.mkdir("out");
+        outDir.cd("out");
+    }
+
+    systemLog.setFileName(outDir.path()+"/"+"system_log.txt");
     systemLog.open(QIODevice::ReadWrite);
 
     //for tracking honeybee position
@@ -32,8 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //send system log back to mainwindow
     connect(TT,SIGNAL(sendSystemLog(QString)),this,SLOT(receiveSystemLog(QString)));
 
-    //send finish signal to mainwindow
-    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
 
     //send processing progress to mainwindows to show on progess bar
     connect(TT,SIGNAL(sendProcessingProgress(int)),this,SLOT(receiveProcessingProgress(int)));
@@ -45,13 +53,25 @@ MainWindow::MainWindow(QWidget *parent) :
     TT->setTagBinaryThreshold(ui->binarythreshold_spinBox->value());
 
     //load stitching model file
-    TT->setManualStitchingFileName("manual_stitching.xml");
+    QFile manulStitchModel("model/manual_stitching.xml");
+    if(manulStitchModel.exists())
+        TT->setManualStitchingFileName(manulStitchModel.fileName().toStdString());
+    else
+        emit sendSystemLog(manulStitchModel.fileName()+" no found!");
 
     //load SVM tag recognition model
-    TT->setSVMModelFileName("model/model_HOG_PCA_25_-1_0.984706.yaml");
+    QFile SVMModel("model/model_HOG_PCA_25_-1_0.984706.yaml");
+    if(SVMModel.exists())
+        TT->setSVMModelFileName(SVMModel.fileName().toStdString());
+    else
+        emit sendSystemLog(SVMModel.fileName()+" no found!");
 
     //load PCA model for tag image reduce dimensions
-    TT->setPCAModelFileName("model/PCA_PCA_25_.txt");
+    QFile PCAModel("model/PCA_PCA_25_.txt");
+    if(PCAModel.exists())
+        TT->setPCAModelFileName(PCAModel.fileName().toStdString());
+    else
+        emit sendSystemLog(PCAModel.fileName()+" no found!");
 
     //set initial hough circle parameters
     TT->setHoughCircleParameters(ui->dp_hough_circle_spinBox->value(),ui->minDist_hough_circle_spinBox->value(),ui->para_1_hough_circle_spinBox->value(),ui->para_2_hough_circle_spinBox->value(),ui->minRadius_hough_circle_spinBox->value(),ui->maxRadius_hough_circle_spinBox->value());
@@ -400,12 +420,24 @@ void MainWindow::on_stitchingStart_pushButton_clicked()
     }
 
     stitchImage();
+
+    //send finish signal to mainwindow
+    connect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
+    ui->stitchingStart_pushButton->setEnabled(false);
+    ui->stitchingStop_pushButton->setEnabled(true);
 }
 
 void MainWindow::on_stitchingStop_pushButton_clicked()
 {
     //stop processing video
     TT->stopStitch();
+
+    //send finish signal to mainwindow
+    disconnect(TT,SIGNAL(finish()),this,SLOT(on_stitchingStart_pushButton_clicked()));
+
+    ui->stitchingStart_pushButton->setEnabled(true);
+    ui->stitchingStop_pushButton->setEnabled(false);
 }
 
 void MainWindow::on_stitching_pushButton_clicked()
@@ -490,27 +522,11 @@ void MainWindow::on_show_image_checkBox_clicked()
 
 void MainWindow::on_load_training_data_pushButton_clicked()
 {
-//    cv::Ptr<cv::>
 
 }
 
 void MainWindow::on_test_recognition_pushButton_clicked()
 {
-//    QString fileName = QFileDialog::getOpenFileName();
-//    tesseract::TessBaseAPI tess;
-//    tess.Init("","eng");
-//    cv::Mat sub = cv::imread(fileName.toStdString());
-//    cv::cvtColor(sub,sub,CV_BGR2GRAY);
-//    tess.SetImage((uchar*)sub.data, sub.size().width, sub.size().height, sub.channels(), sub.step1());
-//    tess.SetVariable("tessedit_char_whitelist","ABCEFGHKLMNOPRSTUYZ");
-//    tess.SetPageSegMode(static_cast<tesseract::PageSegMode>(tesseract::PSM_SINGLE_WORD));
-//    tess.Recognize(0);
-
-//    qDebug() << tess.GetUTF8Text();
-
-
-
-
 
 }
 

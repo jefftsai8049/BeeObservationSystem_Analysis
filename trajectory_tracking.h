@@ -73,6 +73,9 @@ signals:
 
 public slots:
 
+private slots:
+    void receiveSystemLog(const QString &log);
+
 private:
     tag_recognition *TR;
 

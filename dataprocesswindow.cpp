@@ -16,6 +16,7 @@ DataProcessWindow::DataProcessWindow(QWidget *parent) :
 
     connect(OTS,SIGNAL(setObjectTrackingParameters(objectTrackingParameters)),this,SLOT(setObjectTrackingParameters(objectTrackingParameters)));
     OTS->requestObjectTrackingParameters();
+    OT->setPathSegmentSize(this->OTParams.segmentSize);
 }
 
 DataProcessWindow::~DataProcessWindow()
@@ -49,8 +50,8 @@ void DataProcessWindow::receiveProgress(const int &val)
 
 void DataProcessWindow::setObjectTrackingParameters(const objectTrackingParameters &params)
 {
-    qDebug() << params.thresholdDirection;
     OTParams = params;
+    OT->setPathSegmentSize(this->OTParams.segmentSize);
 }
 
 void DataProcessWindow::on_actionOpen_Raw_Data_triggered()
@@ -86,6 +87,5 @@ void DataProcessWindow::on_trajectory_classify_pushButton_clicked()
 
 void DataProcessWindow::on_actionObject_Tracking_triggered()
 {
-
     OTS->show();
 }

@@ -296,7 +296,8 @@ public:
         stitchingStart_pushButton->setGeometry(QRect(1090, 610, 111, 61));
         stitchingStop_pushButton = new QPushButton(centralWidget);
         stitchingStop_pushButton->setObjectName(QStringLiteral("stitchingStop_pushButton"));
-        stitchingStop_pushButton->setGeometry(QRect(1210, 610, 101, 61));
+        stitchingStop_pushButton->setEnabled(false);
+        stitchingStop_pushButton->setGeometry(QRect(1210, 610, 111, 61));
         imageShow_widget = new QSmartGraphicsView(centralWidget);
         imageShow_widget->setObjectName(QStringLiteral("imageShow_widget"));
         imageShow_widget->setGeometry(QRect(10, 10, 1061, 561));
@@ -345,7 +346,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

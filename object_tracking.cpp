@@ -47,6 +47,14 @@ double track::howClose(const cv::Vec3f &circle)
 object_tracking::object_tracking(QObject *parent, const QDateTime fileTime)
 {
     this->startTime = fileTime;
+
+
+    if(!outDataDir.exists())
+    {
+        outDataDir.cdUp();
+        outDataDir.mkdir("processing_data");
+        outDataDir.cd("processing_data");
+    }
 }
 
 object_tracking::~object_tracking()
@@ -194,17 +202,15 @@ void object_tracking::drawPath(cv::Mat& src)
 }
 
 void object_tracking::savePath()
-{
+{    
+    //QFileInfo fileInfo("out/processing_data/"+startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
 
-    QFileInfo fileInfo(startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
-    QFile file(fileInfo.fileName());
+    QFile file(outDataDir.path()+"/"+this->startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
 
-    if(!fileInfo.exists())
+    if(!file.exists())
     {
-        qDebug() << this->startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv";
-
         file.open(QIODevice::WriteOnly);
-        qDebug() <<fileInfo.exists();
+        emit sendSystemLog(file.fileName()+" establish!");
     }
     else
     {
@@ -238,15 +244,12 @@ void object_tracking::savePath()
 
 void object_tracking::saveAllPath()
 {
-    QFileInfo fileInfo(startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
-    QFile file(fileInfo.fileName());
+    QFile file(outDataDir.path()+"/"+this->startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv");
 
-    if(!fileInfo.exists())
+    if(!file.exists())
     {
-        qDebug() << this->startTime.toString("yyyy-MM-dd_hh-mm-ss-zzz")+".csv";
-
         file.open(QIODevice::WriteOnly);
-        qDebug() <<fileInfo.exists();
+        emit sendSystemLog(file.fileName()+" establish!");
     }
     else
     {
@@ -713,6 +716,11 @@ QString object_tracking::tracjectoryName(const char &pattern)
         return "FORAGING";
     else
         return "OTHER";
+}
+
+void object_tracking::setPathSegmentSize(const int &size)
+{
+    this->segmentSize = size;
 }
 
 void object_tracking::drawPathPattern(const QVector<cv::Point> &path)

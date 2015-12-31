@@ -9,6 +9,8 @@
 #include <QVector>
 #include <QFileInfo>
 #include <QDataStream>
+#include <QDir>
+
 #include <opencv.hpp>
 #include <stdlib.h>
 
@@ -39,6 +41,7 @@ struct objectTrackingParameters
     int thresholdNoMove;
     int thresholdLoitering;
     int thresholdDirection;
+    int segmentSize;
 };
 
 //before preprocessing
@@ -113,6 +116,8 @@ public:
 
     QString tracjectoryName(const char &pattern);
 
+    void setPathSegmentSize(const int &size);
+
     //for debug
 
     void drawPathPattern(const QVector<cv::Point> &path);
@@ -139,6 +144,10 @@ private:
 
     std::vector<track> path;
 
+    QDir outDataDir = QDir("out/processing_data");
+
+    int segmentSize;
+
     int minTimeStep(const std::vector<QDateTime> &time);
 
     cv::Point mean(const QVector<cv::Point> &motion);
@@ -146,6 +155,7 @@ private:
     QVector<float> variance(const QVector<cv::Point> &motion);
 
     int direction(const QVector<cv::Point> &motion,const objectTrackingParameters params);
+
 
 };
 #endif // OBJECT_TRACKING_H
