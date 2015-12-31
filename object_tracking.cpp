@@ -649,13 +649,13 @@ void object_tracking::tracjectoryClassify(QVector<trackPro> &path, const objectT
     {
         QVector<char> patternSequence;
         //check path position size is bigger than  SHORTEST_SAMPLE_SIZE or not
-        if(path.at(i).size > SHORTEST_SAMPLE_SIZE-1)
+        if(path.at(i).size > this->segmentSize-1)
         {
-            for(int j = 0; j < path.at(i).size-SHORTEST_SAMPLE_SIZE+1; j++)
+            for(int j = 0; j < path.at(i).size-this->segmentSize+1; j++)
             {
                 //grab path segment
-                QVector<cv::Point> motion(SHORTEST_SAMPLE_SIZE);
-                for(int m = 0; m < SHORTEST_SAMPLE_SIZE; m++)
+                QVector<cv::Point> motion(this->segmentSize);
+                for(int m = 0; m < this->segmentSize; m++)
                 {
                     motion[m] = path.at(i).position.at(j+m);
                 }
