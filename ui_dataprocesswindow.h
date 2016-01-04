@@ -22,8 +22,10 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QWidget>
+#include "qcustomplot/qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -33,6 +35,7 @@ public:
     QAction *actionOpen_Raw_Data;
     QAction *actionOpen_Processed_Data;
     QAction *actionObject_Tracking;
+    QAction *actionOpen_Sensor_Data;
     QWidget *centralwidget;
     QTextBrowser *system_log_textBrowser;
     QProgressBar *progressBar;
@@ -42,6 +45,10 @@ public:
     QLabel *label_2;
     QGroupBox *groupBox_2;
     QPushButton *trajectory_classify_pushButton;
+    QTabWidget *tabWidget;
+    QWidget *bee_info;
+    QWidget *weather_info;
+    QCustomPlot *weather_info_widget;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuSetting;
@@ -51,7 +58,7 @@ public:
     {
         if (DataProcessWindow->objectName().isEmpty())
             DataProcessWindow->setObjectName(QStringLiteral("DataProcessWindow"));
-        DataProcessWindow->resize(800, 600);
+        DataProcessWindow->resize(1007, 653);
         QFont font;
         font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(14);
@@ -62,14 +69,16 @@ public:
         actionOpen_Processed_Data->setObjectName(QStringLiteral("actionOpen_Processed_Data"));
         actionObject_Tracking = new QAction(DataProcessWindow);
         actionObject_Tracking->setObjectName(QStringLiteral("actionObject_Tracking"));
+        actionOpen_Sensor_Data = new QAction(DataProcessWindow);
+        actionOpen_Sensor_Data->setObjectName(QStringLiteral("actionOpen_Sensor_Data"));
         centralwidget = new QWidget(DataProcessWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         system_log_textBrowser = new QTextBrowser(centralwidget);
         system_log_textBrowser->setObjectName(QStringLiteral("system_log_textBrowser"));
-        system_log_textBrowser->setGeometry(QRect(20, 440, 761, 111));
+        system_log_textBrowser->setGeometry(QRect(10, 490, 761, 111));
         progressBar = new QProgressBar(centralwidget);
         progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(570, 330, 191, 91));
+        progressBar->setGeometry(QRect(790, 500, 191, 91));
         progressBar->setValue(0);
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
@@ -92,10 +101,22 @@ public:
         trajectory_classify_pushButton->setObjectName(QStringLiteral("trajectory_classify_pushButton"));
         trajectory_classify_pushButton->setEnabled(false);
         trajectory_classify_pushButton->setGeometry(QRect(20, 30, 181, 61));
+        tabWidget = new QTabWidget(centralwidget);
+        tabWidget->setObjectName(QStringLiteral("tabWidget"));
+        tabWidget->setGeometry(QRect(300, 20, 691, 461));
+        bee_info = new QWidget();
+        bee_info->setObjectName(QStringLiteral("bee_info"));
+        tabWidget->addTab(bee_info, QString());
+        weather_info = new QWidget();
+        weather_info->setObjectName(QStringLiteral("weather_info"));
+        weather_info_widget = new QCustomPlot(weather_info);
+        weather_info_widget->setObjectName(QStringLiteral("weather_info_widget"));
+        weather_info_widget->setGeometry(QRect(10, 10, 661, 411));
+        tabWidget->addTab(weather_info, QString());
         DataProcessWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(DataProcessWindow);
         menubar->setObjectName(QStringLiteral("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 28));
+        menubar->setGeometry(QRect(0, 0, 1007, 21));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuSetting = new QMenu(menubar);
@@ -109,9 +130,14 @@ public:
         menubar->addAction(menuSetting->menuAction());
         menuFile->addAction(actionOpen_Raw_Data);
         menuFile->addAction(actionOpen_Processed_Data);
+        menuFile->addSeparator();
+        menuFile->addAction(actionOpen_Sensor_Data);
         menuSetting->addAction(actionObject_Tracking);
 
         retranslateUi(DataProcessWindow);
+
+        tabWidget->setCurrentIndex(1);
+
 
         QMetaObject::connectSlotsByName(DataProcessWindow);
     } // setupUi
@@ -122,12 +148,15 @@ public:
         actionOpen_Raw_Data->setText(QApplication::translate("DataProcessWindow", "Open Raw Data", 0));
         actionOpen_Processed_Data->setText(QApplication::translate("DataProcessWindow", "Open Processed Data", 0));
         actionObject_Tracking->setText(QApplication::translate("DataProcessWindow", "Object Tracking", 0));
+        actionOpen_Sensor_Data->setText(QApplication::translate("DataProcessWindow", "Open Sensor Data", 0));
         groupBox->setTitle(QApplication::translate("DataProcessWindow", "Step 2.", 0));
         data_preprocessing_pushButton->setText(QApplication::translate("DataProcessWindow", "Preprocessing", 0));
         label->setText(QApplication::translate("DataProcessWindow", "Step 1. Open Raw Data", 0));
         label_2->setText(QApplication::translate("DataProcessWindow", "Step 3. Open Processed Data", 0));
         groupBox_2->setTitle(QApplication::translate("DataProcessWindow", "Step 4.", 0));
         trajectory_classify_pushButton->setText(QApplication::translate("DataProcessWindow", "Trajectory Classify", 0));
+        tabWidget->setTabText(tabWidget->indexOf(bee_info), QApplication::translate("DataProcessWindow", "Bee Info", 0));
+        tabWidget->setTabText(tabWidget->indexOf(weather_info), QApplication::translate("DataProcessWindow", "Weather Info", 0));
         menuFile->setTitle(QApplication::translate("DataProcessWindow", "File", 0));
         menuSetting->setTitle(QApplication::translate("DataProcessWindow", "Setting", 0));
     } // retranslateUi

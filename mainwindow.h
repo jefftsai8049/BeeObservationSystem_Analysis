@@ -1,13 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+//OpenCV
 #include <opencv.hpp>
 #include <core/ocl.hpp>
 #include <features2d.hpp>
 #include "ml.hpp"
 
+//OpenMP
 #include <omp.h>
 
+//QT
 #include <QMainWindow>
 #include <QDataStream>
 #include <QDebug>
@@ -23,22 +26,21 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QtSerialPort/QSerialPort>
 
+//Tsai LIB
 #include "trajectory_tracking.h"
 #include "tag_recognition.h"
 #include "dataprocesswindow.h"
 
+//QSmartGraphicsView
 #include "qsmartgraphicsview/qsmartgraphicsview.h"
 #include "qsmartgraphicsview/qsmartlabel.h"
 
-
+//Parameters
 #define imgSizeX 1200
 #define imgSizeY 1600
 
 #define SERIAL_TIME 2000
 #define RECORD_TIME 60*10*1000
-
-
-
 
 namespace Ui {
 class MainWindow;

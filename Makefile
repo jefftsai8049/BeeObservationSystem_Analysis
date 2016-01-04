@@ -210,6 +210,7 @@ Makefile: BeeObservationSystem_Analysis.pro C:\Qt\5.5\msvc2013_64\mkspecs\win32-
 		BeeObservationSystem_Analysis.pro \
 		C:/Qt/5.5/msvc2013_64/lib/qtmain.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGL.prl \
+		C:/Qt/5.5/msvc2013_64/lib/Qt5PrintSupport.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Widgets.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5Gui.prl \
 		C:/Qt/5.5/msvc2013_64/lib/Qt5SerialPort.prl \
@@ -353,6 +354,7 @@ C:\Qt\5.5\msvc2013_64\mkspecs\features\lex.prf:
 BeeObservationSystem_Analysis.pro:
 C:/Qt/5.5/msvc2013_64/lib/qtmain.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5OpenGL.prl:
+C:/Qt/5.5/msvc2013_64/lib/Qt5PrintSupport.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Widgets.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5Gui.prl:
 C:/Qt/5.5/msvc2013_64/lib/Qt5SerialPort.prl:

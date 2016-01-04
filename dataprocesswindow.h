@@ -1,6 +1,7 @@
 #ifndef DATAPROCESSWINDOW_H
 #define DATAPROCESSWINDOW_H
 
+//QT LIB
 #include <QMainWindow>
 #include <QStringList>
 #include <QString>
@@ -8,12 +9,28 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QtConcurrent>
+#include <QDateTime>
 
+//Tsai LIB
 #include "object_tracking.h"
 #include "objecttrackingform.h"
 
+//QCustomPlot LIB
+#include <qcustomplot/qcustomplot.h>
+
+//OpenCV
 #include <opencv.hpp>
 
+
+struct weatherInfo
+{
+    QDateTime time;
+    float inHiveTemp;
+    float inHiveRH;
+    float outHiveTemp;
+    float outHiveRH;
+    float pressure;
+};
 
 
 namespace Ui {
@@ -48,6 +65,8 @@ private slots:
 
     void on_actionObject_Tracking_triggered();
 
+    void on_actionOpen_Sensor_Data_triggered();
+
 private:
     Ui::DataProcessWindow *ui;
 
@@ -61,7 +80,17 @@ private:
 
     objectTrackingParameters OTParams;
 
-//    void rawDataPreprocessing();
+    void loadWeatherData(const QStringList &fileNames,QVector<weatherInfo> &weatherData);
+
+    void getInHiveTemp(const QVector<weatherInfo> &weatherData,QVector<double> &x,QVector<double> &y);
+
+    void getInHiveRH(const QVector<weatherInfo> &weatherData,QVector<double> &x,QVector<double> &y);
+
+    void getOutHiveTemp(const QVector<weatherInfo> &weatherData,QVector<double> &x,QVector<double> &y);
+
+    void getOutHiveRH(const QVector<weatherInfo> &weatherData,QVector<double> &x,QVector<double> &y);
+
+    void getPressure(const QVector<weatherInfo> &weatherData,QVector<double> &x,QVector<double> &y);
 
 
 signals:

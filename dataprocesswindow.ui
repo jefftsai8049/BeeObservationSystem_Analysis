@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1007</width>
+    <height>653</height>
    </rect>
   </property>
   <property name="font">
@@ -23,8 +23,8 @@
    <widget class="QTextBrowser" name="system_log_textBrowser">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>440</y>
+      <x>10</x>
+      <y>490</y>
       <width>761</width>
       <height>111</height>
      </rect>
@@ -33,8 +33,8 @@
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>330</y>
+      <x>790</x>
+      <y>500</y>
       <width>191</width>
       <height>91</height>
      </rect>
@@ -133,14 +133,47 @@
      </property>
     </widget>
    </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>20</y>
+      <width>691</width>
+      <height>461</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="bee_info">
+     <attribute name="title">
+      <string>Bee Info</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="weather_info">
+     <attribute name="title">
+      <string>Weather Info</string>
+     </attribute>
+     <widget class="QCustomPlot" name="weather_info_widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>661</width>
+        <height>411</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>28</height>
+     <width>1007</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -149,6 +182,8 @@
     </property>
     <addaction name="actionOpen_Raw_Data"/>
     <addaction name="actionOpen_Processed_Data"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpen_Sensor_Data"/>
    </widget>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
@@ -175,7 +210,20 @@
     <string>Object Tracking</string>
    </property>
   </action>
+  <action name="actionOpen_Sensor_Data">
+   <property name="text">
+    <string>Open Sensor Data</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot/qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

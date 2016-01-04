@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl serialport concurrent
+QT       += core gui opengl serialport concurrent printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     object_tracking.cpp \
     math_function.cpp \
     dataprocesswindow.cpp \
-    objecttrackingform.cpp
+    objecttrackingform.cpp \
+    qcustomplot/qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     trajectory_tracking.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     object_tracking.h \
     math_function.h \
     dataprocesswindow.h \
-    objecttrackingform.h
+    objecttrackingform.h \
+    qcustomplot/qcustomplot.h
 
 FORMS    += mainwindow.ui \
     dataprocesswindow.ui \
