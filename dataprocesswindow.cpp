@@ -104,77 +104,114 @@ void DataProcessWindow::on_actionOpen_Sensor_Data_triggered()
     {
         ui->system_log_textBrowser->insertPlainText(errMsg);
     }
+    //set title font size
+    QFont font;
+    font.setPointSize(14);
+
+    //
+    ui->rh_info_widget->plotLayout()->insertRow(0);
+    QCPPlotTitle *rhTitle = new QCPPlotTitle(ui->rh_info_widget, "Humidity In-Out Bee Hive");
+    rhTitle->setFont(font);
+    ui->rh_info_widget->plotLayout()->addElement(0, 0, rhTitle);
 
     QVector<double> x1,y1;
     this->getInHiveRH(weatherData,x1,y1);
-    ui->weather_info_widget->addGraph();
-    ui->weather_info_widget->graph(0)->setData(x1,y1);
-    //ui->weather_info_widget->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,QPen(Qt::black,1.5), QBrush(Qt::white), 9));
-    ui->weather_info_widget->graph(0)->setPen(QPen(QColor(255,0,0),2));
-    ui->weather_info_widget->graph(0)->setName("In-Hive Humidity");
+    ui->rh_info_widget->addGraph();
+    ui->rh_info_widget->graph(0)->setData(x1,y1);
+    ui->rh_info_widget->graph(0)->setPen(QPen(Qt::red,2));
+    ui->rh_info_widget->graph(0)->setName("In-Hive");
 
 
     QVector<double> x2,y2;
     this->getOutHiveRH(weatherData,x2,y2);
-    ui->weather_info_widget->addGraph();
-    ui->weather_info_widget->graph(1)->setData(x2,y2);
-    //ui->weather_info_widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,QPen(Qt::black,1.5), QBrush(Qt::white), 9));
-    ui->weather_info_widget->graph(1)->setPen(QPen(QColor(0,0,255),2));
-    ui->weather_info_widget->graph(1)->setName("Out-Hive Humidity");
+    ui->rh_info_widget->addGraph();
+    ui->rh_info_widget->graph(1)->setData(x2,y2);
+    ui->rh_info_widget->graph(1)->setPen(QPen(Qt::blue,2));
+    ui->rh_info_widget->graph(1)->setName("Out-Hive");
 
-    ui->weather_info_widget->xAxis->setRange(x2.at(0),x2.at(x2.size()-1));
-    ui->weather_info_widget->yAxis->setRange(30,120);
+    ui->rh_info_widget->xAxis->rescale();
+    ui->rh_info_widget->yAxis->rescale();
+    ui->rh_info_widget->yAxis->setVisible(true);
+    ui->rh_info_widget->yAxis->setLabel("Humidity (%)");
 
+    ui->rh_info_widget->axisRect()->axis(QCPAxis::atBottom)->setAutoTickStep(false);
+    ui->rh_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickStep(60*10*6*6); // 4 day tickstep
+    ui->rh_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickLabelType(QCPAxis::ltDateTime);
+    ui->rh_info_widget->axisRect()->axis(QCPAxis::atBottom)->setDateTimeSpec(Qt::LocalTime);
+    ui->rh_info_widget->axisRect()->axis(QCPAxis::atBottom)->setDateTimeFormat("MM-dd hh:mm");
+    ui->rh_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickLabelRotation(30);
+
+    ui->temp_info_widget->plotLayout()->insertRow(0);
+    QCPPlotTitle *tempTitle = new QCPPlotTitle(ui->temp_info_widget, "Temperture In-Out Bee Hive");
+    tempTitle->setFont(font);
+    ui->temp_info_widget->plotLayout()->addElement(0, 0, tempTitle);
 
     QVector<double> x3,y3;
     this->getInHiveTemp(weatherData,x3,y3);
-    ui->weather_info_widget->addGraph(ui->weather_info_widget->xAxis2,ui->weather_info_widget->yAxis2);
-    ui->weather_info_widget->graph(2)->setData(x3,y3);
-    //ui->weather_info_widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,QPen(Qt::black,1.5), QBrush(Qt::white), 9));
-    ui->weather_info_widget->graph(2)->setPen(QPen(QColor(Qt::green),2));
-    ui->weather_info_widget->graph(2)->setName("In-Hive Temperture");
+    ui->temp_info_widget->addGraph(ui->temp_info_widget->xAxis,ui->temp_info_widget->yAxis);
+    ui->temp_info_widget->graph(0)->setData(x3,y3);
+    ui->temp_info_widget->graph(0)->setPen(QPen(QColor(Qt::red),2));
+    ui->temp_info_widget->graph(0)->setName("In-Hive");
 
     QVector<double> x4,y4;
     this->getOutHiveTemp(weatherData,x4,y4);
-    ui->weather_info_widget->addGraph(ui->weather_info_widget->xAxis2,ui->weather_info_widget->yAxis2);
-    ui->weather_info_widget->graph(3)->setData(x4,y4);
-    //ui->weather_info_widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,QPen(Qt::black,1.5), QBrush(Qt::white), 9));
-    ui->weather_info_widget->graph(3)->setPen(QPen(QColor(Qt::darkCyan),2));
-    ui->weather_info_widget->graph(3)->setName("Out-Hive Temperture");
+    ui->temp_info_widget->addGraph(ui->temp_info_widget->xAxis,ui->temp_info_widget->yAxis);
+    ui->temp_info_widget->graph(1)->setData(x4,y4);
+    ui->temp_info_widget->graph(1)->setPen(QPen(QColor(Qt::blue),2));
+    ui->temp_info_widget->graph(1)->setName("Out-Hive");
 
-//    QVector<double> x3,y3;
-//    this->getInHiveTemp(weatherData,x3,y3);
-//    QCPBars *inTemp = new QCPBars(ui->weather_info_widget->xAxis2,ui->weather_info_widget->yAxis2);
-//    inTemp->setData(x3,y3);
-//    inTemp->setPen(QPen(QColor(0,0,255),2));
-//    inTemp->setName("In-Hive Temperture");
-//    ui->weather_info_widget->addPlottable(inTemp);
+    ui->temp_info_widget->xAxis->rescale();
+    ui->temp_info_widget->yAxis->rescale();
+    ui->temp_info_widget->yAxis->setVisible(true);
+    ui->temp_info_widget->yAxis->setLabel("Temperture (C)");
 
-//    QVector<double> x4,y4;
-//    this->getInHiveTemp(weatherData,x4,y4);
-//    QCPBars *outTemp = new QCPBars(ui->weather_info_widget->xAxis2,ui->weather_info_widget->yAxis2);
-//    outTemp->setData(x4,y4);
-//    outTemp->setPen(QPen(QColor(255,0,0),2));
-//    outTemp->setName("Out-Hive Temperture");
-//    ui->weather_info_widget->addPlottable(outTemp);
+    ui->temp_info_widget->axisRect()->axis(QCPAxis::atBottom)->setAutoTickStep(false);
+    ui->temp_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickStep(60*10*6*6); // 4 day tickstep
+    ui->temp_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickLabelType(QCPAxis::ltDateTime);
+    ui->temp_info_widget->axisRect()->axis(QCPAxis::atBottom)->setDateTimeSpec(Qt::LocalTime);
+    ui->temp_info_widget->axisRect()->axis(QCPAxis::atBottom)->setDateTimeFormat("MM-dd hh:mm");
+    ui->temp_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickLabelRotation(30);
 
-    ui->weather_info_widget->xAxis2->setRange(x3.at(0),x3.at(x3.size()-1));
-    ui->weather_info_widget->yAxis2->setRange(10,40);
-    ui->weather_info_widget->yAxis2->setVisible(true);
 
-    ui->weather_info_widget->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignLeft|Qt::AlignBottom);
-    ui->weather_info_widget->legend->setVisible(true);
+    ui->pressure_info_widget->plotLayout()->insertRow(0);
+    QCPPlotTitle *pressureTitle = new QCPPlotTitle(ui->pressure_info_widget, "Air Pressure");
+    pressureTitle->setFont(font);
+    ui->pressure_info_widget->plotLayout()->addElement(0, 0, pressureTitle);
 
-    ui->weather_info_widget->replot();
+    QVector<double> x5,y5;
+    this->getPressure(weatherData,x5,y5);
+    ui->pressure_info_widget->addGraph(ui->pressure_info_widget->xAxis,ui->pressure_info_widget->yAxis);
+    ui->pressure_info_widget->graph(0)->setData(x5,y5);
+    ui->pressure_info_widget->graph(0)->setPen(QPen(QColor(Qt::black),2));
+    ui->pressure_info_widget->graph(0)->setName("Air Pressure");
 
-    for(int i = 0; i < x1.size(); i++)
-    {
-        qDebug() << x1.at(i) << y1.at(i);
-    }
+    ui->pressure_info_widget->xAxis->rescale();
+    ui->pressure_info_widget->yAxis->rescale();
+    ui->pressure_info_widget->yAxis->setVisible(true);
+    ui->pressure_info_widget->yAxis->setLabel("Air Pressure (hPa)");
+
+    ui->pressure_info_widget->axisRect()->axis(QCPAxis::atBottom)->setAutoTickStep(false);
+    ui->pressure_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickStep(60*10*6*6); // 4 day tickstep
+    ui->pressure_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickLabelType(QCPAxis::ltDateTime);
+    ui->pressure_info_widget->axisRect()->axis(QCPAxis::atBottom)->setDateTimeSpec(Qt::LocalTime);
+    ui->pressure_info_widget->axisRect()->axis(QCPAxis::atBottom)->setDateTimeFormat("MM-dd hh:mm");
+    ui->pressure_info_widget->axisRect()->axis(QCPAxis::atBottom)->setTickLabelRotation(30);
+
+    ui->pressure_info_widget->legend->setVisible(true);
+    ui->pressure_info_widget->replot();
+
+    ui->temp_info_widget->legend->setVisible(true);
+    ui->temp_info_widget->replot();
+
+    ui->rh_info_widget->legend->setVisible(true);
+    ui->rh_info_widget->replot();
+
+
 }
 
 void DataProcessWindow::loadWeatherData(const QStringList &fileNames, QVector<weatherInfo> &weatherData)
 {
+    weatherData.clear();
     for(int i = 0; i < fileNames.size(); i++)
     {
         QFile file(fileNames.at(i));
@@ -183,14 +220,13 @@ void DataProcessWindow::loadWeatherData(const QStringList &fileNames, QVector<we
             throw fileNames.at(i)+QString(" file not exist");
             return;
         }
-        weatherData.clear();
+
         file.open(QIODevice::ReadOnly);
         while(!file.atEnd())
         {
             QString msg = file.readLine();
             msg = msg.trimmed();
             QStringList data = msg.split(",");
-            qDebug() << data[0]<< data[1]<< data[2]<< data[3]<< data[4]<< data[5];
             if(data.at(0)!="")
             {
                 weatherInfo wData;
@@ -218,7 +254,7 @@ void DataProcessWindow::getInHiveTemp(const QVector<weatherInfo> &weatherData, Q
 
     for(int i = 0; i < weatherData.size(); i++)
     {
-        x[i] = i;
+        x[i] = weatherData.at(i).time.toTime_t();
         y[i] = weatherData.at(i).inHiveTemp;
     }
 }
@@ -233,7 +269,7 @@ void DataProcessWindow::getInHiveRH(const QVector<weatherInfo> &weatherData, QVe
 
     for(int i = 0; i < weatherData.size(); i++)
     {
-        x[i] = i;
+        x[i] = weatherData.at(i).time.toTime_t();
         y[i] = weatherData.at(i).inHiveRH;
     }
 }
@@ -248,7 +284,7 @@ void DataProcessWindow::getOutHiveTemp(const QVector<weatherInfo> &weatherData, 
 
     for(int i = 0; i < weatherData.size(); i++)
     {
-        x[i] = i;
+        x[i] = weatherData.at(i).time.toTime_t();
         y[i] = weatherData.at(i).outHiveTemp;
     }
 }
@@ -263,7 +299,7 @@ void DataProcessWindow::getOutHiveRH(const QVector<weatherInfo> &weatherData, QV
 
     for(int i = 0; i < weatherData.size(); i++)
     {
-        x[i] = i;
+        x[i] = weatherData.at(i).time.toTime_t();
         y[i] = weatherData.at(i).outHiveRH;
     }
 }
@@ -278,7 +314,7 @@ void DataProcessWindow::getPressure(const QVector<weatherInfo> &weatherData, QVe
 
     for(int i = 0; i < weatherData.size(); i++)
     {
-        x[i] = i;
+        x[i] = weatherData.at(i).time.toTime_t();
         y[i] = weatherData.at(i).pressure;
     }
 }

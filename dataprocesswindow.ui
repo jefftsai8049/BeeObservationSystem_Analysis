@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1007</width>
-    <height>653</height>
+    <height>776</height>
    </rect>
   </property>
   <property name="font">
@@ -24,7 +24,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>490</y>
+      <y>620</y>
       <width>761</width>
       <height>111</height>
      </rect>
@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>500</y>
+      <y>630</y>
       <width>191</width>
       <height>91</height>
      </rect>
@@ -139,7 +139,7 @@
       <x>300</x>
       <y>20</y>
       <width>691</width>
-      <height>461</height>
+      <height>591</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -154,13 +154,33 @@
      <attribute name="title">
       <string>Weather Info</string>
      </attribute>
-     <widget class="QCustomPlot" name="weather_info_widget" native="true">
+     <widget class="QCustomPlot" name="temp_info_widget" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
         <width>661</width>
-        <height>411</height>
+        <height>171</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="rh_info_widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>190</y>
+        <width>661</width>
+        <height>171</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="pressure_info_widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>370</y>
+        <width>661</width>
+        <height>171</height>
        </rect>
       </property>
      </widget>

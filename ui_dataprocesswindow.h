@@ -48,7 +48,9 @@ public:
     QTabWidget *tabWidget;
     QWidget *bee_info;
     QWidget *weather_info;
-    QCustomPlot *weather_info_widget;
+    QCustomPlot *temp_info_widget;
+    QCustomPlot *rh_info_widget;
+    QCustomPlot *pressure_info_widget;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuSetting;
@@ -58,7 +60,7 @@ public:
     {
         if (DataProcessWindow->objectName().isEmpty())
             DataProcessWindow->setObjectName(QStringLiteral("DataProcessWindow"));
-        DataProcessWindow->resize(1007, 653);
+        DataProcessWindow->resize(1007, 776);
         QFont font;
         font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(14);
@@ -75,10 +77,10 @@ public:
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         system_log_textBrowser = new QTextBrowser(centralwidget);
         system_log_textBrowser->setObjectName(QStringLiteral("system_log_textBrowser"));
-        system_log_textBrowser->setGeometry(QRect(10, 490, 761, 111));
+        system_log_textBrowser->setGeometry(QRect(10, 620, 761, 111));
         progressBar = new QProgressBar(centralwidget);
         progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(790, 500, 191, 91));
+        progressBar->setGeometry(QRect(790, 630, 191, 91));
         progressBar->setValue(0);
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
@@ -103,15 +105,21 @@ public:
         trajectory_classify_pushButton->setGeometry(QRect(20, 30, 181, 61));
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(300, 20, 691, 461));
+        tabWidget->setGeometry(QRect(300, 20, 691, 591));
         bee_info = new QWidget();
         bee_info->setObjectName(QStringLiteral("bee_info"));
         tabWidget->addTab(bee_info, QString());
         weather_info = new QWidget();
         weather_info->setObjectName(QStringLiteral("weather_info"));
-        weather_info_widget = new QCustomPlot(weather_info);
-        weather_info_widget->setObjectName(QStringLiteral("weather_info_widget"));
-        weather_info_widget->setGeometry(QRect(10, 10, 661, 411));
+        temp_info_widget = new QCustomPlot(weather_info);
+        temp_info_widget->setObjectName(QStringLiteral("temp_info_widget"));
+        temp_info_widget->setGeometry(QRect(10, 10, 661, 171));
+        rh_info_widget = new QCustomPlot(weather_info);
+        rh_info_widget->setObjectName(QStringLiteral("rh_info_widget"));
+        rh_info_widget->setGeometry(QRect(10, 190, 661, 171));
+        pressure_info_widget = new QCustomPlot(weather_info);
+        pressure_info_widget->setObjectName(QStringLiteral("pressure_info_widget"));
+        pressure_info_widget->setGeometry(QRect(10, 370, 661, 171));
         tabWidget->addTab(weather_info, QString());
         DataProcessWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(DataProcessWindow);
